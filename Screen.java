@@ -13,4 +13,9 @@ public abstract class Screen {
         this.stage = stage;
         this.fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
     }
+
+    public void show() {
+        stage.setTitle(screenTile);
+
+    }
 }
