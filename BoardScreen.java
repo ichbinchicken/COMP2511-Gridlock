@@ -8,8 +8,15 @@ public class BoardScreen extends Screen {
     @FXML
     private TableView table;
 
-    public BoardScreen(Stage s) {
-        super("BoardScreen.fxml", "Current Board", s);
+    private Controller controller;
+    private Stage stage;
 
+    public BoardScreen(Stage s) {
+        super("BoardScreen.fxml", "Uni Hell", s);
+        controller = new BoardController();
+        super.setController(controller);
+        stage = s;
     }
+
+
 }
