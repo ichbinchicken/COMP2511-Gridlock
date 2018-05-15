@@ -5,8 +5,8 @@ import java.util.*;
 
 
 public class Search {
-	Map<ArrayList<Integer>,NodeState> closedMap = new HashMap<ArrayList<Integer>,NodeState>();
-	Queue<NodeState> queue = new LinkedList<NodeState>();
+	Map<ArrayList<Integer>,NodeState> closedMap;
+	Queue<NodeState> queue;
 	int Cmax = 6;
 	int Rmax = 6;
 	int numCarPer = 3; //Max number of cars/trucks per row - number of options per row ie 2 cars 1 truck for 6, 3 cars 2 trucks 7
@@ -34,48 +34,77 @@ public class Search {
 	 * Returns a board with number of moves to solve as close to upper bound movesMax 
 	 * If moves < movesMin - no solution with required difficulty
 	 */
-	public void GenBoard(BoardState state, int movesMin) {
+	public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
+		queue =  new LinkedList<NodeState>();
+		closedMap = new HashMap<ArrayList<Integer>,NodeState>();
 		int j=0;
+		int max=0;
+		int tmoves=0;
+		NodeState maxN=null;
 		ArrayList<Integer> arr = state.GetBoard();
 		//arr.add(0); //Append number of moves taken - index of n^2 is number of moves
-		NodeState curr = new NodeState(arr,0);
+		NodeState curr = new NodeState(arr,-1);
 		//NodeStart curr2 = null;
 		addQueue(curr,null);
 		boolean solved = false;
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
 			curr.incMoves();
-			/*if(isGen(curr, movesMin, movesMax)) {
-				solved = true;
+			tmoves=isGen(curr,movesMin);
+			if(tmoves>movesMin-2) {
+				solved=true;
+				break;
+			}
+			if(tmoves>=movesMin) {
+				solved=true;
+				maxN=curr;
+				//break;
+			}
+
+			/*if(isGen(curr, movesMin)>0) {
+				
+				//solved = true;
 				//FindPrev(curr);
-				printBoard(curr);
-				break; //Finished
+				//printBoard(curr);
+				//break; //Finished
 			}*/
 			FindNeighbour(curr);
 			j++;		
 		}
-		if(solved==false) {
-		    NodeState gen = FindMoves(curr, movesMin);
-		    System.out.println("Max Moves is "+ curr.getMoves() + "\nMoves to Solve " + gen.getMoves());
+		if(solved==true) {
+			//curr;
+			
+		    //NodeState gen = FindMoves(curr, movesMin);
+		    //System.out.println("Max Moves is "+ curr.getMoves() + "\nMoves to Solve " + curr.getMoves());
 		    
 
-		    printBoard(gen);
+		    printBoard(curr);
+		    return curr.arr;
 		}
+		else {
+			return null;
+		}
+		//}
+		//return null;
 	}
 	
-	public void SearchBoard(BoardState state) {
+	public int SearchBoard(BoardState state) {
+		queue =  new LinkedList<NodeState>();
+		closedMap = new HashMap<ArrayList<Integer>,NodeState>();
+
 		int j=0;
 		ArrayList<Integer> arr = state.GetBoard();
 		//NodeState nullArr = new NodeState();
-		NodeState curr = new NodeState(arr,0);
+		NodeState curr = new NodeState(arr,-1);
 		addQueue(curr, null);
 		boolean solved = false;
 		
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
+			curr.incMoves();
 			if(isGoal(curr) && !solved) {
 				solved = true;
-				FindPrev(curr);
+				//FindPrev(curr);
 				break; //Finished
 			}
 			FindNeighbour(curr);
@@ -83,12 +112,15 @@ public class Search {
 		}
 		int i=1;
 		i++;
-		if(solved==false) {
-		    System.out.println("Puzzle Cannot Be Solved");
+		if(solved==true) {
+		   // System.out.println("Puzzle Solved in " + curr.getMoves() +" moves");
 
+			return curr.getMoves();
 		}
-		
-		
+		else{
+		    System.out.println("Puzzle Cannot Be Solved");
+		    return -1;
+		}
 	}
 	
 	
@@ -110,7 +142,7 @@ public class Search {
 
 	}
 	
-	private void printBoard(NodeState state) {
+	public void printBoard(NodeState state) {
 		
 		for(int i =0; i<state.size();i++) {
 			if(i%Cmax==0) {
@@ -144,14 +176,23 @@ public class Search {
 		return false;
 	}
 	
-	private boolean isGen(NodeState state, int moves, int max) {
-		if(state.getMoves()>=moves && state.getMoves()<max) {
+	private int isGen(NodeState state, int moves) {
+		if(state.getMoves()>=moves) {
 			if(state.get(RCtoI(GenR,GenC))==GoalCar) {
-			
-				return true;
+				//return 1;
+				BoardState bs = new BoardState(6);
+				Integer[] search2= new Integer[state.arr.size()];
+				search2 = state.arr.toArray(search2);
+				bs.GivenBoard(search2);
+				Search search = new Search();
+				int realnum = search.SearchBoard(bs);
+				return realnum;
+				//if(realnum==moves) {
+				//	return moves;
+				//}
 			}
 		}
-		return false;
+		return -1;
 	}
 	
 	private void FindNeighbour(NodeState curr) {
@@ -291,7 +332,7 @@ public class Search {
 	
 	 private class NodeState {
 		 ArrayList<Integer> arr;
-		 int moves=0;
+		 int moves=-1;
 		public NodeState(ArrayList<Integer> arr, int moves) {
 			this.arr = arr;
 			this.moves = moves;
