@@ -36,10 +36,22 @@ public class BoardController extends Controller {
     private int nSquares;
     private Timeline countDown;
     private int totalSeconds;
+    private double mousex;
+    private double mousey;
+    private double x;
+    private double y;
+    private boolean dragging;
+    private boolean moveToFront;
 
     public BoardController() {
         this.nSquares = 6; //this will be replaced dynamically.
         this.totalSeconds = 10; // 5 mins
+        x = 0;
+        y = 0;
+        mousex = 0;
+        mousey = 0;
+        dragging = false;
+        moveToFront = true;
     }
 
     @FXML
@@ -96,11 +108,76 @@ public class BoardController extends Controller {
                 boardPane.getChildren().add(rec[i][j]);
             }
         }
+        addRedCar();
     }
 
-    private void setTimer() {
 
+    private void addRedCar() {
+        Rectangle redCar = new Rectangle();
+        redCar.setX(0);
+        redCar.setY(0);
+        redCar.setWidth(squareWidth);
+        redCar.setHeight(2 * squareWidth);
+        redCar.setFill(Color.YELLOW);
+        redCar.setStroke(Color.BLUE);
+
+        redCar.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                // record the current mouse X and Y position on Node
+                mousex = event.getSceneX();
+                mousey = event.getSceneY();
+
+                x = redCar.getLayoutX();
+                y = redCar.getLayoutY();
+
+                if (moveToFront) {
+                    redCar.toFront();
+                }
+            }
+        });
+
+        redCar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                // Get the exact moved X and Y
+
+                double offsetX = event.getSceneX() - mousex;
+                double offsetY = event.getSceneY() - mousey;
+
+                x += offsetX;
+                y += offsetY;
+
+                double scaledX = x;
+                double scaledY = y;
+
+                redCar.setLayoutX(scaledX);
+                redCar.setLayoutY(scaledY);
+
+                dragging = true;
+
+                // again set current Mouse x AND y position
+                mousex = event.getSceneX();
+                mousey = event.getSceneY();
+
+                event.consume();
+            }
+        });
+
+        redCar.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+
+                    dragging = false;
+                }
+            }
+        );
+
+        boardPane.getChildren().add(redCar);
     }
+
 
     private String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
