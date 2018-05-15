@@ -4,30 +4,67 @@ import java.util.*;
 
 
 public class Search {
-	Map<ArrayList<Integer>,ArrayList<Integer>> closedMap = new HashMap<ArrayList<Integer>,ArrayList<Integer>>();
-	Queue<ArrayList<Integer>> queue = new LinkedList<ArrayList<Integer>>();
+	Map<ArrayList<Integer>,NodeState> closedMap = new HashMap<ArrayList<Integer>,NodeState>();
+	Queue<NodeState> queue = new LinkedList<NodeState>();
 	int Cmax = 6;
 	int Rmax = 6;
 	int numCarPer = 3; //Max number of cars/trucks per row - number of options per row ie 2 cars 1 truck for 6, 3 cars 2 trucks 7
 	int GoalC = Cmax-1;
 	int GoalR = 2;
 	int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
+	int GenC = 1;
+	int GenR = 2;
 	
 	private static final int  VERT =0;
 	private static final int  HORIZ =1; //Horizontal sliding
 
 	
 	
-	private ArrayList<Integer> arr;
+	//private NodeState arr;
 	public Search() {
 	}
 
+	
+
+	/**
+	 * @param state Finished state
+	 * @param movesMin Minimum nubmer of moves
+	 * @param movesMax Maximum number of moves
+	 * Returns a board with number of moves to solve as close to upper bound movesMax 
+	 * If moves < movesMin - no solution with required difficulty
+	 */
+	public void GenBoard(BoardState state, int movesMin, int movesMax) {
+		int j=0;
+		ArrayList<Integer> arr = state.GetBoard();
+		//arr.add(0); //Append number of moves taken - index of n^2 is number of moves
+		NodeState curr = new NodeState(arr,0);
+		//NodeStart curr2 = null;
+		addQueue(curr,null);
+		boolean solved = false;
+		while(!queue.isEmpty()) {
+			curr = queue.remove();
+			curr.incMoves();
+			if(isGen(curr, movesMin, movesMax)) {
+				solved = true;
+				//FindPrev(curr);
+				printBoard(curr);
+				break; //Finished
+			}
+			FindNeighbour(curr);
+			j++;		
+		}
+		if(solved==false) {
+		    System.out.println("Puzzle Cannot Be Generated, Max Moves is "+ curr.getMoves());
+		    printBoard(curr);
+		}
+	}
+	
 	public void SearchBoard(BoardState state) {
 		int j=0;
-		arr = state.GetBoard();
-		//ArrayList<Integer> nullArr = new ArrayList<Integer>();
-		ArrayList<Integer> curr;
-		addQueue(arr, null);
+		ArrayList<Integer> arr = state.GetBoard();
+		//NodeState nullArr = new NodeState();
+		NodeState curr = new NodeState(arr,0);
+		addQueue(curr, null);
 		boolean solved = false;
 		
 		while(!queue.isEmpty()) {
@@ -42,14 +79,18 @@ public class Search {
 		}
 		int i=1;
 		i++;
+		if(solved==false) {
+		    System.out.println("Puzzle Cannot Be Solved");
+
+		}
 		
 		
 	}
 	
 	
 	
-	private int FindPrev(ArrayList<Integer> state) {
-		ArrayList<Integer> prev = closedMap.get(state);
+	private int FindPrev(NodeState state) {
+		NodeState prev = closedMap.get(state.arr);
         int step = (prev == null) ? 0 : FindPrev(prev) + 1;
         System.out.println(step);
         printBoard(state);
@@ -58,7 +99,7 @@ public class Search {
 
 	}
 	
-	private void printBoard(ArrayList<Integer> state) {
+	private void printBoard(NodeState state) {
 		
 		for(int i =0; i<state.size();i++) {
 			if(i%Cmax==0) {
@@ -71,27 +112,38 @@ public class Search {
 
 	}
 	
-	private void addQueue(ArrayList<Integer> next, ArrayList<Integer> prev) {
-		ArrayList<Integer> next1 = new ArrayList<Integer>(next);
-		ArrayList<Integer> prev1 = null;
+	private void addQueue(NodeState next, NodeState prev) {
+		NodeState next1 = copyNodeState(next);
+		NodeState prev1 = null;
 		if(prev!=null) {
-			prev1 = new ArrayList<Integer>(prev);
+			prev1 = copyNodeState(prev);
 		}
 
-		if(!closedMap.containsKey(next1)) {
-			closedMap.put(next1,prev1);
+		if(!closedMap.containsKey(next1.arr)) {
+			closedMap.put(next1.arr, prev1);
+			//closedMap.put(next1,prev1);
 			queue.add(next1);
 		}
 	}
 	
-	private boolean isGoal(ArrayList<Integer> state) {
+	private boolean isGoal(NodeState state) {
 		if(state.get(RCtoI(GoalR,GoalC)) == GoalCar) {
 			return true;
 		}
 		return false;
 	}
 	
-	private void FindNeighbour(ArrayList<Integer> curr) {
+	private boolean isGen(NodeState state, int moves, int max) {
+		if(state.getMoves()>=moves && state.getMoves()<max) {
+			if(state.get(RCtoI(GenR,GenC))==GoalCar) {
+			
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void FindNeighbour(NodeState curr) {
 		for( int r=0; r < Rmax; r++) {
 			for (int c = 0; c<Cmax; c++) {
 				int carId = curr.get(RCtoI(r,c));
@@ -124,11 +176,11 @@ public class Search {
 	
 
 	
-	private int UpSpaces(ArrayList<Integer> state, int r, int c) {
+	private int UpSpaces(NodeState state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		ArrayList<Integer> nState = new ArrayList<Integer>(state);
+		NodeState nState = copyNodeState(state);
 		
 		
 		while((r-j >= 0) && state.get(RCtoI(r-j,c))==0){ //If in bounds and space above is empty
@@ -142,11 +194,11 @@ public class Search {
 	}
 	
 	
-	private int DownSpaces(ArrayList<Integer> state, int r, int c) {
+	private int DownSpaces(NodeState state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		ArrayList<Integer> nState = new ArrayList<Integer>(state);
+		NodeState nState = copyNodeState(state);
 		
 		while((r+j < Rmax) && state.get(RCtoI(r+j,c))==0){ //If in bounds and space above is empty
 			//Moving up - add to queue
@@ -159,11 +211,11 @@ public class Search {
 	
 	}
 	
-	private int LeftSpaces(ArrayList<Integer> state, int r, int c) {
+	private int LeftSpaces(NodeState state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		ArrayList<Integer> nState = new ArrayList<Integer>(state);
+		NodeState nState = copyNodeState(state);
 
 		while((c-j >= 0) && state.get(RCtoI(r,c-j))==0){
 			nState.set(RCtoI(r,c-j), id); 
@@ -177,11 +229,11 @@ public class Search {
 	
 	
 	
-	private int RightSpaces(ArrayList<Integer> state, int r, int c) {
+	private int RightSpaces(NodeState state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		ArrayList<Integer> nState = new ArrayList<Integer>(state);
+		NodeState nState = copyNodeState(state);
 		
 		while((c+j < Cmax) && state.get(RCtoI(r,c+j))==0){
 			nState.set(RCtoI(r,c+j), id);
@@ -217,5 +269,50 @@ public class Search {
 		}
 		return 2;
 	}
+
 	
+	public NodeState copyNodeState(NodeState orig) {
+		//ArrayList<Integer> arr2 = 
+		ArrayList<Integer> next1 = new ArrayList<Integer>(orig.getArr());
+		NodeState n= new NodeState(next1,orig.getMoves());
+		return n;
+	}
+	
+	 private class NodeState {
+		 ArrayList<Integer> arr;
+		 int moves=0;
+		public NodeState(ArrayList<Integer> arr, int moves) {
+			this.arr = arr;
+			this.moves = moves;
+		}
+		
+		public int get(int i) {
+			return arr.get(i);
+		}
+		
+		public void set(int i, int j) {
+			arr.set(i,j);
+		}
+		
+		public int size() {
+			return arr.size();
+		}
+		public void incMoves() {
+			moves++;
+		}
+		public int getMoves() {
+			return moves;
+		}
+		
+		public ArrayList<Integer>  getArr(){
+			return arr;
+		}
+		
+		@Override
+		public int hashCode() {
+			return arr.hashCode();
+		}
+
+		
+	}
 }
