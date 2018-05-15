@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+@SuppressWarnings("unused")
 public class SearchTest {
 
 	@Test
@@ -52,7 +53,7 @@ public class SearchTest {
 
 		
 		state.GivenBoard(gen1);
-		search.GenBoard(state, 50, 55);
+		search.GenBoard(state, 50);
 		
 	}
 

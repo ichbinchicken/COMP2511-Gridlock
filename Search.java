@@ -1,4 +1,5 @@
 import java.util.*;
+@SuppressWarnings("unused")
 
 
 
@@ -33,7 +34,7 @@ public class Search {
 	 * Returns a board with number of moves to solve as close to upper bound movesMax 
 	 * If moves < movesMin - no solution with required difficulty
 	 */
-	public void GenBoard(BoardState state, int movesMin, int movesMax) {
+	public void GenBoard(BoardState state, int movesMin) {
 		int j=0;
 		ArrayList<Integer> arr = state.GetBoard();
 		//arr.add(0); //Append number of moves taken - index of n^2 is number of moves
@@ -44,18 +45,21 @@ public class Search {
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
 			curr.incMoves();
-			if(isGen(curr, movesMin, movesMax)) {
+			/*if(isGen(curr, movesMin, movesMax)) {
 				solved = true;
 				//FindPrev(curr);
 				printBoard(curr);
 				break; //Finished
-			}
+			}*/
 			FindNeighbour(curr);
 			j++;		
 		}
 		if(solved==false) {
-		    System.out.println("Puzzle Cannot Be Generated, Max Moves is "+ curr.getMoves());
-		    printBoard(curr);
+		    NodeState gen = FindMoves(curr, movesMin);
+		    System.out.println("Max Moves is "+ curr.getMoves() + "\nMoves to Solve " + gen.getMoves());
+		    
+
+		    printBoard(gen);
 		}
 	}
 	
@@ -87,6 +91,13 @@ public class Search {
 		
 	}
 	
+	
+	private NodeState FindMoves(NodeState state, int moves) {
+		while(state.getMoves()> moves) {
+			state = closedMap.get(state.arr);
+		}
+		return state;
+	}
 	
 	
 	private int FindPrev(NodeState state) {
