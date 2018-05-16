@@ -2,3 +2,6 @@
 *.iml
 out/*
 /bin/
+/BoardGen.csv
+/.classpath
+/.project

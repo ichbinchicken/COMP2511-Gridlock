@@ -65,6 +65,8 @@ public class BoundedQueue<E>
 
    public boolean isFull() 
    { 
+	  if(debug)
+		  System.out.println("Size="+size+",ElementsL="+elements.length);
       return size == elements.length;
    } 
 

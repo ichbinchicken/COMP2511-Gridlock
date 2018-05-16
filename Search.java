@@ -15,7 +15,7 @@ public class Search {
 	int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
 	int GenC = 1;
 	int GenR = 2;
-	
+	boolean gen=false;
 	private static final int  VERT =0;
 	private static final int  HORIZ =1; //Horizontal sliding
 
@@ -34,59 +34,44 @@ public class Search {
 	 * Returns a board with number of moves to solve as close to upper bound movesMax 
 	 * If moves < movesMin - no solution with required difficulty
 	 */
-	public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
+	//public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
+	public NodeState GenBoard(BoardState state, int movesMin) {
+		
 		queue =  new LinkedList<NodeState>();
 		closedMap = new HashMap<ArrayList<Integer>,NodeState>();
-		int j=0;
-		int max=0;
-		int tmoves=0;
-		NodeState maxN=null;
+		Queue<NodeState> solveList = new LinkedList<NodeState>();
 		ArrayList<Integer> arr = state.GetBoard();
-		//arr.add(0); //Append number of moves taken - index of n^2 is number of moves
 		NodeState curr = new NodeState(arr,-1);
-		//NodeStart curr2 = null;
 		addQueue(curr,null);
 		boolean solved = false;
+		gen=false;
+		while(!queue.isEmpty()) {
+			curr = queue.remove();
+			if(isGoal(curr)) {
+				solveList.add(curr);
+			}
+			FindNeighbour(curr);
+		}
+		queue =  new LinkedList<NodeState>();
+		closedMap = new HashMap<ArrayList<Integer>,NodeState>();
+
+		while(!solveList.isEmpty()) {
+			curr = solveList.remove();
+			addQueue(curr,null); //Add to queue and closed map
+		}
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
 			curr.incMoves();
-			tmoves=isGen(curr,movesMin);
-			if(tmoves>movesMin-2) {
-				solved=true;
-				break;
-			}
-			if(tmoves>=movesMin) {
-				solved=true;
-				maxN=curr;
-				//break;
-			}
-
-			/*if(isGen(curr, movesMin)>0) {
-				
-				//solved = true;
-				//FindPrev(curr);
-				//printBoard(curr);
-				//break; //Finished
-			}*/
 			FindNeighbour(curr);
-			j++;		
 		}
-		if(solved==true) {
-			//curr;
-			
-		    //NodeState gen = FindMoves(curr, movesMin);
-		    //System.out.println("Max Moves is "+ curr.getMoves() + "\nMoves to Solve " + curr.getMoves());
-		    
-
-		    printBoard(curr);
-		    return curr.arr;
+		if(curr.getMoves()>movesMin) {
+			return curr;
 		}
-		else {
-			return null;
-		}
-		//}
-		//return null;
+		return null;
 	}
+	
+	
+
 	
 	public int SearchBoard(BoardState state) {
 		queue =  new LinkedList<NodeState>();
@@ -136,29 +121,18 @@ public class Search {
 		NodeState prev = closedMap.get(state.arr);
         int step = (prev == null) ? 0 : FindPrev(prev) + 1;
         System.out.println(step);
-        printBoard(state);
+        state.printBoard();
         //System.out.println((state));
         return step;
 
 	}
 	
-	public void printBoard(NodeState state) {
-		
-		for(int i =0; i<state.size();i++) {
-			if(i%Cmax==0) {
-			    System.out.print('\n');
-			}
-		    System.out.format(" %2d", state.get(i));
 
-		}
-	    System.out.print('\n');
-
-	}
 	
 	private void addQueue(NodeState next, NodeState prev) {
 		NodeState next1 = copyNodeState(next);
 		NodeState prev1 = null;
-		if(prev!=null) {
+		if(prev!=null && gen==false) {
 			prev1 = copyNodeState(prev);
 		}
 
@@ -176,7 +150,7 @@ public class Search {
 		return false;
 	}
 	
-	private int isGen(NodeState state, int moves) {
+/*	private int isGen(NodeState state, int moves) {
 		if(state.getMoves()>=moves) {
 			if(state.get(RCtoI(GenR,GenC))==GoalCar) {
 				//return 1;
@@ -193,13 +167,17 @@ public class Search {
 			}
 		}
 		return -1;
-	}
+	}*/
 	
 	private void FindNeighbour(NodeState curr) {
 		for( int r=0; r < Rmax; r++) {
 			for (int c = 0; c<Cmax; c++) {
+
 				int carId = curr.get(RCtoI(r,c));
 				if(carId ==0) {
+					continue;
+				}
+				if(carId == GoalCar && gen==true) {
 					continue;
 				}
 				if(IDtoType(carId)== HORIZ ) {
@@ -222,6 +200,8 @@ public class Search {
 			}
 		}
 	}
+	
+	
 	
 	
 	
@@ -330,41 +310,5 @@ public class Search {
 		return n;
 	}
 	
-	 private class NodeState {
-		 ArrayList<Integer> arr;
-		 int moves=-1;
-		public NodeState(ArrayList<Integer> arr, int moves) {
-			this.arr = arr;
-			this.moves = moves;
-		}
-		
-		public int get(int i) {
-			return arr.get(i);
-		}
-		
-		public void set(int i, int j) {
-			arr.set(i,j);
-		}
-		
-		public int size() {
-			return arr.size();
-		}
-		public void incMoves() {
-			moves++;
-		}
-		public int getMoves() {
-			return moves;
-		}
-		
-		public ArrayList<Integer>  getArr(){
-			return arr;
-		}
-		
-		@Override
-		public int hashCode() {
-			return arr.hashCode();
-		}
 
-		
-	}
 }
