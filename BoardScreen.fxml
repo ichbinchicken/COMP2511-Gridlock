@@ -21,21 +21,26 @@
       </AnchorPane>
        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="222.0">
             <children>
-               <Button fx:id="buttonPause" layoutX="24.0" layoutY="263.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Pause">
+               <Button fx:id="buttonPause" layoutX="24.0" layoutY="260.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="80.0" text="Pause">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="13.0" />
                   </font>
-            </Button>
-               <Button layoutX="25.0" layoutY="208.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Hint">
+                </Button>
+               <Button layoutX="24.0" layoutY="200.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="80.0" text="Hint">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="13.0" />
                   </font>
-            </Button>
+                </Button>
+               <Button fx:id="buttonRestart" layoutX="25.0" layoutY="320.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="80.0" text="Restart">
+                  <font>
+                     <Font name="DejaVu Sans Mono for Powerline Bold" size="13.0" />
+                  </font>
+               </Button>
                <Label layoutX="23.0" layoutY="106.0" prefHeight="16.0" prefWidth="56.0" text="Time:">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
                   </font>
-            </Label>
+                </Label>
                <Label layoutX="25.0" layoutY="146.0" text="Move:">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />

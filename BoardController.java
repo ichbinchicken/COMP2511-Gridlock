@@ -21,12 +21,12 @@ import java.util.ArrayList;
 public class BoardController extends Controller {
     @FXML
     private Pane boardPane;
-
     @FXML
     private Label totalTime;
-
     @FXML
     private Button buttonPause;
+    @FXML
+    private Button buttonRestart;
 
     private Rectangle curtain;
     private Label gameOver;
@@ -34,7 +34,8 @@ public class BoardController extends Controller {
     private double squareWidth;
     private int nSquares;
     private Timeline countDown;
-    private int totalSeconds;
+    private final int totalSeconds;
+    private int currSeconds;
     private boolean running;
 
     private ArrayList<Homework> workload;
@@ -42,8 +43,8 @@ public class BoardController extends Controller {
     private final Color boardColor = Color.ORANGE;
 
     public BoardController() {
-        this.nSquares = 6; //this will be replaced dynamically.
-        this.totalSeconds = 10; // 5 mins
+        nSquares = 6; //this will be replaced dynamically.
+        totalSeconds = currSeconds = 10; // 5 mins
         workload = new ArrayList<>();
         running = true;
     }
@@ -51,17 +52,11 @@ public class BoardController extends Controller {
     @FXML
     public void initialize() {
         this.squareWidth = boardPane.getPrefWidth()/nSquares;
-        //System.out.println(boardPane.getPrefWidth());
-        //System.out.println(squareWidth);
-        drawBoard();
-        totalTime.setText(convertTime(totalSeconds));
 
         // init curtain
         curtain = new Rectangle(boardPane.getPrefWidth(), boardPane.getPrefHeight(), boardColor);
-        curtain.setVisible(false);
         curtain.setX(0);
         curtain.setY(0);
-        boardPane.getChildren().add(curtain);
 
         // init game over message
         gameOver = new Label("GAME OVER");
@@ -69,10 +64,11 @@ public class BoardController extends Controller {
         gameOver.setTextFill(Color.WHITESMOKE);
         gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
         gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
-        gameOver.setVisible(false);
-        boardPane.getChildren().add(gameOver);
 
-        // init button
+        // must call drawBoard after curtain and gameOver are init'd
+        drawBoard();
+
+        // init buttons
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -81,12 +77,23 @@ public class BoardController extends Controller {
                     running = false;
                     buttonPause.setText("Resume");
                     curtain.setVisible(true);
+                    curtain.toFront();
                 } else {
                     countDown.play();
                     running = true;
                     buttonPause.setText("Pause");
                     curtain.setVisible(false);
+                    curtain.toFront();
                 }
+            }
+        });
+        buttonRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                boardPane.getChildren().clear();
+                currSeconds = totalSeconds;
+                drawBoard();
+                countDown.playFromStart();
             }
         });
 
@@ -94,13 +101,15 @@ public class BoardController extends Controller {
         countDown = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                totalSeconds--;
-                totalTime.setText(convertTime(totalSeconds));
-                if (totalSeconds <= 0) {
+                currSeconds--;
+                totalTime.setText(convertTime(currSeconds));
+                if (currSeconds <= 0) {
                     countDown.stop();
                     buttonPause.setDisable(true);
                     curtain.setVisible(true);
+                    curtain.toFront();
                     gameOver.setVisible(true);
+                    gameOver.toFront();
                 }
             }
         }));
@@ -109,6 +118,13 @@ public class BoardController extends Controller {
     }
 
     private void drawBoard() {
+        running = true;
+        buttonPause.setDisable(false);
+        buttonPause.setText("Pause");
+        totalTime.setText(convertTime(totalSeconds));
+        curtain.setVisible(false);
+        gameOver.setVisible(false);
+
         Rectangle[][] rec = new Rectangle[nSquares][nSquares];
 
         for (int i = 0; i < nSquares; i ++) {
@@ -124,6 +140,8 @@ public class BoardController extends Controller {
             }
         }
         addRedCar();
+        boardPane.getChildren().add(curtain);
+        boardPane.getChildren().add(gameOver);
     }
 
 
