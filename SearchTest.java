@@ -45,14 +45,14 @@ public class SearchTest {
 		Search search = new Search();
 
 		
-		//state.GivenBoard(array4);
+		//state.GivenBoard(array1);
 		///state.GivenBoard(array2);
 		//state.GivenBoard(array3);
 		//search.SearchBoard(state);
 
 		
 		state.GivenBoard(gen1);
-		search.GenBoard(state, 50, 55);
+		search.GenBoard(state, 10, 55);
 		
 	}
 

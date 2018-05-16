@@ -183,7 +183,7 @@ public class Search {
 		NodeState nState = copyNodeState(state);
 		
 		
-		while((r-j >= 0) && state.get(RCtoI(r-j,c))==0){ //If in bounds and space above is empty
+		while((r-j >= 0) && state.get(RCtoI(r-j,c))==0){ //If in boundsLocal and space above is empty
 			//Moving up - add to queue
 			nState.set(RCtoI(r-j,c), id); 
 			nState.set(RCtoI(r-j+length,c), 0); //Clear end
@@ -200,7 +200,7 @@ public class Search {
 		int length = getSize(id);
 		NodeState nState = copyNodeState(state);
 		
-		while((r+j < Rmax) && state.get(RCtoI(r+j,c))==0){ //If in bounds and space above is empty
+		while((r+j < Rmax) && state.get(RCtoI(r+j,c))==0){ //If in boundsLocal and space above is empty
 			//Moving up - add to queue
 			nState.set(RCtoI(r+j,c), id); 
 			nState.set(RCtoI(r+j-length,c), 0); //Clear end
