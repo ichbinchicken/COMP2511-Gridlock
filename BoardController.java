@@ -29,6 +29,7 @@ public class BoardController extends Controller {
     private Button buttonPause;
 
     private Rectangle curtain;
+    private Label gameOver;
 
     private double squareWidth;
     private int nSquares;
@@ -62,6 +63,15 @@ public class BoardController extends Controller {
         curtain.setY(0);
         boardPane.getChildren().add(curtain);
 
+        // init game over message
+        gameOver = new Label("GAME OVER");
+        gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
+        gameOver.setTextFill(Color.WHITESMOKE);
+        gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
+        gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
+        gameOver.setVisible(false);
+        boardPane.getChildren().add(gameOver);
+
         // init button
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -89,10 +99,8 @@ public class BoardController extends Controller {
                 if (totalSeconds <= 0) {
                     countDown.stop();
                     buttonPause.setDisable(true);
-                    Label gameOver = new Label("GAME OVER YOU IDIOT!!!");
-                    gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 24));
-                    gameOver.setTextFill(Color.RED);
-                    boardPane.getChildren().add(gameOver);
+                    curtain.setVisible(true);
+                    gameOver.setVisible(true);
                 }
             }
         }));
