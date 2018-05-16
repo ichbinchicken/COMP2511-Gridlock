@@ -1,6 +1,7 @@
 import javafx.event.EventHandler;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -8,11 +9,11 @@ import javafx.scene.shape.Rectangle;
 
 public class Homework {
     Rectangle slider;
+    //Image image;
     double width;
     double height;
+    double squareWidth;
     Pane pane;
-    //Bounds boundsLocal;
-    //Bounds boundsParent;
     Bounds boundsLocal;
     Bounds boundsParent;
 
@@ -23,13 +24,15 @@ public class Homework {
     private boolean dragging;
     private boolean moveToFront;
 
-    public Homework(double initX, double initY, double width, double height, Color fillColor, Pane pane) {
+    public Homework(double initX, double initY, double width, double height, Color fillColor, Pane pane, double squareWidth) {
         slider = new Rectangle();
         slider.setX(initX);
         slider.setY(initY);
         this.width = width;
         this.height = height;
         this.pane = pane;
+        this.squareWidth = squareWidth;
+        //image = new Image("");
         Bounds bLocal = pane.getBoundsInLocal();
         Bounds bParent = pane.getBoundsInParent();
 
@@ -37,8 +40,6 @@ public class Homework {
             boundsLocal = new BoundingBox(bLocal.getMinX() - initX, bLocal.getMinY(), bLocal.getWidth(), height);
             boundsParent = new BoundingBox(bParent.getMinX() - initX, bParent.getMinY(), bParent.getWidth(), height);
         } else {
-            //boundsLocal = new BoundingBox(bLocal.getMinX() + initX, bLocal.getMinY(), width, bLocal.getHeight());
-            //boundsParent = new BoundingBox(bParent.getMinX() + initX, bParent.getMinY(), width, bParent.getHeight());
             boundsLocal = new BoundingBox(bLocal.getMinX(), bLocal.getMinY() - initY, width, bLocal.getHeight());
             boundsParent = new BoundingBox(bParent.getMinX(), bParent.getMinY() - initY, width, bParent.getHeight());
         }
@@ -95,8 +96,8 @@ public class Homework {
 
                 System.out.println("x is "+x+", y is "+y);
 
-                double scaledX = x;
-                double scaledY = y;
+                double scaledX = Math.round(x / squareWidth) * squareWidth;
+                double scaledY = Math.round(y / squareWidth) * squareWidth;
 
                 slider.setLayoutX(scaledX);
                 slider.setLayoutY(scaledY);

@@ -102,8 +102,10 @@ public class BoardController extends Controller {
 
 
     private void addRedCar() {
-        Homework assn1 = new Homework(1 * squareWidth, 0, squareWidth, 2*squareWidth, Color.YELLOW, boardPane);
-        Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth, Color.GREENYELLOW, boardPane);
+        Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
+                Color.YELLOW, boardPane, squareWidth);
+        Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth,
+                Color.GREENYELLOW, boardPane, squareWidth);
         workload.add(assn1);
         workload.add(assn2);
     }
