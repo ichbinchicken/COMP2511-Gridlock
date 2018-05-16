@@ -2,6 +2,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -26,6 +27,9 @@ public class Homework {
 
     public Homework(double initX, double initY, double width, double height, Color fillColor, Pane pane, double squareWidth) {
         slider = new Rectangle();
+        Image IMAGE = new Image("https://en.wikipedia.org/wiki/Rush_Hour_(puzzle)#/media/File:Rush_Hour_sliding_block_puzzle.jpg");
+        ImageView redCar = new ImageView(IMAGE);
+        
         slider.setX(initX);
         slider.setY(initY);
         this.width = width;
@@ -131,5 +135,10 @@ public class Homework {
             return minCoord;
         }
         return newCoord;
+    }
+    
+    
+    private void checkIntersection() {
+    	
     }
 }

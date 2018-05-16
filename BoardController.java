@@ -11,6 +11,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -19,7 +20,10 @@ import java.util.ArrayList;
 
 
 public class BoardController extends Controller {
-    @FXML
+	public static final int  VERT=0;
+	public static final int HORIZ=1;
+
+	@FXML
     private Pane boardPane;
 
     @FXML
@@ -36,7 +40,7 @@ public class BoardController extends Controller {
     private Timeline countDown;
     private int totalSeconds;
 
-    private ArrayList<Homework> workload;
+    private ArrayList<Car> workload;
 
     public BoardController() {
         this.nSquares = 6; //this will be replaced dynamically.
@@ -74,7 +78,7 @@ public class BoardController extends Controller {
                     Label gameOver = new Label("GAME OVER YOU IDIOT!!!");
                     gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 24));
                     gameOver.setTextFill(Color.RED);
-                    boardPane.getChildren().add(gameOver);
+                    //boardPane.getChildren().add(gameOver);
                 }
             }
         }));
@@ -97,17 +101,47 @@ public class BoardController extends Controller {
                 boardPane.getChildren().add(rec[i][j]);
             }
         }
+        drawBoarder();
         addRedCar();
     }
 
 
+    private void drawBoarder() {
+        Line l= new Line();
+        l.setEndY(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+        l=new Line();
+        l.setEndX(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+        l=new Line();
+        l.setStartY(nSquares*squareWidth);
+        l.setEndY(nSquares*squareWidth);
+        l.setEndX(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+        l=new Line();
+        l.setStartX(nSquares*squareWidth);
+        l.setEndX(nSquares*squareWidth);
+        l.setEndY(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+    }
     private void addRedCar() {
-        Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
+        /*Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
                 Color.YELLOW, boardPane, squareWidth);
         Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth,
                 Color.GREENYELLOW, boardPane, squareWidth);
         workload.add(assn1);
-        workload.add(assn2);
+        workload.add(assn2);*/
+    	int r=1;
+    	int c=1;
+    	int length = 2;
+    	Car c1 = new  Car(squareWidth,r,c, VERT, length, boardPane,1);
+    	Car c2 = new  Car(squareWidth,4,4, HORIZ, length, boardPane,2);
+    	Car c3 = new Car(squareWidth,0,0, HORIZ,3,boardPane,3);
+
+    	workload.add(c1);
+    	workload.add(c2);
+    	workload.add(c3);
+
     }
 
 
