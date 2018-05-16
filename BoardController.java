@@ -28,20 +28,23 @@ public class BoardController extends Controller {
     @FXML
     private Button buttonPause;
 
-    @FXML
-    private Button buttonResume;
+    private Rectangle curtain;
 
     private double squareWidth;
     private int nSquares;
     private Timeline countDown;
     private int totalSeconds;
+    private boolean running;
 
     private ArrayList<Homework> workload;
+
+    private final Color boardColor = Color.ORANGE;
 
     public BoardController() {
         this.nSquares = 6; //this will be replaced dynamically.
         this.totalSeconds = 10; // 5 mins
         workload = new ArrayList<>();
+        running = true;
     }
 
     @FXML
@@ -51,19 +54,33 @@ public class BoardController extends Controller {
         //System.out.println(squareWidth);
         drawBoard();
         totalTime.setText(convertTime(totalSeconds));
+
+        // init curtain
+        curtain = new Rectangle(boardPane.getPrefWidth(), boardPane.getPrefHeight(), boardColor);
+        curtain.setVisible(false);
+        curtain.setX(0);
+        curtain.setY(0);
+        boardPane.getChildren().add(curtain);
+
+        // init button
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                countDown.pause();
-            }
-        });
-        buttonResume.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                countDown.play();
+                if (running) {
+                    countDown.pause();
+                    running = false;
+                    buttonPause.setText("Resume");
+                    curtain.setVisible(true);
+                } else {
+                    countDown.play();
+                    running = true;
+                    buttonPause.setText("Pause");
+                    curtain.setVisible(false);
+                }
             }
         });
 
+        // init timer
         countDown = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -71,6 +88,7 @@ public class BoardController extends Controller {
                 totalTime.setText(convertTime(totalSeconds));
                 if (totalSeconds <= 0) {
                     countDown.stop();
+                    buttonPause.setDisable(true);
                     Label gameOver = new Label("GAME OVER YOU IDIOT!!!");
                     gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 24));
                     gameOver.setTextFill(Color.RED);
@@ -92,7 +110,7 @@ public class BoardController extends Controller {
                 rec[i][j].setY(j * squareWidth);
                 rec[i][j].setWidth(squareWidth);
                 rec[i][j].setHeight(squareWidth);
-                rec[i][j].setFill(Color.valueOf("orange"));
+                rec[i][j].setFill(boardColor);
                 rec[i][j].setStroke(Color.BLUE);
                 boardPane.getChildren().add(rec[i][j]);
             }

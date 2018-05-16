@@ -51,11 +51,6 @@
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
                   </font>
                </Label>
-               <Button fx:id="buttonResume" layoutX="24.0" layoutY="319.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="66.0" text="Resume">
-                  <font>
-                     <Font name="DejaVu Sans Mono for Powerline Bold" size="13.0" />
-                  </font>
-               </Button>
             </children>
       </AnchorPane>
    </children>

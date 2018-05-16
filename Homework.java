@@ -96,9 +96,10 @@ public class Homework {
 
                 System.out.println("x is "+x+", y is "+y);
 
+                //double scaledX = x;
+                //double scaledY = y;
                 double scaledX = Math.round(x / squareWidth) * squareWidth;
                 double scaledY = Math.round(y / squareWidth) * squareWidth;
-
                 slider.setLayoutX(scaledX);
                 slider.setLayoutY(scaledY);
 
@@ -118,6 +119,10 @@ public class Homework {
             @Override
             public void handle(MouseEvent event) {
 
+                double scaledX = Math.round(x / squareWidth) * squareWidth;
+                double scaledY = Math.round(y / squareWidth) * squareWidth;
+                slider.setLayoutX(scaledX);
+                slider.setLayoutY(scaledY);
                 dragging = false;
             }
         });
