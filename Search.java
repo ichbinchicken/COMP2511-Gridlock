@@ -60,6 +60,8 @@ public class Search {
 			if(isGoal(curr)) {
 				solveList.add(curr);
 			}
+			curr.printBoard();
+
 			FindNeighbour(curr);
 		}
 		queue =  new LinkedList<GameBoard>();
@@ -73,6 +75,8 @@ public class Search {
 			curr = queue.remove();
 			curr.incMoves();
 			FindNeighbour(curr);
+			curr.printBoard();
+
 
 		}
 		curr.printBoard();

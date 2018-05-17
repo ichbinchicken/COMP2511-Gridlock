@@ -4,10 +4,10 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -20,74 +20,121 @@ import java.util.ArrayList;
 
 
 public class BoardController extends Controller {
-	Main main =new Main();
-	public static final int  VERT=0;
-	public static final int HORIZ=1;
+	// public static final int  VERT=0;
+	// public static final int HORIZ=1;
 
 	@FXML
     private Pane boardPane;
-
     @FXML
     private Label totalTime;
-
     @FXML
     private Button buttonPause;
-
     @FXML
-    private Button buttonResume;
+    private Button buttonRestart;
+
+    private Rectangle curtain;
+    private Label gameOver;
 
     private double squareWidth;
     private int nSquares;
     private Timeline countDown;
-    private int totalSeconds;
+    private final int totalSeconds;  // The duration of game, should not changed
+    private int currSeconds;
+    private boolean running;
+    private Puzzle puzzle;
 
     private ArrayList<Car> workload;
 
+    private final Color boardColor = Color.ORANGE;
+
     public BoardController() {
-        this.nSquares = 6; //this will be replaced dynamically.
-        this.totalSeconds = 10; // 5 mins
-        workload = new ArrayList<Car>();
+        nSquares = 6; //this will be replaced dynamically.
+        totalSeconds = currSeconds = 3600;
+        workload = new ArrayList<>();
+        running = true; // this is to check whether the game is paused. Initially, it's running.
     }
 
     @FXML
     public void initialize() {
         this.squareWidth = boardPane.getPrefWidth()/nSquares;
-        //System.out.println(boardPane.getPrefWidth());
-        //System.out.println(squareWidth);
+
+        // init curtain
+        curtain = new Rectangle(boardPane.getPrefWidth(), boardPane.getPrefHeight(), boardColor);
+        curtain.setX(0);
+        curtain.setY(0);
+
+        // init game over message
+        gameOver = new Label("GAME OVER");
+        gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
+        gameOver.setTextFill(Color.WHITESMOKE);
+        // place the label in the centre
+        gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
+        gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
+
+        GenNewPuzzle();
+
+        // must call drawBoard after curtain and gameOver are init'd, and after GenNewPuzzle
         drawBoard();
-        totalTime.setText(convertTime(totalSeconds));
+
+        // init buttons
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                countDown.pause();
-            }
-        });
-        buttonResume.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                countDown.play();
+                if (running) {
+                    countDown.pause();
+                    running = false;
+                    buttonPause.setText("Resume");
+                    curtain.setVisible(true);
+                    curtain.toFront();
+                } else {
+                    countDown.play();
+                    running = true;
+                    buttonPause.setText("Pause");
+                    curtain.setVisible(false);
+                    //curtain.toFront();
+                }
             }
         });
 
+        buttonRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                boardPane.getChildren().clear();
+                currSeconds = totalSeconds;
+                drawBoard();
+                countDown.playFromStart();
+            }
+        });
+
+        // init timer
         countDown = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                totalSeconds--;
-                totalTime.setText(convertTime(totalSeconds));
-                if (totalSeconds <= 0) {
+                currSeconds--;
+                totalTime.setText(convertTime(currSeconds));
+                if (currSeconds <= 0) {
                     countDown.stop();
-                    Label gameOver = new Label("GAME OVER YOU IDIOT!!!");
-                    gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 24));
-                    gameOver.setTextFill(Color.RED);
-                    //boardPane.getChildren().add(gameOver);
+                    buttonPause.setDisable(true);
+                    curtain.setVisible(true);
+                    curtain.toFront();
+                    gameOver.setVisible(true);
+                    gameOver.toFront();
                 }
             }
         }));
+
         countDown.setCycleCount(Animation.INDEFINITE);
-        countDown.playFromStart();
+        countDown.playFromStart(); // initialise the timer at the first time
     }
 
     private void drawBoard() {
+        running = true;
+        buttonPause.setDisable(false);
+        buttonPause.setText("Pause");
+        totalTime.setText(convertTime(totalSeconds));
+        curtain.setVisible(false);
+        gameOver.setVisible(false);
+
         Rectangle[][] rec = new Rectangle[nSquares][nSquares];
 
         for (int i = 0; i < nSquares; i ++) {
@@ -97,17 +144,20 @@ public class BoardController extends Controller {
                 rec[i][j].setY(j * squareWidth);
                 rec[i][j].setWidth(squareWidth);
                 rec[i][j].setHeight(squareWidth);
-                rec[i][j].setFill(Color.valueOf("orange"));
+                rec[i][j].setFill(boardColor);
                 rec[i][j].setStroke(Color.BLUE);
                 boardPane.getChildren().add(rec[i][j]);
             }
         }
-        drawBoarder();
-        addRedCar();
+        drawBorder();
+        drawCars();
+        boardPane.getChildren().add(curtain);
+        boardPane.getChildren().add(gameOver);
     }
 
 
-    private void drawBoarder() {
+    // draw border for the board
+    private void drawBorder() {
         Line l= new Line();
         l.setEndY(nSquares*squareWidth);
         boardPane.getChildren().add(l);
@@ -125,32 +175,32 @@ public class BoardController extends Controller {
         l.setEndY(nSquares*squareWidth);
         boardPane.getChildren().add(l);
     }
-    private void addRedCar() {
-    	workload = main.GenNewPuzzle();
-    	for(Car c: workload) {
-    		c.CarGraphics(squareWidth, boardPane);
-    	}
 
-    	
-        /*Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
-                Color.YELLOW, boardPane, squareWidth);
-        Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth,
-                Color.GREENYELLOW, boardPane, squareWidth);
-        workload.add(assn1);
-        workload.add(assn2);*/
-    	//int r=1;
-    	//int c=1;
-    	//int length = 2;
-    	//Car c1 = new Car(squareWidth,r,c, VERT, length, boardPane,1);
-    	//Car c2 = new Car(squareWidth,4,4, HORIZ, length, boardPane,2);
-    	//Car c3 = new Car(squareWidth,0,0, HORIZ,3,boardPane,3);
-
-    	//workload.add(c1);
-    	//workload.add(c2);
-    	//workload.add(c3);
+    private void drawCars() {
+        workload.clear();
+    	workload = puzzle.GenCarList();
+        for(Car c: workload) {
+            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this);
+            Node car = c.getCar();
+            boardPane.getChildren().add(car);
+            car.toFront();
+        }
 
     }
 
+    public boolean checkIntersection(Car car) {
+        Bounds bounds = car.getCar().getBoundsInParent();
+        for (Car c: workload) {
+            if (c == car) {
+                continue;
+            }
+            Bounds cbounds = c.getCar().getBoundsInParent();
+            if(cbounds.intersects(bounds)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
@@ -168,5 +218,10 @@ public class BoardController extends Controller {
         return String.format("%02d", elapsedHours) + ":" +
                 String.format("%02d", elapsedMinutes) + ":" +
                 String.format("%02d", elapsedSeconds);
+    }
+
+    private void GenNewPuzzle(){
+        puzzle = new Puzzle(6,6);
+        puzzle.printBoard();
     }
 }

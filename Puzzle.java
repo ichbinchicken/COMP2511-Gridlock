@@ -41,6 +41,8 @@ public class Puzzle {
 		while(moves < minMoves) {
 			board = GenSolution(13,80,60);
 			newBoard = search.GenBoard(board);
+			System.out.println("NEW BOARD STATE");
+			newBoard.printBoard();
 			moves=newBoard.getMoves();
 			//System.out.println(moves);
 
@@ -102,7 +104,6 @@ public class Puzzle {
 		int botleft = n*(n-1);
 		int col=0;
 		int row=0;
-		i=0;
 		while(i<arr.size()) {
 			id = arr.get(i);
 			if(id==VCAR) {

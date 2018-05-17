@@ -1,106 +1,89 @@
+import javafx.geometry.BoundingBox;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.geometry.BoundingBox;
-import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.*;
 
 public class Car {
-    Image IMAGE; 
-    ImageView redCar;
+    private Image IMAGE;
+    private ImageView carNode;
 	private static final int  GOALCAR=5;
 	private static final int  HORCAR=4;
 	private static final int  HORTRUCK=3;
 	private static final int  VERCAR=1;
 	private static final int  VERTRUCK=2;
+	private static final int X = 0;
+    private static final int Y = 0;
+
+	private int r;
+    private int c;
 	
-	int id;
-	int r;
-	int c;
-	
-	double x;
-	double y;
-	int length;
-	double squareLength;
-	int type;
-	boolean dragging;
-	boolean movetoFront;
+	private double x;
+	private double y;
+	private int length;
+	private double squareLength;
+	private int type;
+	private boolean dragging;
+	private boolean movetoFront;
 	private double mousex;
 	private double mousey;
-	Pane pane;
-	double min=0;
-	double max;
+	private BoardController boardController;
+	private double min=0;
+	private Bounds bounds;
+	//private double max;
+
 
 	public Car(int r, int c, int type, int length) {
-		this.r=r;
-		this.c=c;
+		this.r=r; // backend coordinate
+		this.c=c; // backend coordinate
 		this.type=type;
-		this.length = length;
+		this.length = length;  // backend length
 	}
-	
-	public void CarGraphics(double squareLength, Pane pane) {
+
+	//
+	public void frontEndCarConstructor(double squareLength, Bounds b, BoardController bcontroller) {
 		this.squareLength = squareLength;
-		this.pane = pane;
+		this.boardController = bcontroller;
 		//Generate the Image
 		if(type!=GOALCAR) {
-		IMAGE = new Image("https://vignette.wikia.nocookie.net/fantendo/images/6/6e/Small-mario.png/revision/latest?cb=20120718024112");
+		IMAGE = new Image("car.jpg");
 		}
 		if(type==GOALCAR) {
-		IMAGE = new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPyPahrzg7s6Gx_qlYznekiF6KjZvCAQjTa_lef0KqEICiS_60");
+		IMAGE = new Image("goalcar.png");
 		}
-		redCar = new ImageView(IMAGE);
-	    max=squareLength*6;
-	    redCar.setX(c*squareLength+1);
-	    redCar.setY(r*squareLength+1);
+		carNode = new ImageView(IMAGE);
+	    //max=squareLength*6;
+        double initX = c*squareLength+1;
+        double initY = r*squareLength+1;
+	    carNode.setX(initX);
+	    carNode.setY(initY);
+	    bounds = new BoundingBox(b.getMinX()-initX, b.getMinY()-initY, b.getWidth(), b.getHeight());
 	    
 	    if(type==VERCAR || type == VERTRUCK) {
-	    	//redCar.setWidth(squareLength);
-	    	//redCar.setHeight(squareLength*length);
-		    redCar.setFitHeight((squareLength)*length-2);
-		    redCar.setFitWidth(squareLength-2);	   
+	    	//carNode.setWidth(squareLength);
+	    	//carNode.setHeight(squareLength*length);
+		    carNode.setFitHeight((squareLength)*length-2);
+		    carNode.setFitWidth(squareLength-2);
 	    }
 	    else {
  	
-		    redCar.setFitHeight(squareLength-2);
-		    redCar.setFitWidth(squareLength*length-2);
-	    	//redCar.setWidth(squareLength*length);
-	    	//redCar.setHeight(squareLength);
+		    carNode.setFitHeight(squareLength-2);
+		    carNode.setFitWidth(squareLength*length-2);
 
 	    }
 	    addMouseEvent();
-	    pane.getChildren().add(redCar);
-	    redCar.toFront();
-
 
 	}
 	
 	
 	public Node getCar() {
-		return redCar;
+		return carNode;
 	}
-	
-	private boolean checkIntersection() {
-		ObservableList<Node> l = pane.getChildren();
-		Bounds bounds = redCar.getBoundsInParent();
-		for(Node block : l) {
-			if(block==redCar || block instanceof Rectangle) {
-				continue;
-			}
-			//if(intersect(redCar,block.)) {
-			if(block.getBoundsInParent().intersects(bounds)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
 
-	
+
 	private double mRound(double value, double factor) {
 		return Math.round(value/factor) * factor;
 	}
@@ -111,51 +94,46 @@ public class Car {
 		return (int) Math.round(coord/squareLength);
 	}
 
-
-
-
 	private void addMouseEvent() {
-	    redCar.setOnMousePressed(new EventHandler<MouseEvent>() {
+	    carNode.setOnMousePressed(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
 	        	mousex = event.getSceneX();
 	        	mousey = event.getSceneY();
+
+	        	x = carNode.getLayoutX();
+	        	y = carNode.getLayoutY();
+                //x = getCoordInParent(X);
+                //y = getCoordInParent(Y);
+                //System.out.println("Car X: "+x+" Y: "+y);
 	        	
-	        	x = redCar.getLayoutX();
-	        	y = redCar.getLayoutY();
-	        	
-	        	redCar.toFront();
+	        	carNode.toFront();
 	
 	        }
 	    });
 	    
-	    redCar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	    carNode.setOnMouseDragged(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-	        	double coord=0;
 	        	dragging=true;
-	        	//boolean collision=false;
 	        	if(type==VERCAR || type == VERTRUCK) {
-	        		if(!checkIntersection()) {
-		        		coord = event.getSceneY() - mousey;
-		        		y = redCar.getLayoutY()+coord;
-		        		redCar.setLayoutY(y);
+                    if(!boardController.checkIntersection(Car.this)) {
+		        		double offsetY = event.getSceneY() - mousey;
+		        		double newY = y + offsetY;
+		        		y = setCoord(newY, bounds.getMinY(), bounds.getMaxY()-length*squareLength);
+		        		//carNode.relocate(x, y);
+		        		carNode.setLayoutY(y);
 	        		}
-	        		else {
-	        			redCar.setLayoutY(Math.round(y/squareLength) * squareLength);
-	
-	        		}
-	
 	        	}
 	        	else {
-	
-	        		if(!checkIntersection()) {
-		        		coord = event.getSceneX() - mousex;
-		        		x+=coord;
-		        		redCar.setLayoutX(x);
-	        		}
-	        		else {
-	        			redCar.setLayoutX(Math.round(x/squareLength) * squareLength);
+
+	        		if(!boardController.checkIntersection(Car.this)) {
+                        double offsetX = event.getSceneX() - mousex;
+
+                        double newX = x + offsetX;
+                        x = setCoord(newX, bounds.getMinX(), bounds.getMaxX()-length*squareLength);
+		        		//carNode.relocate(x, y);
+                        carNode.setLayoutX(x);
 	        		}
 	        	}
 	    		mousey = event.getSceneY();
@@ -166,39 +144,66 @@ public class Car {
 	        }
 	    });
 	    
-	    redCar.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	    carNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-	
 	            dragging = false;
 	        }
 	    });
 	    
-	    redCar.setOnMouseReleased(new EventHandler<MouseEvent>() {
+	    carNode.setOnMouseReleased(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-	        	
-	        	x = redCar.getLayoutX();
-	        	y = redCar.getLayoutY();
-	        	
+
+                x = carNode.getLayoutX();
+                y = carNode.getLayoutY();
+                //x = getCoordInParent(X);
+                //y = getCoordInParent(Y);
+
 	        	double scaledY=Math.round(y/squareLength) * squareLength;
 	        	double scaledX=Math.round(x/squareLength) * squareLength;
-	        
-	        	redCar.setLayoutX(scaledX);
-	        	redCar.setLayoutY(scaledY);
+
+	        	//carNode.relocate(scaledX, scaledY);
+
+	        	carNode.setLayoutX(scaledX);
+	        	carNode.setLayoutY(scaledY);
 	        	event.consume();
 	        	
-	        	if(r!=CoordtoN(redCar.getX()+redCar.getLayoutX())||c!=CoordtoN(redCar.getY()+redCar.getLayoutY())) {
-	        		r=CoordtoN(redCar.getX()+redCar.getLayoutX());
-	        		c=CoordtoN(redCar.getY()+redCar.getLayoutY());
+	        	if(r!=CoordtoN(carNode.getX()+ carNode.getLayoutX())||c!=CoordtoN(carNode.getY()+ carNode.getLayoutY())) {
+	        		r=CoordtoN(carNode.getX()+ carNode.getLayoutX());
+	        		c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
 	        		//Update Coordinates - tell game engine we have moved
 	        		
 	        	}
-	        	c=CoordtoN(redCar.getY()+redCar.getLayoutY());
+	        	c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
 	        	//System.out.println("Coords r,c" + r+ ","+ c );
 	
 	        }
 	    });
 	    
 	}
+
+	private double setCoord(double newCoord, double minCoord, double maxCoord) {
+        if (newCoord > maxCoord) {
+            return maxCoord;
+        }
+        if (newCoord < minCoord) {
+            return minCoord;
+        }
+        return newCoord;
+    }
+
+    /*
+    private double getCoordInParent(int flag) {
+        double localX = carNode.getLayoutX();
+        double localY = carNode.getLayoutY();
+        Point2D XYInParent = carNode.localToParent(localX, localY);
+        if (flag == X) {
+            return XYInParent.getX();
+        } else {
+            return XYInParent.getY();
+        }
+
+    }
+    */
 }
