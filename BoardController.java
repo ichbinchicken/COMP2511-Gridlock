@@ -49,7 +49,7 @@ public class BoardController extends Controller {
 
     public BoardController() {
         nSquares = 6; //this will be replaced dynamically.
-        totalSeconds = currSeconds = 3600; // 5 mins
+        totalSeconds = currSeconds = 10; // 5 mins
         workload = new ArrayList<>();
         running = true; // this is to check whether the game is paused. Initially, it's running.
     }
@@ -172,22 +172,28 @@ public class BoardController extends Controller {
         boardPane.getChildren().add(l);
     }
     private void addRedCar() {
+    	workload = GenNewPuzzle();
+    	for(Car c: workload) {
+    		c.CarGraphics(squareWidth, boardPane, this);
+    	}
+
+    	
         /*Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
                 Color.YELLOW, boardPane, squareWidth);
         Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth,
                 Color.GREENYELLOW, boardPane, squareWidth);
         workload.add(assn1);
         workload.add(assn2);*/
-    	int r=1;
-    	int c=1;
-    	int length = 2;
-    	Car c1 = new  Car(squareWidth,1,2, VERT, length, boardPane,this, 1);
-    	Car c2 = new  Car(squareWidth,4,4, HORIZ, length, boardPane,this, 2);
-    	Car c3 = new Car(squareWidth,0,0, HORIZ,3,boardPane,this, 3);
+    	//int r=1;
+    	//int c=1;
+    	//int length = 2;
+    	//Car c1 = new Car(squareWidth,r,c, VERT, length, boardPane,1);
+    	//Car c2 = new Car(squareWidth,4,4, HORIZ, length, boardPane,2);
+    	//Car c3 = new Car(squareWidth,0,0, HORIZ,3,boardPane,3);
 
-    	workload.add(c1);
-    	workload.add(c2);
-    	workload.add(c3);
+    	//workload.add(c1);
+    	//workload.add(c2);
+    	//workload.add(c3);
 
     }
 
@@ -221,5 +227,11 @@ public class BoardController extends Controller {
         return String.format("%02d", elapsedHours) + ":" +
                 String.format("%02d", elapsedMinutes) + ":" +
                 String.format("%02d", elapsedSeconds);
+    }
+
+    private ArrayList<Car> GenNewPuzzle(){
+        Puzzle puzzle = new Puzzle(6,6);
+        puzzle.printBoard();
+        return puzzle.GenCarList();
     }
 }
