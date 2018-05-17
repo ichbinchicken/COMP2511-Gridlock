@@ -4,6 +4,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +12,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -19,7 +21,10 @@ import java.util.ArrayList;
 
 
 public class BoardController extends Controller {
-    @FXML
+	public static final int  VERT=0;
+	public static final int HORIZ=1;
+
+	@FXML
     private Pane boardPane;
     @FXML
     private Label totalTime;
@@ -38,15 +43,15 @@ public class BoardController extends Controller {
     private int currSeconds;
     private boolean running;
 
-    private ArrayList<Homework> workload;
+    private ArrayList<Car> workload;
 
     private final Color boardColor = Color.ORANGE;
 
     public BoardController() {
         nSquares = 6; //this will be replaced dynamically.
-        totalSeconds = currSeconds = 10; // 5 mins
+        totalSeconds = currSeconds = 3600; // 5 mins
         workload = new ArrayList<>();
-        running = true;
+        running = true; // this is to check whether the game is paused. Initially, it's running.
     }
 
     @FXML
@@ -62,6 +67,7 @@ public class BoardController extends Controller {
         gameOver = new Label("GAME OVER");
         gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
         gameOver.setTextFill(Color.WHITESMOKE);
+        // place the label in the centre
         gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
         gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
 
@@ -139,21 +145,65 @@ public class BoardController extends Controller {
                 boardPane.getChildren().add(rec[i][j]);
             }
         }
+        drawBoarder();
+        workload.clear();
         addRedCar();
         boardPane.getChildren().add(curtain);
         boardPane.getChildren().add(gameOver);
     }
 
 
+    private void drawBoarder() {
+        Line l= new Line();
+        l.setEndY(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+        l=new Line();
+        l.setEndX(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+        l=new Line();
+        l.setStartY(nSquares*squareWidth);
+        l.setEndY(nSquares*squareWidth);
+        l.setEndX(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+        l=new Line();
+        l.setStartX(nSquares*squareWidth);
+        l.setEndX(nSquares*squareWidth);
+        l.setEndY(nSquares*squareWidth);
+        boardPane.getChildren().add(l);
+    }
     private void addRedCar() {
-        Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
+        /*Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
                 Color.YELLOW, boardPane, squareWidth);
         Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth,
                 Color.GREENYELLOW, boardPane, squareWidth);
         workload.add(assn1);
-        workload.add(assn2);
+        workload.add(assn2);*/
+    	int r=1;
+    	int c=1;
+    	int length = 2;
+    	Car c1 = new  Car(squareWidth,1,2, VERT, length, boardPane,this, 1);
+    	Car c2 = new  Car(squareWidth,4,4, HORIZ, length, boardPane,this, 2);
+    	Car c3 = new Car(squareWidth,0,0, HORIZ,3,boardPane,this, 3);
+
+    	workload.add(c1);
+    	workload.add(c2);
+    	workload.add(c3);
+
     }
 
+    public boolean checkIntersection(Car car) {
+        Bounds bounds = car.getCar().getBoundsInParent();
+        for (Car c: workload) {
+            if (c == car) {
+                continue;
+            }
+            Bounds cbounds = c.getCar().getBoundsInParent();
+            if(cbounds.intersects(bounds)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
