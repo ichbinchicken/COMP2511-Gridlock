@@ -1,26 +1,37 @@
 import java.util.*;
+@SuppressWarnings("unused")
 
 
 
 
 public class Search {
-	Map<ArrayList<Integer>,NodeState> closedMap = new HashMap<ArrayList<Integer>,NodeState>();
-	Queue<NodeState> queue = new LinkedList<NodeState>();
+	private static final int  EMPTY=0;
+	private static final int  GOALCAR=5;
+	private static final int  HORCAR=4;
+	private static final int  HORTRUCK=3;
+	private static final int  VERCAR=1;
+	private static final int  VERTRUCK=2;
+
+	//private static final int  VERT =;
+	//private static final int  HORI =; //Horizontal sliding
+
+	
+	
+	Map<ArrayList<Integer>,GameBoard> closedMap;
+	Queue<GameBoard> queue;
 	int Cmax = 6;
 	int Rmax = 6;
 	int numCarPer = 3; //Max number of cars/trucks per row - number of options per row ie 2 cars 1 truck for 6, 3 cars 2 trucks 7
 	int GoalC = Cmax-1;
 	int GoalR = 2;
-	int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
+	//int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
 	int GenC = 1;
 	int GenR = 2;
-	
-	private static final int  VERT =0;
-	private static final int  HORIZ =1; //Horizontal sliding
+	boolean gen=false;
 
 	
 	
-	//private NodeState arr;
+	//private GameBoard arr;
 	public Search() {
 	}
 
@@ -33,45 +44,63 @@ public class Search {
 	 * Returns a board with number of moves to solve as close to upper bound movesMax 
 	 * If moves < movesMin - no solution with required difficulty
 	 */
-	public void GenBoard(BoardState state, int movesMin, int movesMax) {
-		int j=0;
-		ArrayList<Integer> arr = state.GetBoard();
-		//arr.add(0); //Append number of moves taken - index of n^2 is number of moves
-		NodeState curr = new NodeState(arr,0);
-		//NodeStart curr2 = null;
+	//public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
+	public GameBoard GenBoard(GameBoard board) {
+		
+		queue =  new LinkedList<GameBoard>();
+		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
+		Queue<GameBoard> solveList = new LinkedList<GameBoard>();
+		ArrayList<Integer> arr = board.getArr();
+		GameBoard curr = new GameBoard(arr,-1);
 		addQueue(curr,null);
 		boolean solved = false;
+		gen=true;
+		while(!queue.isEmpty()) {
+			curr = queue.remove();
+			if(isGoal(curr)) {
+				solveList.add(curr);
+			}
+			FindNeighbour(curr);
+		}
+		queue =  new LinkedList<GameBoard>();
+		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
+		gen=false;
+		while(!solveList.isEmpty()) {
+			curr = solveList.remove();
+			addQueue(curr,null); //Add to queue and closed map
+		}
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
 			curr.incMoves();
-			if(isGen(curr, movesMin, movesMax)) {
-				solved = true;
-				//FindPrev(curr);
-				printBoard(curr);
-				break; //Finished
-			}
 			FindNeighbour(curr);
-			j++;		
+
 		}
-		if(solved==false) {
-		    System.out.println("Puzzle Cannot Be Generated, Max Moves is "+ curr.getMoves());
-		    printBoard(curr);
-		}
+		curr.printBoard();
+
+		System.out.println(curr.getMoves());
+		return curr;
 	}
 	
-	public void SearchBoard(BoardState state) {
+	
+
+	
+	public int SearchBoard(Puzzle state) {
+		queue =  new LinkedList<GameBoard>();
+		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
+
 		int j=0;
 		ArrayList<Integer> arr = state.GetBoard();
-		//NodeState nullArr = new NodeState();
-		NodeState curr = new NodeState(arr,0);
+		//GameBoard nullArr = new GameBoard();
+		GameBoard curr = new GameBoard(arr,-1);
 		addQueue(curr, null);
 		boolean solved = false;
 		
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
+			curr.incMoves();
 			if(isGoal(curr) && !solved) {
 				solved = true;
-				FindPrev(curr);
+				//FindPrev(curr);
 				break; //Finished
 			}
 			FindNeighbour(curr);
@@ -79,78 +108,90 @@ public class Search {
 		}
 		int i=1;
 		i++;
-		if(solved==false) {
-		    System.out.println("Puzzle Cannot Be Solved");
+		if(solved==true) {
+		   // System.out.println("Puzzle Solved in " + curr.getMoves() +" moves");
 
+			return curr.getMoves();
 		}
-		
-		
+		else{
+		    System.out.println("Puzzle Cannot Be Solved");
+		    return -1;
+		}
 	}
 	
 	
+	private GameBoard FindMoves(GameBoard state, int moves) {
+		while(state.getMoves()> moves) {
+			state = closedMap.get(state.getArr());
+		}
+		return state;
+	}
 	
-	private int FindPrev(NodeState state) {
-		NodeState prev = closedMap.get(state.arr);
+	
+	private int FindPrev(GameBoard state) {
+		GameBoard prev = closedMap.get(state.getArr());
         int step = (prev == null) ? 0 : FindPrev(prev) + 1;
         System.out.println(step);
-        printBoard(state);
+        state.printBoard();
         //System.out.println((state));
         return step;
 
 	}
 	
-	private void printBoard(NodeState state) {
-		
-		for(int i =0; i<state.size();i++) {
-			if(i%Cmax==0) {
-			    System.out.print('\n');
-			}
-		    System.out.format(" %2d", state.get(i));
 
-		}
-	    System.out.print('\n');
-
-	}
 	
-	private void addQueue(NodeState next, NodeState prev) {
-		NodeState next1 = copyNodeState(next);
-		NodeState prev1 = null;
-		if(prev!=null) {
-			prev1 = copyNodeState(prev);
+	private void addQueue(GameBoard next, GameBoard prev) {
+		GameBoard next1 = next.copyGameBoard();
+		GameBoard prev1 = null;
+		if(prev!=null && gen==false) {
+			prev1 = prev.copyGameBoard();
 		}
 
-		if(!closedMap.containsKey(next1.arr)) {
-			closedMap.put(next1.arr, prev1);
+		if(!closedMap.containsKey(next1.getArr())) {
+			closedMap.put(next1.getArr(), prev1);
 			//closedMap.put(next1,prev1);
 			queue.add(next1);
 		}
 	}
 	
-	private boolean isGoal(NodeState state) {
-		if(state.get(RCtoI(GoalR,GoalC)) == GoalCar) {
+	private boolean isGoal(GameBoard state) {
+		if(state.get(RCtoI(GoalR,GoalC)) == GOALCAR) {
 			return true;
 		}
 		return false;
 	}
 	
-	private boolean isGen(NodeState state, int moves, int max) {
-		if(state.getMoves()>=moves && state.getMoves()<max) {
+/*	private int isGen(GameBoard state, int moves) {
+		if(state.getMoves()>=moves) {
 			if(state.get(RCtoI(GenR,GenC))==GoalCar) {
-			
-				return true;
+				//return 1;
+				BoardState bs = new BoardState(6);
+				Integer[] search2= new Integer[state.arr.size()];
+				search2 = state.arr.toArray(search2);
+				bs.GivenBoard(search2);
+				Search search = new Search();
+				int realnum = search.SearchBoard(bs);
+				return realnum;
+				//if(realnum==moves) {
+				//	return moves;
+				//}
 			}
 		}
-		return false;
-	}
+		return -1;
+	}*/
 	
-	private void FindNeighbour(NodeState curr) {
+	private void FindNeighbour(GameBoard curr) {
 		for( int r=0; r < Rmax; r++) {
 			for (int c = 0; c<Cmax; c++) {
+
 				int carId = curr.get(RCtoI(r,c));
 				if(carId ==0) {
 					continue;
 				}
-				if(IDtoType(carId)== HORIZ ) {
+				if(carId == GOALCAR && gen==true) {
+					continue;
+				}
+				else if(carId== HORTRUCK || carId == HORCAR || carId==GOALCAR) {
 					if(c>0) {
 					LeftSpaces(curr,r,c);
 					}
@@ -174,16 +215,18 @@ public class Search {
 	
 	
 	
+	
+	
 
 	
-	private int UpSpaces(NodeState state, int r, int c) {
+	private int UpSpaces(GameBoard state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		NodeState nState = copyNodeState(state);
+		GameBoard nState = state.copyGameBoard();
 		
 		
-		while((r-j >= 0) && state.get(RCtoI(r-j,c))==0){ //If in boundsLocal and space above is empty
+		while((r-j >= 0) && state.get(RCtoI(r-j,c))==0){ //If in bounds and space above is empty
 			//Moving up - add to queue
 			nState.set(RCtoI(r-j,c), id); 
 			nState.set(RCtoI(r-j+length,c), 0); //Clear end
@@ -194,13 +237,13 @@ public class Search {
 	}
 	
 	
-	private int DownSpaces(NodeState state, int r, int c) {
+	private int DownSpaces(GameBoard state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		NodeState nState = copyNodeState(state);
+		GameBoard nState = state.copyGameBoard();
 		
-		while((r+j < Rmax) && state.get(RCtoI(r+j,c))==0){ //If in boundsLocal and space above is empty
+		while((r+j < Rmax) && state.get(RCtoI(r+j,c))==0){ //If in bounds and space below is empty
 			//Moving up - add to queue
 			nState.set(RCtoI(r+j,c), id); 
 			nState.set(RCtoI(r+j-length,c), 0); //Clear end
@@ -211,11 +254,11 @@ public class Search {
 	
 	}
 	
-	private int LeftSpaces(NodeState state, int r, int c) {
+	private int LeftSpaces(GameBoard state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		NodeState nState = copyNodeState(state);
+		GameBoard nState = state.copyGameBoard();
 
 		while((c-j >= 0) && state.get(RCtoI(r,c-j))==0){
 			nState.set(RCtoI(r,c-j), id); 
@@ -229,11 +272,11 @@ public class Search {
 	
 	
 	
-	private int RightSpaces(NodeState state, int r, int c) {
+	private int RightSpaces(GameBoard state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
-		NodeState nState = copyNodeState(state);
+		GameBoard nState = state.copyGameBoard();
 		
 		while((c+j < Cmax) && state.get(RCtoI(r,c+j))==0){
 			nState.set(RCtoI(r,c+j), id);
@@ -250,69 +293,28 @@ public class Search {
 		return r * Cmax + c;
 	}
 	
-	private int IDtoType(int id) {
+	/*private int IDtoType(int id) {
 		if (id<=Cmax*numCarPer) {
 			return VERT;
 		}
 		return HORIZ;
-	}
+	}*/
 	
 	private int getSize(int id) { //Check this for scaling
-		if(id==0) {
+		if(id==EMPTY) {
 			return 0;
 		}
-		if(id==GoalCar) {
+		else if(id==VERCAR || id== HORCAR || id == GOALCAR) {
 			return 2;
 		}
-		else if(id%numCarPer==0) { //Truck
+		else if(id==VERTRUCK || id == HORTRUCK) {
 			return 3;
 		}
-		return 2;
+		return -1;
 	}
 
 	
-	public NodeState copyNodeState(NodeState orig) {
-		//ArrayList<Integer> arr2 = 
-		ArrayList<Integer> next1 = new ArrayList<Integer>(orig.getArr());
-		NodeState n= new NodeState(next1,orig.getMoves());
-		return n;
-	}
-	
-	 private class NodeState {
-		 ArrayList<Integer> arr;
-		 int moves=0;
-		public NodeState(ArrayList<Integer> arr, int moves) {
-			this.arr = arr;
-			this.moves = moves;
-		}
-		
-		public int get(int i) {
-			return arr.get(i);
-		}
-		
-		public void set(int i, int j) {
-			arr.set(i,j);
-		}
-		
-		public int size() {
-			return arr.size();
-		}
-		public void incMoves() {
-			moves++;
-		}
-		public int getMoves() {
-			return moves;
-		}
-		
-		public ArrayList<Integer>  getArr(){
-			return arr;
-		}
-		
-		@Override
-		public int hashCode() {
-			return arr.hashCode();
-		}
 
-		
-	}
+	
+
 }

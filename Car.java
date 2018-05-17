@@ -7,15 +7,17 @@ import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
+import javafx.scene.*;
 
 public class Car {
     Image IMAGE; 
     ImageView redCar;
-	public static final int  VERT=0;
-	public static final int HORIZ=1;
+	private static final int  GOALCAR=5;
+	private static final int  HORCAR=4;
+	private static final int  HORTRUCK=3;
+	private static final int  VERCAR=1;
+	private static final int  VERTRUCK=2;
 	
 	int id;
 	int r;
@@ -34,120 +36,49 @@ public class Car {
 	double min=0;
 	double max;
 
-	
-	public Car(double squareLength,int r, int c,int type, int length, Pane pane, int id) {
-		this.id=id;
+	public Car(int r, int c, int type, int length) {
 		this.r=r;
 		this.c=c;
-		this.squareLength = squareLength;
 		this.type=type;
 		this.length = length;
-		IMAGE = new Image("https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Rush_Hour_sliding_block_puzzle.jpg/1920px-Rush_Hour_sliding_block_puzzle.jpg");
-	    redCar = new ImageView(IMAGE);
-		//redCar = new Rectangle();
+	}
+	
+	public void CarGraphics(double squareLength, Pane pane) {
+		this.squareLength = squareLength;
+		this.pane = pane;
+		//Generate the Image
+		if(type!=GOALCAR) {
+		IMAGE = new Image("https://vignette.wikia.nocookie.net/fantendo/images/6/6e/Small-mario.png/revision/latest?cb=20120718024112");
+		}
+		if(type==GOALCAR) {
+		IMAGE = new Image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPyPahrzg7s6Gx_qlYznekiF6KjZvCAQjTa_lef0KqEICiS_60");
+		}
+		redCar = new ImageView(IMAGE);
 	    max=squareLength*6;
-	    redCar.setX(r*squareLength+1);
-	    redCar.setY(c*squareLength+1);
-	    if(type==1) {
+	    redCar.setX(c*squareLength+1);
+	    redCar.setY(r*squareLength+1);
+	    
+	    if(type==VERCAR || type == VERTRUCK) {
+	    	//redCar.setWidth(squareLength);
+	    	//redCar.setHeight(squareLength*length);
+		    redCar.setFitHeight((squareLength)*length-2);
+		    redCar.setFitWidth(squareLength-2);	   
+	    }
+	    else {
+ 	
 		    redCar.setFitHeight(squareLength-2);
 		    redCar.setFitWidth(squareLength*length-2);
 	    	//redCar.setWidth(squareLength*length);
 	    	//redCar.setHeight(squareLength);
 
 	    }
-	    else {
-	    	//redCar.setWidth(squareLength);
-	    	//redCar.setHeight(squareLength*length);
-
-
-		    redCar.setFitHeight((squareLength)*length-2);
-		    redCar.setFitWidth(squareLength-2);	    	
-	    }
-
 	    addMouseEvent();
-	    this.pane = pane;
 	    pane.getChildren().add(redCar);
 	    redCar.toFront();
+
+
 	}
 	
-	
-	
-	private void addMouseEvent() {
-        redCar.setOnMousePressed(new EventHandler<MouseEvent>() {
-	        @Override
-	        public void handle(MouseEvent event) {
-	        	mousex = event.getSceneX();
-	        	mousey = event.getSceneY();
-	        	
-	        	x = redCar.getLayoutX();
-	        	y = redCar.getLayoutY();
-	        	
-	        	redCar.toFront();
-
-	        }
-	    });
-        
-        redCar.setOnMouseDragged(new EventHandler<MouseEvent>() {
-	        @Override
-	        public void handle(MouseEvent event) {
-	        	double coord=0;
-	        	dragging=true;
-	        	//boolean collision=false;
-	        	if(type==VERT) {
-	        		if(!checkIntersection()) {
-		        		coord = event.getSceneY() - mousey;
-		        		y = redCar.getLayoutY()+coord;
-		        		redCar.setLayoutY(y);
-		        		mousey = event.getSceneY();
-	        		}
-
-	        	}
-	        	else {
-
-	        		if(!checkIntersection()) {
-		        		coord = event.getSceneX() - mousex;
-		        		x+=coord;
-		        		redCar.setLayoutX(x);
-		        		mousex = event.getSceneX();	        		
-	        		}
-	        	}
-        		event.consume();
-
-	        }
-	    });
-        
-        redCar.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-
-                dragging = false;
-            }
-        });
-        
-        redCar.setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-            	
-            	x = redCar.getLayoutX();
-            	y = redCar.getLayoutY();
-            	
-            	double scaledY=Math.round(y/squareLength) * squareLength;
-            	double scaledX=Math.round(x/squareLength) * squareLength;
-            
-            	redCar.setLayoutX(scaledX);
-            	redCar.setLayoutY(scaledY);
-            	event.consume();
-            	
-            	r=CoordtoN(redCar.getX()+redCar.getLayoutX());
-            	c=CoordtoN(redCar.getY()+redCar.getLayoutY());
-            	System.out.println("Coords r,c" + r+ ","+ c );
-
-
-            }
-        });
-        
-		
-	}
 	
 	public Node getCar() {
 		return redCar;
@@ -178,5 +109,96 @@ public class Car {
 	private int CoordtoN(double coord) {
 		//System.out.println(coord + "|");
 		return (int) Math.round(coord/squareLength);
+	}
+
+
+
+
+	private void addMouseEvent() {
+	    redCar.setOnMousePressed(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	mousex = event.getSceneX();
+	        	mousey = event.getSceneY();
+	        	
+	        	x = redCar.getLayoutX();
+	        	y = redCar.getLayoutY();
+	        	
+	        	redCar.toFront();
+	
+	        }
+	    });
+	    
+	    redCar.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	double coord=0;
+	        	dragging=true;
+	        	//boolean collision=false;
+	        	if(type==VERCAR || type == VERTRUCK) {
+	        		if(!checkIntersection()) {
+		        		coord = event.getSceneY() - mousey;
+		        		y = redCar.getLayoutY()+coord;
+		        		redCar.setLayoutY(y);
+	        		}
+	        		else {
+	        			redCar.setLayoutY(Math.round(y/squareLength) * squareLength);
+	
+	        		}
+	
+	        	}
+	        	else {
+	
+	        		if(!checkIntersection()) {
+		        		coord = event.getSceneX() - mousex;
+		        		x+=coord;
+		        		redCar.setLayoutX(x);
+	        		}
+	        		else {
+	        			redCar.setLayoutX(Math.round(x/squareLength) * squareLength);
+	        		}
+	        	}
+	    		mousey = event.getSceneY();
+	    		mousex = event.getSceneX();	        		
+	
+	    		event.consume();
+	
+	        }
+	    });
+	    
+	    redCar.setOnMouseClicked(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent event) {
+	
+	            dragging = false;
+	        }
+	    });
+	    
+	    redCar.setOnMouseReleased(new EventHandler<MouseEvent>() {
+	        @Override
+	        public void handle(MouseEvent event) {
+	        	
+	        	x = redCar.getLayoutX();
+	        	y = redCar.getLayoutY();
+	        	
+	        	double scaledY=Math.round(y/squareLength) * squareLength;
+	        	double scaledX=Math.round(x/squareLength) * squareLength;
+	        
+	        	redCar.setLayoutX(scaledX);
+	        	redCar.setLayoutY(scaledY);
+	        	event.consume();
+	        	
+	        	if(r!=CoordtoN(redCar.getX()+redCar.getLayoutX())||c!=CoordtoN(redCar.getY()+redCar.getLayoutY())) {
+	        		r=CoordtoN(redCar.getX()+redCar.getLayoutX());
+	        		c=CoordtoN(redCar.getY()+redCar.getLayoutY());
+	        		//Update Coordinates - tell game engine we have moved
+	        		
+	        	}
+	        	c=CoordtoN(redCar.getY()+redCar.getLayoutY());
+	        	//System.out.println("Coords r,c" + r+ ","+ c );
+	
+	        }
+	    });
+	    
 	}
 }
