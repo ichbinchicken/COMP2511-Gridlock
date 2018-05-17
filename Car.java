@@ -31,7 +31,6 @@ public class Car {
 	private boolean movetoFront;
 	private double mousex;
 	private double mousey;
-	private Pane pane;
 	private BoardController boardController;
 	private double min=0;
 	//private double max;
@@ -47,9 +46,8 @@ public class Car {
 		//this.boardController = bcontroller;
 	}
 	
-	public void CarGraphics(double squareLength, Pane pane, BoardController bcontroller) {
+	public void CarGraphics(double squareLength, BoardController bcontroller) {
 		this.squareLength = squareLength;
-		this.pane = pane;
 		this.boardController = bcontroller;
 		//Generate the Image
 		if(type!=GOALCAR) {
@@ -76,9 +74,6 @@ public class Car {
 
 	    }
 	    addMouseEvent();
-	    pane.getChildren().add(redCar);
-	    redCar.toFront();
-
 
 	}
 	
@@ -87,25 +82,7 @@ public class Car {
 		return redCar;
 	}
 
-	/*
-	private boolean checkIntersection() {
-		ObservableList<Node> l = pane.getChildren();
-		Bounds bounds = redCar.getBoundsInParent();
-		for(Node block : l) {
-			if(block==redCar || block instanceof Rectangle) {
-				continue;
-			}
-			//if(intersect(redCar,block.)) {
-			if(block.getBoundsInParent().intersects(bounds)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	*/
-	
 
-	
 	private double mRound(double value, double factor) {
 		return Math.round(value/factor) * factor;
 	}
@@ -115,9 +92,6 @@ public class Car {
 		//System.out.println(coord + "|");
 		return (int) Math.round(coord/squareLength);
 	}
-
-
-
 
 	private void addMouseEvent() {
 	    redCar.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -147,11 +121,7 @@ public class Car {
 		        		//y = redCar.getLayoutY()+coord;
 		        		redCar.setLayoutY(y);
 	        		}
-	        		else {
-	        			redCar.setLayoutY(Math.round(y/squareLength) * squareLength);
-	
-	        		}
-	
+
 	        	}
 	        	else {
 
@@ -159,9 +129,6 @@ public class Car {
 		        		coord = event.getSceneX() - mousex;
 		        		x+=coord;
 		        		redCar.setLayoutX(x);
-	        		}
-	        		else {
-	        			redCar.setLayoutX(Math.round(x/squareLength) * squareLength);
 	        		}
 	        	}
 	    		mousey = event.getSceneY();

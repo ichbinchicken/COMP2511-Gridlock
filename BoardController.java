@@ -5,10 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -21,8 +20,8 @@ import java.util.ArrayList;
 
 
 public class BoardController extends Controller {
-	public static final int  VERT=0;
-	public static final int HORIZ=1;
+	// public static final int  VERT=0;
+	// public static final int HORIZ=1;
 
 	@FXML
     private Pane boardPane;
@@ -39,9 +38,10 @@ public class BoardController extends Controller {
     private double squareWidth;
     private int nSquares;
     private Timeline countDown;
-    private final int totalSeconds;
+    private final int totalSeconds;  // The duration of game, should not changed
     private int currSeconds;
     private boolean running;
+    private Puzzle puzzle;
 
     private ArrayList<Car> workload;
 
@@ -49,7 +49,7 @@ public class BoardController extends Controller {
 
     public BoardController() {
         nSquares = 6; //this will be replaced dynamically.
-        totalSeconds = currSeconds = 10; // 5 mins
+        totalSeconds = currSeconds = 3600;
         workload = new ArrayList<>();
         running = true; // this is to check whether the game is paused. Initially, it's running.
     }
@@ -71,7 +71,9 @@ public class BoardController extends Controller {
         gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
         gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
 
-        // must call drawBoard after curtain and gameOver are init'd
+        GenNewPuzzle();
+
+        // must call drawBoard after curtain and gameOver are init'd, and after GenNewPuzzle
         drawBoard();
 
         // init buttons
@@ -89,10 +91,11 @@ public class BoardController extends Controller {
                     running = true;
                     buttonPause.setText("Pause");
                     curtain.setVisible(false);
-                    curtain.toFront();
+                    //curtain.toFront();
                 }
             }
         });
+
         buttonRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -119,8 +122,9 @@ public class BoardController extends Controller {
                 }
             }
         }));
+
         countDown.setCycleCount(Animation.INDEFINITE);
-        countDown.playFromStart();
+        countDown.playFromStart(); // initialise the timer at the first time
     }
 
     private void drawBoard() {
@@ -146,8 +150,7 @@ public class BoardController extends Controller {
             }
         }
         drawBoarder();
-        workload.clear();
-        addRedCar();
+        drawCars();
         boardPane.getChildren().add(curtain);
         boardPane.getChildren().add(gameOver);
     }
@@ -171,29 +174,16 @@ public class BoardController extends Controller {
         l.setEndY(nSquares*squareWidth);
         boardPane.getChildren().add(l);
     }
-    private void addRedCar() {
-    	workload = GenNewPuzzle();
-    	for(Car c: workload) {
-    		c.CarGraphics(squareWidth, boardPane, this);
-    	}
 
-    	
-        /*Homework assn1 = new Homework(squareWidth, squareWidth, squareWidth, 2*squareWidth,
-                Color.YELLOW, boardPane, squareWidth);
-        Homework assn2 = new Homework(2 * squareWidth, 3 * squareWidth, 2 * squareWidth, squareWidth,
-                Color.GREENYELLOW, boardPane, squareWidth);
-        workload.add(assn1);
-        workload.add(assn2);*/
-    	//int r=1;
-    	//int c=1;
-    	//int length = 2;
-    	//Car c1 = new Car(squareWidth,r,c, VERT, length, boardPane,1);
-    	//Car c2 = new Car(squareWidth,4,4, HORIZ, length, boardPane,2);
-    	//Car c3 = new Car(squareWidth,0,0, HORIZ,3,boardPane,3);
-
-    	//workload.add(c1);
-    	//workload.add(c2);
-    	//workload.add(c3);
+    private void drawCars() {
+        workload.clear();
+    	workload = puzzle.GenCarList();
+        for(Car c: workload) {
+            c.CarGraphics(squareWidth, this);
+            Node car = c.getCar();
+            boardPane.getChildren().add(car);
+            car.toFront();
+        }
 
     }
 
@@ -229,9 +219,8 @@ public class BoardController extends Controller {
                 String.format("%02d", elapsedSeconds);
     }
 
-    private ArrayList<Car> GenNewPuzzle(){
-        Puzzle puzzle = new Puzzle(6,6);
+    private void GenNewPuzzle(){
+        puzzle = new Puzzle(6,6);
         puzzle.printBoard();
-        return puzzle.GenCarList();
     }
 }
