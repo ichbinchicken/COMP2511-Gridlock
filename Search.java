@@ -54,13 +54,13 @@ public class Search {
 		GameBoard curr = new GameBoard(arr,-1);
 		addQueue(curr,null);
 		boolean solved = false;
-		gen=true;
+		//gen=true;
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
 			if(isGoal(curr)) {
 				solveList.add(curr);
 			}
-			curr.printBoard();
+			//curr.printBoard();
 
 			FindNeighbour(curr);
 		}
@@ -75,13 +75,12 @@ public class Search {
 			curr = queue.remove();
 			curr.incMoves();
 			FindNeighbour(curr);
-			curr.printBoard();
+			//curr.printBoard();
 
 
 		}
-		curr.printBoard();
 
-		System.out.println(curr.getMoves());
+		System.out.println("NUM MOVES" +curr.getMoves());
 		return curr;
 	}
 	
@@ -104,12 +103,12 @@ public class Search {
 			curr.incMoves();
 			if(isGoal(curr) && !solved) {
 				solved = true;
-				//FindPrev(curr);
 				break; //Finished
 			}
 			FindNeighbour(curr);
 			j++;
 		}
+
 		int i=1;
 		i++;
 		if(solved==true) {
@@ -136,7 +135,7 @@ public class Search {
 		GameBoard prev = closedMap.get(state.getArr());
         int step = (prev == null) ? 0 : FindPrev(prev) + 1;
         System.out.println(step);
-        state.printBoard();
+        //state.printBoard();
         //System.out.println((state));
         return step;
 
