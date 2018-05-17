@@ -179,7 +179,7 @@ public class BoardController extends Controller {
         workload.clear();
     	workload = puzzle.GenCarList();
         for(Car c: workload) {
-            c.CarGraphics(squareWidth, this);
+            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this);
             Node car = c.getCar();
             boardPane.getChildren().add(car);
             car.toFront();

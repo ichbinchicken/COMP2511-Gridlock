@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-@SuppressWarnings("unused")
 
 public class Main extends Application {
 	private static final int  EMPTY=0;
@@ -29,11 +28,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-    	Main main = new Main();
-    	
-
         launch(args);
-
 
     }
     
