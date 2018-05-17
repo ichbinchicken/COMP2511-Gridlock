@@ -149,14 +149,15 @@ public class BoardController extends Controller {
                 boardPane.getChildren().add(rec[i][j]);
             }
         }
-        drawBoarder();
+        drawBorder();
         drawCars();
         boardPane.getChildren().add(curtain);
         boardPane.getChildren().add(gameOver);
     }
 
 
-    private void drawBoarder() {
+    // draw border for the board
+    private void drawBorder() {
         Line l= new Line();
         l.setEndY(nSquares*squareWidth);
         boardPane.getChildren().add(l);
