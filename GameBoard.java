@@ -86,7 +86,6 @@ public class GameBoard { //Representation of the board
 			int type2=0;
 			int i=0;
 			int r=0,c=0,newR=0,newC=0;
-			int count=0;
 			ArrayList<Integer> trarr = new ArrayList<Integer>();
 			ArrayList<Integer> tcarr = new ArrayList<Integer>();
 			//Find first difference and last difference
@@ -98,7 +97,6 @@ public class GameBoard { //Representation of the board
 					int tr=(int)Math.floor(i/n);
 					trarr.add( tr);
 					tcarr.add(tc);
-					count++;
 					if(first==false) {
 						first=true;
 						if(type1!=0) {

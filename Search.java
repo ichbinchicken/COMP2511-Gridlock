@@ -80,7 +80,7 @@ public class Search {
 
 		}
 
-		System.out.println("NUM MOVES" +curr.getMoves());
+		//System.out.println("NUM MOVES" +curr.getMoves());
 		return curr;
 	}
 	

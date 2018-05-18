@@ -12,17 +12,14 @@ public class Puzzle {
 	private GameBoard initial=null; //Initial State of Board (Reset)
 	private int minInitMoves=0;
 	private int numMoves=0;
-	private ArrayList<Car> carList=null; //List of frontend cars
+	//private ArrayList<Car> carList=null; //List of frontend cars
 	private int difficulty;
 	private Search search; //Add parameters here for size etc
 
 
-	private int n;
+	private int Size=6;
 	
-	int Cmax = 6;
-	int Rmax = 6;
-
-	int GoalC = Cmax-1;
+	int GoalC = Size-1;
 	Random rand = new Random();
 	int GoalR = rand.nextInt(5); //From 6 to 11 cars
 
@@ -37,7 +34,7 @@ public class Puzzle {
 	public Puzzle(int n, int minMoves) {
 		//arr= new ArrayList<Integer>(n*n);
 		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
-		this.n=n;
+		this.Size=n;
 		int moves=0;
 		GameBoard newBoard=null;
 		search=new Search(GoalR);
@@ -58,12 +55,12 @@ public class Puzzle {
 	}
 	
 	
-	public void getBestMove() {
+	public int[] getBestMove() {
 		GameBoard sb = board.copyGameBoard();
 		LinkedList<GameBoard> list = search.SearchBoard(sb);
 		sb = list.removeFirst();
 		sb = list.removeFirst();
-		int[] arr = sb.compareBoard(board);
+		return sb.compareBoard(board);
 	}
 	
 	/*public void GivenBoard(Integer[] array) {
@@ -87,7 +84,7 @@ public class Puzzle {
 	//Return isGoal if only move left is red to end
 	private boolean isGoalState() {
 		int type;
-		int i=Cmax-1;
+		int i=GoalC;
 		int id = board.getRC(GoalR, i );
 		while(id==0) {
 			i--;
@@ -151,27 +148,27 @@ public class Puzzle {
 		int r=0;
 		int c=0;
 		int id;
-		while(i<(n*n-1)) {
+		while(i<(Size*Size-1)) {
 			 id = board.get(i);
 			if(id==HCAR) {
 				i++;
-				c=i%n-1;
-				r=(int)Math.floor(i/n);
+				c=i%Size-1;
+				r=(int)Math.floor(i/Size);
 				car = new Car(r,c, HCAR, 2);
 				list.add(car);
 			}
 			else if(id==HTRUCK) {
 				i+=2;
-				c=i%n-2;
-				r=(int)Math.floor(i/n);
+				c=i%Size-2;
+				r=(int)Math.floor(i/Size);
 				car = new Car(r,c, HTRUCK, 3);
 				list.add(car);
 
 			}
 			else if(id==GOALCAR) {
 				i++;
-				c=i%n-1;
-				r=(int)Math.floor(i/n);
+				c=i%Size-1;
+				r=(int)Math.floor(i/Size);
 				car = new Car(r,c, GOALCAR, 2);
 				list.add(car);
 
@@ -179,33 +176,33 @@ public class Puzzle {
 			i++;
 		}
 		i=0;
-		int botleft = n*(n-1);
+		int botleft = Size*(Size-1);
 		int col=0;
 		int row=0;
 		while(i<arr.size()) {
 			id = board.get(i);
 			if(id==VCAR) {
 				row++;
-				c=i%n;
-				r=(int)Math.floor(i/n);
+				c=i%Size;
+				r=(int)Math.floor(i/Size);
 				car = new Car(r,c, VCAR, 2);
 				list.add(car);
 
 			}
 			else if(id==VTRUCK) {
 				row+=2;
-				c=i%n;
-				r=(int)Math.floor(i/n);
+				c=i%Size;
+				r=(int)Math.floor(i/Size);
 				car = new Car(r,c, VTRUCK, 3);
 				list.add(car);
 
 			}
 			row++;
-			if(row>=n) {
+			if(row>=Size) {
 				row=0;
 				col++;
 			}
-			if(col==n) {
+			if(col==Size) {
 				return list;
 			}
 			i=RCtoI(row,col);
@@ -223,7 +220,7 @@ public class Puzzle {
 	
 	//In general - hardest solutions roughly ~13, 80, 60
 	public GameBoard GenSolution(int maxCars, int carProb, int verProb) {
-		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
+		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(Size*Size, 0));
 		GameBoard board = new GameBoard(arr,-1);
 
 		Random rand = new Random();
@@ -283,7 +280,7 @@ public class Puzzle {
 		}
 		
 		if(type == HCAR) {
-			if(c+1<Cmax-1) {
+			if(c+1<Size-1) {
 				if(board.getRC(r,c) ==0 && 0==board.getRC(r,c+1)){
 					board.setRC(r,c, HCAR);
 					board.setRC(r,c+1, HCAR);
@@ -292,7 +289,7 @@ public class Puzzle {
 			}
 		}
 		if(type == HTRUCK) {
-			if(c+2<Cmax-1) {
+			if(c+2<Size-1) {
 				if(board.getRC(r,c) ==0 && board.getRC(r,c+2)==0 && board.getRC(r,c+1)==0){
 					board.setRC(r,c, HTRUCK);
 					board.setRC(r,c+1, HTRUCK);
@@ -302,7 +299,7 @@ public class Puzzle {
 			}
 		}
 		if(type == VTRUCK) {
-			if(r+2<Rmax-1) {
+			if(r+2<Size-1) {
 				if(board.getRC(r,c) ==0 && board.getRC(r+1,c)==0 && board.getRC(r+2,c)==0){
 					board.setRC(r,c, VTRUCK);
 					board.setRC(r+1,c, VTRUCK);
@@ -313,7 +310,7 @@ public class Puzzle {
 		}
 		
 		if(type == VCAR) {
-			if(r+1<Rmax-1) {
+			if(r+1<Size-1) {
 				if(board.getRC(r,c)==0 && board.getRC(r+1,c)==0) {
 					board.setRC(r,c, VCAR);
 					board.setRC(r+1,c, VCAR);
@@ -324,7 +321,7 @@ public class Puzzle {
 		return false;
 	}
 	private int RCtoI(int r, int c) {
-		return r * (Cmax) + c;
+		return r * (Size) + c;
 	}
 	
 	

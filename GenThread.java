@@ -61,32 +61,38 @@ public class GenThread implements Runnable
 
 		try {
 			int minMoves = findSmallestQueue();
-			if(minMoves==0) {
-				return; //All queues full
+			while(!queueListFull()) {
+				if(minMoves==0) {
+					return; //All queues full
+				}
+				Puzzle puzzle = new Puzzle(size,minMoves);
+				int moves = puzzle.getInitMoves();
+				if(moves>=PHD) {
+					queue = queueList.get(4);
+				}
+				else if(moves>=MASTERS) {
+					queue = queueList.get(3);
+				}				
+				else if(moves>=BACH) {
+					queue = queueList.get(2);
+				}
+				else if(moves>=HSC) {
+					queue = queueList.get(1);
+				}
+				else {
+					queue = queueList.get(0);
+				}
+				if(!queue.isFull()) {
+					queue.add(puzzle);
+					System.out.println(moves);
+					i++;
+				}
+				if(i>count) {
+					return;
+				}
+		        Thread.sleep((int) (Math.random() * DELAY));
 			}
-			Puzzle puzzle = new Puzzle(size,minMoves);
-			int moves = puzzle.getInitMoves();
-			if(moves>=PHD) {
-				queue = queueList.get(4);
-			}
-			else if(moves>=MASTERS) {
-				queue = queueList.get(3);
-			}				
-			else if(moves>=BACH) {
-				queue = queueList.get(2);
-			}
-			else if(moves>=HSC) {
-				queue = queueList.get(1);
-			}
-			else {
-				queue = queueList.get(0);
-			}
-			if(!queue.isFull()) {
-				queue.add(puzzle);
-				System.out.println(moves);
-				i++;
-			}		
-	        Thread.sleep((int) (Math.random() * DELAY));
+			return;
 		}
 	catch (InterruptedException exception){	
 	}
