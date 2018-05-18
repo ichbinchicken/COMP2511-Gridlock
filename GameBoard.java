@@ -4,6 +4,7 @@ public class GameBoard { //Representation of the board
 		 private ArrayList<Integer> arr; //Current 
 		 private int moves=-1;
 		 private int n=6;
+
 		 //int GoalRow;
 		 
 		 
@@ -81,11 +82,12 @@ public class GameBoard { //Representation of the board
 		//This is latest board
 		public int[] compareBoard(GameBoard oldB) {
 			boolean first=false;
-			boolean topLeft=false;
+			boolean upleft=false;
 			int type1=0;
 			int type2=0;
 			int i=0;
 			int r=0,c=0,newR=0,newC=0;
+			int direc=0;
 			ArrayList<Integer> trarr = new ArrayList<Integer>();
 			ArrayList<Integer> tcarr = new ArrayList<Integer>();
 			//Find first difference and last difference
@@ -93,22 +95,71 @@ public class GameBoard { //Representation of the board
 				type1 = get(i);
 				type2 = oldB.get(i);
 				if(type1!=type2) {
-					int tc=i%(n-1);
-					int tr=(int)Math.floor(i/n);
+					
+					int tc=i%(n);
+					int tr=(int)Math.floor(i/(n));
+					if(type1==0) {
+						//Move up or left
+						
+					}
+					else {
+						//Move down or right
+					}
+					
+					System.out.println("tC" +tc + "tR" + tr);
 					trarr.add( tr);
 					tcarr.add(tc);
 					if(first==false) {
 						first=true;
-						if(type1!=0) {
-							topLeft=true;
+						if(type1==0) {
+							upleft=true;
+							direc=type2;
+						}
+						else {
+							direc=type1;
 						}
 					}
 				}
 				i++;
 			}
-			int size = trarr.size();
-
-			if(!topLeft) {
+			
+			int size = trarr.size(); //How far move +1
+			//if(direc == VCAR || direc== VTRUCK ) {
+				if(upleft=true) {
+					newR=trarr.get(0);
+					newC=tcarr.get(0);
+					if(direc==VCAR||direc==VTRUCK) {
+						r = newR+size-2;
+						c = newC;
+					}
+					else {
+						c = newC+size-2;
+						r = newR;
+					}
+					//r = trarr.get(size/2);
+					//c= tcarr.get(size/2);
+				}
+				else {
+					r=trarr.get(0);
+					c=tcarr.get(0);
+					if(direc==VCAR||direc==VTRUCK) {
+						newR = r-(size-2);
+						c=newC;
+					}
+					else {
+						newC = c-(size-2);
+						r=newR;
+					}
+					//newR=trarr.get(size/2);
+					//newC=tcarr.get(size/2);
+				}
+			//}
+			//else {
+			//	if(upleft=true) {
+					
+				//}
+			//}
+			/*if(!topLeft) {
 				r = trarr.get(0);
 				c = tcarr.get(0);
 			}
@@ -117,13 +168,23 @@ public class GameBoard { //Representation of the board
 				c = tcarr.get(size/2);
 			}
 			if(trarr.get(0)==trarr.get(size-1)) { //Same row
-				newC = c+size/2;
+				if(topLeft) {
+					newC=c-size/2;
+				}
+				else {
+					newC = c+size/2;
+				}
 				newR=r;
 			}
 			else {
+				if(topLeft) {
+					newR=r-size/2;
+				}
+				else {
 				newR = r+size/2;
+				}
 				newC=c;
-			}
+			}*/
 			int[] array = {r,c,newR,newC};
 			return array;
 			//return {r,c,newR,newC};
@@ -144,5 +205,7 @@ public class GameBoard { //Representation of the board
 			return n;
 		}
 
+		private static final int  VCAR =1; //Horizontal sliding
+		private static final int  VTRUCK =2; //Horizontal sliding
 		
 	}

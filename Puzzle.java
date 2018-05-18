@@ -58,11 +58,15 @@ public class Puzzle {
 	 * @return [currR,currC,newR,newC]
 	 */
 	public int[] getBestMove() {
+		
 		GameBoard sb = board.copyGameBoard();
 		LinkedList<GameBoard> list = search.SearchBoard(sb);
 		sb = list.removeFirst();
 		sb = list.removeFirst();
-		return sb.compareBoard(board);
+		
+		int[] arr = sb.compareBoard(board);
+		System.out.println("ARRAY" + arr[0] + " " + arr[1] + " " + arr[2] + " "+ arr[3]);
+		return arr;
 	}
 	
 	/*public void GivenBoard(Integer[] array) {

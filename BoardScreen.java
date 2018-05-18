@@ -12,7 +12,7 @@ public class BoardScreen extends Screen {
     private Stage stage;
 
     public BoardScreen(Stage s, GameEngine engine) {
-        super("BoardScreen.fxml", "Uni Hell", s);
+        super("BoardScreen.fxml", "Gradlock", s);
     	//this.engine = engine;
         controller = new BoardController(engine);
         super.setController(controller);

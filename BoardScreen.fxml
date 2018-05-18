@@ -26,7 +26,7 @@
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="13.0" />
                   </font>
                 </Button>
-               <Button layoutX="24.0" layoutY="180.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="100.0" text="Hint">
+               <Button fx:id="buttonHint" layoutX="24.0" layoutY="180.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="100.0" text="Hint">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="13.0" />
                   </font>

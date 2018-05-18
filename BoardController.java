@@ -40,6 +40,9 @@ public class BoardController extends Controller {
     
     @FXML
     private Button buttonNewGame;
+    
+    @FXML
+    private Button buttonHint;
 
     private Rectangle curtain;
     private Label gameOver;
@@ -50,6 +53,7 @@ public class BoardController extends Controller {
     private int currSeconds;
     private boolean running;
     private ArrayList<Car> workload;
+    private boolean GameWon = false;
 
     private final Color boardColor = Color.ORANGE;
 
@@ -83,6 +87,8 @@ public class BoardController extends Controller {
         // must call drawBoard after curtain and gameOver are init'd, and after GenNewPuzzle
         drawBoard();
 
+
+        
         // init buttons
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -123,9 +129,27 @@ public class BoardController extends Controller {
             	engine.RestartPuzzle();
                 boardPane.getChildren().clear();
                 currSeconds = totalSeconds;
+                GameWon=false;
                 drawBoard();
                 countDown.playFromStart();
             }
+        });
+        
+
+        buttonHint.setOnMouseClicked(new EventHandler <MouseEvent>() {
+        	@Override
+        	public void handle (MouseEvent event) {
+        		System.out.println("HINT");
+        		int[] arr =engine.getNextMove();
+        		System.out.println(arr);
+        		Car car =findCar(arr[0], arr[1]);
+        		if(car!=null) {
+        			car.CarMakeMove(arr[2], arr[3]);
+        		}
+        		else {
+        			System.out.println("R"+ arr[0] + " " + "C"+arr[1]);
+        		}
+        	}
         });
 
         // init timer
@@ -244,13 +268,16 @@ public class BoardController extends Controller {
 
     
     public void MakeMove(int oldR, int oldC, int r, int c) {
-		if(engine.MakeMove(oldR, oldC, r,c)) {
-
-			//Game has finished
-			Car car = findGoalCar();
-			car.CarMakeMove(car.getR(), engine.getBoardSize()-2);
-			
-		}
+    	if(!GameWon) {
+			if(engine.MakeMove(oldR, oldC, r,c)) {
+				GameWon=true;
+				//Game has finished
+				Car car = findGoalCar();
+				car.CarMakeMove(car.getR(), engine.getBoardSize()-2);
+				//return true;
+			}
+			//return false;
+    	}
     }
     
     public void GetHint() {

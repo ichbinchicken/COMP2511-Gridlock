@@ -38,6 +38,8 @@ public class Car {
 	private BoardController boardController;
 	private double min=0;
 	private Bounds bounds;
+	private int initR;
+	private int initC;
 	//private GameEngine engine;
 	//private double max;
 
@@ -45,6 +47,8 @@ public class Car {
 	public Car(int r, int c, int type, int length) {
 		this.r=r; // backend coordinate
 		this.c=c; // backend coordinate
+		initR=r;
+		initC=c;
 		this.type=type;
 		this.length = length;  // backend length
 	}
@@ -204,10 +208,10 @@ public class Car {
 		double xshift = NtoCoord(newC-c);
 		double yshift = NtoCoord(newR-r);
 		Bounds cBnd = carNode.getBoundsInLocal();
-
-		double xstart = NtoCoord(c)+ cBnd.getWidth()/2+1;
-		double ystart = NtoCoord(r)+cBnd.getHeight()/2+1;
-		
+		System.out.println("R|" + r + "C|"+ c);
+		double xstart = NtoCoord(initC)+cBnd.getWidth()/2+1; //I dont know why NtoCoord(c) shouldnt be added
+		double ystart = NtoCoord(initR)+cBnd.getHeight()/2+1;
+		System.out.println("xstart"+ xstart + "Ystart" + ystart);
 		//x=carNode.getTran
 		Path p = new Path();
 		p.getElements().add(new MoveTo(xstart,ystart));
@@ -218,6 +222,11 @@ public class Car {
 		pt.setCycleCount(1);
 		
 		pt.play();
+		int oldR=r;
+		int oldC=c;
+		r=newR;
+		c=newC;
+		boardController.MakeMove(oldR, oldC, r, c);
 
 		//Make the Car Drag Off Screen
 		//carNode.setY(y);
