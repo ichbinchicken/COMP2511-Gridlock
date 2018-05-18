@@ -33,6 +33,7 @@ public class Car {
 	private BoardController boardController;
 	private double min=0;
 	private Bounds bounds;
+	private GameEngine engine;
 	//private double max;
 
 
@@ -44,7 +45,8 @@ public class Car {
 	}
 
 	//
-	public void frontEndCarConstructor(double squareLength, Bounds b, BoardController bcontroller) {
+	public void frontEndCarConstructor(double squareLength, Bounds b, BoardController bcontroller, GameEngine engine) {
+		this.engine = engine;
 		this.squareLength = squareLength;
 		this.boardController = bcontroller;
 		//Generate the Image
@@ -168,21 +170,40 @@ public class Car {
 	        	carNode.setLayoutX(scaledX);
 	        	carNode.setLayoutY(scaledY);
 	        	event.consume();
-	        	
-	        	if(r!=CoordtoN(carNode.getX()+ carNode.getLayoutX())||c!=CoordtoN(carNode.getY()+ carNode.getLayoutY())) {
-	        		r=CoordtoN(carNode.getX()+ carNode.getLayoutX());
-	        		c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
+	        	int oldR = r;
+	        	int oldC = c;
+	        	c=CoordtoN(carNode.getX()+ carNode.getLayoutX());
+	        	r=CoordtoN(carNode.getY()+ carNode.getLayoutY());
+	        	if(r!=oldR || c!=oldC) {
 	        		//Update Coordinates - tell game engine we have moved
+	        		engine.MakeMove(oldR, oldC, r, c);
 	        		
 	        	}
-	        	c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
+	        	//c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
 	        	//System.out.println("Coords r,c" + r+ ","+ c );
 	
 	        }
 	    });
 	    
 	}
+	
+	public int getCarType() {
+		return type;
+	}
 
+	public void CarDragOff() {
+		//Make the Car Drag Off Screen
+	}
+	
+	public int getR() {
+		return r;
+	}
+	public int getC() {
+		return c;
+	}
+	
+	
+	
 	private double setCoord(double newCoord, double minCoord, double maxCoord) {
         if (newCoord > maxCoord) {
             return maxCoord;

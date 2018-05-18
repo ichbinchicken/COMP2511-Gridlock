@@ -21,7 +21,6 @@ public class Search {
 	Queue<GameBoard> queue;
 	int Cmax = 6;
 	int Rmax = 6;
-	int numCarPer = 3; //Max number of cars/trucks per row - number of options per row ie 2 cars 1 truck for 6, 3 cars 2 trucks 7
 	int GoalC = Cmax-1;
 	int GoalR = 2;
 	//int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
@@ -32,7 +31,8 @@ public class Search {
 	
 	
 	//private GameBoard arr;
-	public Search() {
+	public Search(int GoalR) {
+		this.GoalR= GoalR;
 	}
 
 	
@@ -87,14 +87,15 @@ public class Search {
 	
 
 	
-	public int SearchBoard(Puzzle state) {
+	public LinkedList<GameBoard> SearchBoard(GameBoard board) {
 		queue =  new LinkedList<GameBoard>();
 		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
 
 		int j=0;
-		ArrayList<Integer> arr = state.GetBoard();
+		//ArrayList<Integer> arr = state.GetBoard();
 		//GameBoard nullArr = new GameBoard();
-		GameBoard curr = new GameBoard(arr,-1);
+		GameBoard curr = board;
+		//GameBoard curr = new GameBoard(arr,-1);
 		addQueue(curr, null);
 		boolean solved = false;
 		
@@ -112,13 +113,15 @@ public class Search {
 		int i=1;
 		i++;
 		if(solved==true) {
+			LinkedList<GameBoard> list = new LinkedList<GameBoard>();
+			FindPrev(curr, list);
 		   // System.out.println("Puzzle Solved in " + curr.getMoves() +" moves");
 
-			return curr.getMoves();
+			return list;
 		}
 		else{
-		    System.out.println("Puzzle Cannot Be Solved");
-		    return -1;
+		    System.out.println("Puzzle Cannot Be Solved"); //SHOULD NOT HAPPEN
+		    return null;
 		}
 	}
 	
@@ -131,11 +134,12 @@ public class Search {
 	}
 	
 	
-	private int FindPrev(GameBoard state) {
+	private int FindPrev(GameBoard state, LinkedList<GameBoard> list) {
 		GameBoard prev = closedMap.get(state.getArr());
-        int step = (prev == null) ? 0 : FindPrev(prev) + 1;
+        int step = (prev == null) ? 0 : FindPrev(prev,list) + 1;
+        list.add(state);
         System.out.println(step);
-        //state.printBoard();
+        state.printBoard();
         //System.out.println((state));
         return step;
 
@@ -278,6 +282,7 @@ public class Search {
 	private int RightSpaces(GameBoard state, int r, int c) {
 		int j=1;
 		int id = state.get(RCtoI(r,c));
+		
 		int length = getSize(id);
 		GameBoard nState = state.copyGameBoard();
 		

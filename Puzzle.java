@@ -8,13 +8,13 @@ import java.util.*;
 //34 is red car
 
 public class Puzzle {
-	//private ArrayList<Integer> initial;
-	//private ArrayList<Integer> current;
-	private GameBoard board;
-	private GameBoard initial=null;
+	private GameBoard board; //Current State of Board
+	private GameBoard initial=null; //Initial State of Board (Reset)
 	private int minInitMoves=0;
-	int difficulty;
-	Search search = new Search(); //Add parameters here for size etc
+	private int numMoves=0;
+	private ArrayList<Car> carList=null; //List of frontend cars
+	private int difficulty;
+	private Search search; //Add parameters here for size etc
 
 
 	private int n;
@@ -23,9 +23,11 @@ public class Puzzle {
 	int Rmax = 6;
 
 	int GoalC = Cmax-1;
-	int GoalR = 2;
-	
+	Random rand = new Random();
+	int GoalR = rand.nextInt(5); //From 6 to 11 cars
 
+	
+	private static final int  EMPTY=0;
 	private static final int  GOALCAR =5;
 	private static final int  HCAR=4; //Horizontal sliding
 	private static final int  HTRUCK =3;
@@ -38,24 +40,42 @@ public class Puzzle {
 		this.n=n;
 		int moves=0;
 		GameBoard newBoard=null;
+		search=new Search(GoalR);
 		while(moves < minMoves) {
 			board = GenSolution(13,80,60);
+			//board.printBoard();
+
 			newBoard = search.GenBoard(board);
-			System.out.println("NEW BOARD STATE");
-			newBoard.printBoard();
+			//System.out.println("NEW BOARD STATE");
 			moves=newBoard.getMoves();
 			//System.out.println(moves);
 
 		}
 		minInitMoves = moves;
 		initial = newBoard.copyGameBoard(); //For reset
+		board = newBoard;
 		GenCarList();
+	}
+	
+	
+	public void getBestMove() {
+		GameBoard sb = board.copyGameBoard();
+		LinkedList<GameBoard> list = search.SearchBoard(sb);
+		sb = list.removeFirst();
+		sb = list.removeFirst();
+		int[] arr = sb.compareBoard(board);
 	}
 	
 	/*public void GivenBoard(Integer[] array) {
 		arr = new ArrayList<Integer>(Arrays.asList(array));
 	}*/
 
+	public void RestartPuzzle() {
+		board = initial.copyGameBoard();
+		numMoves=0;
+		
+	}
+	
 	public int getInitMoves() {
 		return minInitMoves;
 	}
@@ -64,6 +84,64 @@ public class Puzzle {
 		return board.getArr();
 	}
 	
+	//Return isGoal if only move left is red to end
+	private boolean isGoalState() {
+		int type;
+		int i=Cmax-1;
+		int id = board.getRC(GoalR, i );
+		while(id==0) {
+			i--;
+			id = board.getRC(GoalR,i);
+		}
+		if(id==GOALCAR) {
+			System.out.println("GOAL STATE");
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean MakeMove(int r,int c, int newR,int newC) {
+		int type = board.getRC(r, c);
+		switch(type) {
+		case HCAR: case GOALCAR: 
+			board.setRC(r, c, EMPTY);
+			board.setRC(r, c+1, EMPTY);
+			board.setRC(newR, newC, type);
+			board.setRC(newR, newC+1, type);
+			break;
+		case HTRUCK: 
+			board.setRC(r, c, EMPTY);
+			board.setRC(r, c+1, EMPTY);
+			board.setRC(r, c+2, EMPTY);
+			board.setRC(newR, newC, type);
+			board.setRC(newR, newC+1, type);
+			board.setRC(newR, newC+2, type);
+			break;
+		case VCAR: 
+			board.setRC(r, c, EMPTY);
+			board.setRC(r+1, c, EMPTY);
+			board.setRC(newR, newC, type);
+			board.setRC(newR+1, newC, type);
+			break;
+		case VTRUCK: 
+			board.setRC(r, c, EMPTY);
+			board.setRC(r+1, c, EMPTY);
+			board.setRC(r+2, c, EMPTY);
+			board.setRC(newR, newC, type);
+			board.setRC(newR+1, newC, type);
+			board.setRC(newR+2, newC, type);
+			break;
+		default:
+			break;
+		}
+		numMoves++;
+		return isGoalState();
+		//if(isGoalState()) 
+	}
+	
+	public int getMoves() {
+		return numMoves;
+	}
 	
 	public ArrayList<Car> GenCarList(){
 		ArrayList<Car> list = new ArrayList<Car>();
@@ -73,8 +151,8 @@ public class Puzzle {
 		int r=0;
 		int c=0;
 		int id;
-		while(i<arr.size()) {
-			 id = arr.get(i);
+		while(i<(n*n-1)) {
+			 id = board.get(i);
 			if(id==HCAR) {
 				i++;
 				c=i%n-1;
@@ -105,7 +183,7 @@ public class Puzzle {
 		int col=0;
 		int row=0;
 		while(i<arr.size()) {
-			id = arr.get(i);
+			id = board.get(i);
 			if(id==VCAR) {
 				row++;
 				c=i%n;
@@ -145,16 +223,18 @@ public class Puzzle {
 	
 	//In general - hardest solutions roughly ~13, 80, 60
 	public GameBoard GenSolution(int maxCars, int carProb, int verProb) {
+		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
+		GameBoard board = new GameBoard(arr,-1);
+
 		Random rand = new Random();
 		int type;
 		//int maxCars = rand.nextInt(5)+6; //From 6 to 11 cars
 		int carCount;
 		int r=0,c;
 		//blockers++;
-		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
-		arr.set(RCtoI(GoalR,GoalC), GOALCAR);
-		arr.set(RCtoI(GoalR,GoalC-1), GOALCAR);
-		arr.set(RCtoI(GoalR,GoalC-2), GOALCAR); //The space to left of red car must be empty
+		board.setRC(GoalR,GoalC,GOALCAR);
+		board.setRC(GoalR,GoalC-1,GOALCAR);
+		board.setRC(GoalR,GoalC-2,GOALCAR);
 		
 		carCount=1;
 		int j=0;
@@ -180,13 +260,12 @@ public class Puzzle {
 					type=VCAR;
 				}
 			}
-			if(addCar(arr,r,c,type)) {
+			if(addCar(board,r,c,type)) {
 				carCount++;
 			}
 			j++;
 		}
-		arr.set(RCtoI(GoalR,GoalC-2), 0);
-		GameBoard board = new GameBoard(arr,-1);
+		board.setRC(GoalR,GoalC-2,EMPTY);
 		return board;
 		
 	}
@@ -198,36 +277,36 @@ public class Puzzle {
 	 * @return
 	 * R C are top left corner of car to insert
 	 */
-	private boolean addCar(ArrayList<Integer> arr, int r, int c, int type) {
+	private boolean addCar(GameBoard board, int r, int c, int type) {
 		if(r<0 || c<0) { 
 			return false;
 		}
 		
 		if(type == HCAR) {
 			if(c+1<Cmax-1) {
-				if(arr.get(RCtoI(r,c)) ==0 && 0==arr.get(RCtoI(r,c+1))){
-					arr.set(RCtoI(r,c), HCAR);
-					arr.set(RCtoI(r,c+1), HCAR);
+				if(board.getRC(r,c) ==0 && 0==board.getRC(r,c+1)){
+					board.setRC(r,c, HCAR);
+					board.setRC(r,c+1, HCAR);
 					return true;
 				}
 			}
 		}
 		if(type == HTRUCK) {
 			if(c+2<Cmax-1) {
-				if(arr.get(RCtoI(r,c)) ==0 && arr.get(RCtoI(r,c+2))==0 && arr.get(RCtoI(r,c+1))==0){
-					arr.set(RCtoI(r,c), HTRUCK);
-					arr.set(RCtoI(r,c+1), HTRUCK);
-					arr.set(RCtoI(r,c+2), HTRUCK);
+				if(board.getRC(r,c) ==0 && board.getRC(r,c+2)==0 && board.getRC(r,c+1)==0){
+					board.setRC(r,c, HTRUCK);
+					board.setRC(r,c+1, HTRUCK);
+					board.setRC(r,c+2, HTRUCK);
 					return true;
 				}
 			}
 		}
 		if(type == VTRUCK) {
 			if(r+2<Rmax-1) {
-				if(arr.get(RCtoI(r,c)) ==0 && arr.get(RCtoI(r+1,c))==0 && arr.get(RCtoI(r+2,c))==0){
-					arr.set(RCtoI(r,c), VTRUCK);
-					arr.set(RCtoI(r+1,c), VTRUCK);
-					arr.set(RCtoI(r+2,c), VTRUCK);
+				if(board.getRC(r,c) ==0 && board.getRC(r+1,c)==0 && board.getRC(r+2,c)==0){
+					board.setRC(r,c, VTRUCK);
+					board.setRC(r+1,c, VTRUCK);
+					board.setRC(r+2,c, VTRUCK);
 					return true;
 				}
 			}
@@ -235,9 +314,9 @@ public class Puzzle {
 		
 		if(type == VCAR) {
 			if(r+1<Rmax-1) {
-				if(arr.get(RCtoI(r,c))==0 && arr.get(RCtoI(r+1,c))==0) {
-					arr.set(RCtoI(r,c), VCAR);
-					arr.set(RCtoI(r+1,c), VCAR);
+				if(board.getRC(r,c)==0 && board.getRC(r+1,c)==0) {
+					board.setRC(r,c, VCAR);
+					board.setRC(r+1,c, VCAR);
 				}
 			}
 			

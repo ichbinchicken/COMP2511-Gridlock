@@ -22,6 +22,7 @@ import java.util.ArrayList;
 public class BoardController extends Controller {
 	// public static final int  VERT=0;
 	// public static final int HORIZ=1;
+    private GameEngine engine;
 
 	@FXML
     private Pane boardPane;
@@ -31,23 +32,25 @@ public class BoardController extends Controller {
     private Button buttonPause;
     @FXML
     private Button buttonRestart;
+    
+    @FXML
+    private Button buttonNewGame;
 
     private Rectangle curtain;
     private Label gameOver;
-
     private double squareWidth;
     private int nSquares;
     private Timeline countDown;
     private final int totalSeconds;  // The duration of game, should not changed
     private int currSeconds;
     private boolean running;
-    private Puzzle puzzle;
 
     private ArrayList<Car> workload;
 
     private final Color boardColor = Color.ORANGE;
 
-    public BoardController() {
+    public BoardController(GameEngine engine) {
+    	this.engine = engine;
         nSquares = 6; //this will be replaced dynamically.
         totalSeconds = currSeconds = 3600;
         workload = new ArrayList<>();
@@ -71,7 +74,7 @@ public class BoardController extends Controller {
         gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
         gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
 
-        GenNewPuzzle();
+        //GenNewPuzzle();
 
         // must call drawBoard after curtain and gameOver are init'd, and after GenNewPuzzle
         drawBoard();
@@ -95,10 +98,25 @@ public class BoardController extends Controller {
                 }
             }
         });
+        
+        buttonNewGame.setOnMouseClicked(new EventHandler<MouseEvent>(){
+            @Override
+            public void handle(MouseEvent event) {
+            	//workload = engine.GetCarList();
+            	engine.getNewPuzzle();
+                boardPane.getChildren().clear();
+                currSeconds = totalSeconds;
+                drawBoard();
+                countDown.playFromStart();
+            }
+
+        });
 
         buttonRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+            	//workload = engine.GetCarList();
+            	engine.RestartPuzzle();
                 boardPane.getChildren().clear();
                 currSeconds = totalSeconds;
                 drawBoard();
@@ -178,9 +196,9 @@ public class BoardController extends Controller {
 
     private void drawCars() {
         workload.clear();
-    	workload = puzzle.GenCarList();
+    	workload = engine.GetCarList();
         for(Car c: workload) {
-            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this);
+            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this, engine);
             Node car = c.getCar();
             boardPane.getChildren().add(car);
             car.toFront();
@@ -220,8 +238,9 @@ public class BoardController extends Controller {
                 String.format("%02d", elapsedSeconds);
     }
 
-    private void GenNewPuzzle(){
-        puzzle = new Puzzle(6,6);
-        puzzle.printBoard();
-    }
+   /* private void GenNewPuzzle(){
+    	//puzzle = engine.getNewPuzzle();
+        //puzzle = new Puzzle(6,6);
+        //puzzle.printBoard();
+    }*/
 }
