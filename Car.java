@@ -201,23 +201,18 @@ public class Car {
 	}
 
 	public void CarMakeMove(int newR, int newC) {
-		double xshift = NtoCoord(newC);
-		double yshift = NtoCoord(newR);
+		double xshift = NtoCoord(newC-c);
+		double yshift = NtoCoord(newR-r);
+		Bounds cBnd = carNode.getBoundsInLocal();
+
+		double xstart = NtoCoord(c)+ cBnd.getWidth()/2+1;
+		double ystart = NtoCoord(r)+cBnd.getHeight()/2+1;
 		
 		//x=carNode.getTran
 		Path p = new Path();
-		//Bounds bounds = carNode.getBoundsInParent();
-		System.out.println(bounds);
-		System.out.println(carNode.getBoundsInLocal());
-		System.out.println(carNode.getLayoutBounds());
-		
-		System.out.println(carNode.getX()+"|"+carNode.getLayoutX()+"|"+carNode.getTranslateX());
-		double x2 = bounds.getMinX();
-		double y2 = bounds.getMinY();
-		p.getElements().add(new MoveTo(NtoCoord(c+1),NtoCoord(r)+1));
-		p.getElements().add(new LineTo(xshift,yshift));
+		p.getElements().add(new MoveTo(xstart,ystart));
+		p.getElements().add(new LineTo(xstart+xshift, ystart+yshift));
 		PathTransition pt = new PathTransition(Duration.millis(4000),p);
-		System.out.println("X" + x +"|Y" + y +"|XShift" + xshift+ "|YShift"+ yshift);
 		pt.setNode(carNode);
 		pt.setPath(p);
 		pt.setCycleCount(1);

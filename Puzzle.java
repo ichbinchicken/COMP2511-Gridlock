@@ -17,8 +17,7 @@ public class Puzzle {
 	private Search search; //Add parameters here for size etc
 	private int Size=6;
 	private int GoalC = Size-1;
-	Random rand = new Random();
-	private int GoalR = rand.nextInt(5); //From 6 to 11 cars
+	private int GoalR =2 ; //Shifted randomly
 
 	
 	private static final int  EMPTY=0;
@@ -32,7 +31,8 @@ public class Puzzle {
 		//arr= new ArrayList<Integer>(n*n);
 		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
 		this.Size=n;
-		Random rand = new Random();
+		Random rand = new Random(System.currentTimeMillis());
+		GoalR = rand.nextInt(5);
 		int maxCars=13;
 		int CarP = 80;
 		int VerP = 60;
@@ -226,7 +226,7 @@ public class Puzzle {
 		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(Size*Size, 0));
 		GameBoard board = new GameBoard(arr,-1);
 
-		Random rand = new Random();
+		Random rand = new Random(System.currentTimeMillis()+1);
 		int type;
 		//int maxCars = rand.nextInt(5)+6; //From 6 to 11 cars
 		int carCount;
