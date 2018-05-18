@@ -2,8 +2,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javafx.application.Application;
-import javafx.stage.Stage;
+
 
 public class GameEngine  {
 	private static final int NumDifficulties=5;
@@ -100,6 +99,10 @@ public class GameEngine  {
 	
 	public int[] getNextMove() {
 		return currPuzzle.getBestMove();
+	}
+	
+	public int getBoardSize() {
+		return currPuzzle.getSize();
 	}
 	
 	

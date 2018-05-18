@@ -4,8 +4,13 @@ import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.animation.PathTransition;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 public class Car {
     private Image IMAGE;
@@ -33,7 +38,7 @@ public class Car {
 	private BoardController boardController;
 	private double min=0;
 	private Bounds bounds;
-	private GameEngine engine;
+	//private GameEngine engine;
 	//private double max;
 
 
@@ -45,8 +50,8 @@ public class Car {
 	}
 
 	//
-	public void frontEndCarConstructor(double squareLength, Bounds b, BoardController bcontroller, GameEngine engine) {
-		this.engine = engine;
+	public void frontEndCarConstructor(double squareLength, Bounds b, BoardController bcontroller) {
+		//this.engine = engine;
 		this.squareLength = squareLength;
 		this.boardController = bcontroller;
 		//Generate the Image
@@ -94,6 +99,10 @@ public class Car {
 	private int CoordtoN(double coord) {
 		//System.out.println(coord + "|");
 		return (int) Math.round(coord/squareLength);
+	}
+	
+	private double NtoCoord(int n) {
+		return n*squareLength;
 	}
 
 	private void addMouseEvent() {
@@ -176,7 +185,7 @@ public class Car {
 	        	r=CoordtoN(carNode.getY()+ carNode.getLayoutY());
 	        	if(r!=oldR || c!=oldC) {
 	        		//Update Coordinates - tell game engine we have moved
-	        		engine.MakeMove(oldR, oldC, r, c);
+	        		boardController.MakeMove(oldR, oldC, r, c);
 	        		
 	        	}
 	        	//c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
@@ -191,8 +200,33 @@ public class Car {
 		return type;
 	}
 
-	public void CarDragOff() {
+	public void CarMakeMove(int newR, int newC) {
+		double xshift = NtoCoord(newC);
+		double yshift = NtoCoord(newR);
+		
+		//x=carNode.getTran
+		Path p = new Path();
+		//Bounds bounds = carNode.getBoundsInParent();
+		System.out.println(bounds);
+		System.out.println(carNode.getBoundsInLocal());
+		System.out.println(carNode.getLayoutBounds());
+		
+		System.out.println(carNode.getX()+"|"+carNode.getLayoutX()+"|"+carNode.getTranslateX());
+		double x2 = bounds.getMinX();
+		double y2 = bounds.getMinY();
+		p.getElements().add(new MoveTo(NtoCoord(c+1),NtoCoord(r)+1));
+		p.getElements().add(new LineTo(xshift,yshift));
+		PathTransition pt = new PathTransition(Duration.millis(4000),p);
+		System.out.println("X" + x +"|Y" + y +"|XShift" + xshift+ "|YShift"+ yshift);
+		pt.setNode(carNode);
+		pt.setPath(p);
+		pt.setCycleCount(1);
+		
+		pt.play();
+
 		//Make the Car Drag Off Screen
+		//carNode.setY(y);
+		//carNode.setX(x);
 	}
 	
 	public int getR() {

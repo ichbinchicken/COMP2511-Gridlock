@@ -1,5 +1,6 @@
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -12,9 +13,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+
 
 import java.util.ArrayList;
 
@@ -22,6 +25,8 @@ import java.util.ArrayList;
 public class BoardController extends Controller {
 	// public static final int  VERT=0;
 	// public static final int HORIZ=1;
+	private static final int  GOALCAR =5;
+
     private GameEngine engine;
 
 	@FXML
@@ -44,7 +49,6 @@ public class BoardController extends Controller {
     private final int totalSeconds;  // The duration of game, should not changed
     private int currSeconds;
     private boolean running;
-
     private ArrayList<Car> workload;
 
     private final Color boardColor = Color.ORANGE;
@@ -198,7 +202,7 @@ public class BoardController extends Controller {
         workload.clear();
     	workload = engine.GetCarList();
         for(Car c: workload) {
-            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this, engine);
+            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this);
             Node car = c.getCar();
             boardPane.getChildren().add(car);
             car.toFront();
@@ -238,6 +242,40 @@ public class BoardController extends Controller {
                 String.format("%02d", elapsedSeconds);
     }
 
+    
+    public void MakeMove(int oldR, int oldC, int r, int c) {
+		if(engine.MakeMove(oldR, oldC, r,c)) {
+
+			//Game has finished
+			Car car = findGoalCar();
+			car.CarMakeMove(car.getR(), engine.getBoardSize()-2);
+			
+		}
+    }
+    
+    public void GetHint() {
+    	int[]  arr = engine.getNextMove();
+    	
+    }
+    private Car findGoalCar() {
+    	for(Car car:workload) {
+    		if(car.getCarType()==GOALCAR) {
+    			return car;
+    		}
+    	}
+    	return null;
+    }
+    
+    private Car findCar(int r,int c) {
+    	for(Car car: workload) {
+    		if(r==car.getR() && c==car.getC()) {
+    			return car;
+    		}
+    	}
+    	return null;
+    }
+    
+    
    /* private void GenNewPuzzle(){
     	//puzzle = engine.getNewPuzzle();
         //puzzle = new Puzzle(6,6);

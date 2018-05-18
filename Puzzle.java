@@ -16,9 +16,9 @@ public class Puzzle {
 	//private int difficulty;
 	private Search search; //Add parameters here for size etc
 	private int Size=6;
-	int GoalC = Size-1;
+	private int GoalC = Size-1;
 	Random rand = new Random();
-	int GoalR = rand.nextInt(5); //From 6 to 11 cars
+	private int GoalR = rand.nextInt(5); //From 6 to 11 cars
 
 	
 	private static final int  EMPTY=0;
@@ -75,6 +75,9 @@ public class Puzzle {
 		
 	}
 	
+	public int getSize() {
+		return Size;
+	}
 	public int getInitMoves() {
 		return minInitMoves;
 	}
