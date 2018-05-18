@@ -54,6 +54,9 @@ public class Puzzle {
 	}
 	
 	
+	/**
+	 * @return [currR,currC,newR,newC]
+	 */
 	public int[] getBestMove() {
 		GameBoard sb = board.copyGameBoard();
 		LinkedList<GameBoard> list = search.SearchBoard(sb);

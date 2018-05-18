@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class GameEngine extends Application {
+public class GameEngine  {
 	private static final int NumDifficulties=5;
 	private static final int NumThreads = 5;
 	private ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(NumDifficulties);
@@ -98,6 +98,12 @@ public class GameEngine extends Application {
 		return currPuzzle.MakeMove(r, c, newR, newC);
 	}
 	
+	public int[] getNextMove() {
+		return currPuzzle.getBestMove();
+	}
+	
+	
+	//Only use for other testing
 	public ArrayList<Car> UIGetPuzzle(){
 		currPuzzle = new Puzzle(6,6);
 		return currPuzzle.GenCarList();
@@ -119,20 +125,7 @@ public class GameEngine extends Application {
 	
 	
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-    	
-        GameEngine engine = new GameEngine();
-        Screen screen = new BoardScreen(primaryStage,engine);
-        screen.show();
 
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-        System.exit(0); //Close all threads when window is closed
-
-    }
     
 
 }
