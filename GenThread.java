@@ -61,7 +61,7 @@ public class GenThread implements Runnable
 
 		try {
 			int minMoves = findSmallestQueue();
-			while(!queueListFull()) {
+			while(!queueListFull() && count < 1000) {
 				if(minMoves==0) {
 					return; //All queues full
 				}
@@ -79,8 +79,11 @@ public class GenThread implements Runnable
 				else if(moves>=HSC) {
 					queue = queueList.get(1);
 				}
-				else {
+				else if(moves>1) {
 					queue = queueList.get(0);
+				}
+				else {
+					continue;
 				}
 				if(!queue.isFull()) {
 					queue.add(puzzle);

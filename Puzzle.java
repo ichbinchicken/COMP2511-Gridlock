@@ -13,12 +13,9 @@ public class Puzzle {
 	private int minInitMoves=0;
 	private int numMoves=0;
 	//private ArrayList<Car> carList=null; //List of frontend cars
-	private int difficulty;
+	//private int difficulty;
 	private Search search; //Add parameters here for size etc
-
-
 	private int Size=6;
-	
 	int GoalC = Size-1;
 	Random rand = new Random();
 	int GoalR = rand.nextInt(5); //From 6 to 11 cars
@@ -35,23 +32,25 @@ public class Puzzle {
 		//arr= new ArrayList<Integer>(n*n);
 		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
 		this.Size=n;
-		int moves=0;
+		Random rand = new Random();
+		int maxCars=13;
+		int CarP = 80;
+		int VerP = 60;
 		GameBoard newBoard=null;
 		search=new Search(GoalR);
-		while(moves < minMoves) {
-			board = GenSolution(13,80,60);
-			//board.printBoard();
-
-			newBoard = search.GenBoard(board);
-			//System.out.println("NEW BOARD STATE");
-			moves=newBoard.getMoves();
+		//while(moves < minMoves) {
+		if(minMoves<7) {
+			maxCars -= 	rand.nextInt(7);
+			CarP = 60;
+		}
+		board = GenSolution(maxCars,CarP,VerP);
+		newBoard = search.GenBoard(board);
+		minInitMoves=newBoard.getMoves();
 			//System.out.println(moves);
 
-		}
-		minInitMoves = moves;
 		initial = newBoard.copyGameBoard(); //For reset
 		board = newBoard;
-		GenCarList();
+		//GenCarList();
 	}
 	
 	
@@ -83,7 +82,6 @@ public class Puzzle {
 	
 	//Return isGoal if only move left is red to end
 	private boolean isGoalState() {
-		int type;
 		int i=GoalC;
 		int id = board.getRC(GoalR, i );
 		while(id==0) {
@@ -176,7 +174,6 @@ public class Puzzle {
 			i++;
 		}
 		i=0;
-		int botleft = Size*(Size-1);
 		int col=0;
 		int row=0;
 		while(i<arr.size()) {

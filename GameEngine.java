@@ -8,9 +8,9 @@ import javafx.stage.Stage;
 public class GameEngine extends Application {
 	private static final int NumDifficulties=5;
 	private static final int NumThreads = 5;
-	ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(NumDifficulties);
-	BoundedQueue<Puzzle> queue=null;
-	
+	private ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(NumDifficulties);
+	private BoundedQueue<Puzzle> queue=null;
+	private ExecutorService executor;
 	int currDifficulty=0;
 
 
@@ -24,18 +24,15 @@ public class GameEngine extends Application {
 		}
 		//Start up 5 background threads to quickly generate a few puzzles
 		//One thread will be running until all puzzles are full
-		ExecutorService executor = Executors.newFixedThreadPool(NumThreads);
+		executor = Executors.newFixedThreadPool(NumThreads);
 		for(int i=0;i<NumThreads;i++) {
 			Runnable run = new GenThread(queueList,1, 6, 2);
 			executor.execute(run);
 		}
-        executor.shutdown();
-        while(!executor.isTerminated()) {
-       	executor.isTerminated();
-        }
         Runnable run = new GenThread(queueList,100000, 6, 2);
-		Thread t = new Thread(run);
-		t.start();
+        executor.execute(run);
+		//Thread t = new Thread(run);
+		//t.start();
 
 
         //queue = queueList.get(NumDifficulties-1);
@@ -50,25 +47,36 @@ public class GameEngine extends Application {
 		}
         queue = queueList.get(currDifficulty);
         if(queue.isEmpty()) {
-        	//Generate more boards quickly
-    		//ExecutorService executor = Executors.newFixedThreadPool(NumThreads);
-    		//for(int i=0;i<NumThreads;i++) {
-    		//	Runnable run = new GenThread(queueList,10, 6, 2);
-    		//	executor.execute(run);
-    		//}
-            //executor.shutdown();
-            //while(!executor.isTerminated()) {
-            //	executor.isTerminated();
-            //}
+        	/*Generate more boards quickly
+    		ExecutorService executor = Executors.newFixedThreadPool(NumThreads);
+    		for(int i=0;i<NumThreads;i++) {
+    			Runnable run = new GenThread(queueList,10, 6, 2);
+    			executor.execute(run);
+    		}
+            executor.shutdown();
+            while(!executor.isTerminated()) {
+            	executor.isTerminated();
+            }*/
         	
     		Runnable run = new GenThread(queueList,10, 6, 2);
-    		Thread t = new Thread(run);
-    		t.start();
+    		executor.execute(run); //Add new thread
 	        if(queue.isEmpty()) {
-	        	currDifficulty--;
-	        	return getNewPuzzle();
+	        	if(currDifficulty!=0) { //Give an easier puzzle
+	        		currDifficulty--;
+	        		return getNewPuzzle();
 	        	
+	        	}
+	        	else {
+	        		while(queue.isEmpty()) {
+	        			try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							System.out.println("Exception Catch");
+						}
+	        		}
+	        	}
 	        }
+	        
         }
         currPuzzle = queue.remove();
 		//Runnable run = new GenThread(queueList,10, 6, 2);
@@ -122,6 +130,7 @@ public class GameEngine extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        System.exit(0); //Close all threads when window is closed
 
     }
     
