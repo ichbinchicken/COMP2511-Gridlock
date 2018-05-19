@@ -362,6 +362,17 @@ public class BoardController extends Controller {
     	return null;
     }
     
+    public void AddCartoPane(Node c) {
+    	boardPane.getChildren().remove(c);
+        boardPane.getChildren().add(c);
+        c.toFront();
+    }
+    
+    
+	public int[] FindMoves(int r, int c) {
+		return engine.FindMoves(r, c);
+	}
+
     
    /* private void GenNewPuzzle(){
     	//puzzle = engine.getNewPuzzle();

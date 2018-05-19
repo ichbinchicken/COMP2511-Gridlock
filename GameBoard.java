@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameBoard { //Representation of the board
 		 private ArrayList<Integer> arr; //Current 
@@ -153,76 +154,84 @@ public class GameBoard { //Representation of the board
 				int[] array = {newR,newC,r,c};
 				return array;
 		}
-						
-				/*	}
-					if(direc==VCAR||direc==VTRUCK) {
-						r = newR+(size/2);
-						c = newC;
-					}
-					else {
-						c = newC+(size/2);
-						r = newR;
-					}
-					//r = trarr.get(size/2);
-					//c= tcarr.get(size/2);
-				}
-				else {
-					r=trarr.get(0);
-					c=tcarr.get(0);
-					if(direc==VCAR||direc==VTRUCK) {
-						newR = r-(size/2);
-						c=newC;
-					}
-					else {
-						newC = c-(size/2);
-						r=newR;
-					}*/
-					//newR=trarr.get(size/2);
-					//newC=tcarr.get(size/2);
-				//}
-			//}
-			//else {
-			//	if(upleft=true) {
-					
-				//}
-			//}
-			/*if(!topLeft) {
-				r = trarr.get(0);
-				c = tcarr.get(0);
-			}
-			else {
-				r = trarr.get(size/2);
-				c = tcarr.get(size/2);
-			}
-			if(trarr.get(0)==trarr.get(size-1)) { //Same row
-				if(topLeft) {
-					newC=c-size/2;
-				}
-				else {
-					newC = c+size/2;
-				}
-				newR=r;
-			}
-			else {
-				if(topLeft) {
-					newR=r-size/2;
-				}
-				else {
-				newR = r+size/2;
-				}
-				newC=c;
-			}*/
-			//return {r,c,newR,newC};
-
-		//}
+				
 
 		
 		
+		/**
+		 * @param r Top Left Row
+		 * @param c Top Left Column
+		 * @return Array with spaces in each direction in form {left, up, right,down}
+		 */
+		public int[] FindMoves(int r, int c) {
+			int id = arr.get(RCtoI(r,c));
+			int size = getSize(id);
+			int cRight = c+(size-1);
+			int rDown = r+(size-1);
+			int flag=0;
+			boolean[] flags = {false,false,false,false};
+			boolean[] goalF = {true,false,true,false};
+			boolean[] goalH = {false,true,false,true};
+			int[] spaces = {0,0,0,0};
+			//Go left
+			int j=1;
+			while(!Arrays.equals(flags, goalF) && !Arrays.equals(flags, goalH)) {
+				switch(id) {
+				case HCAR: case HTRUCK: case GOALCAR:
+					if(c-j >= 0 && (arr.get(RCtoI(r,c-j))==0) && flags[0]==false) { //LEFT
+						spaces[0]++;
+					}
+					else {
+						flags[0]=true;
+					}
+					if(cRight+j < n && (arr.get(RCtoI(r,cRight+j))==0) && flags[2] ==false) { //RIGHT
+						spaces[2]++;
+					}
+					else {
+						flags[2]=true;
+					}
+					break;
+				case VCAR: case VTRUCK:
+					if(r-j >=0 && (arr.get(RCtoI(r-j,c))==0) && flags[1]==false){
+						spaces[1]++;
+					}
+					else {
+						flags[1]=true;
+					}
+					if(rDown+j < n && arr.get(RCtoI(rDown+j,c))==0 && flags[3]==false){
+						spaces[3]++;
+					}
+					else {
+						flags[3]=true;
+					}
+					break;
+				
+				
+				}
+				j++;
+			}
+			return spaces;
+		}
 		@Override
 		public int hashCode() {
 			return arr.hashCode();
 		}
 		
+		
+		
+		private int getSize(int id) { //Check this for scaling
+			if(id==EMPTY) {
+				return 0;
+			}
+			else if(id==VCAR || id== HCAR || id == GOALCAR) {
+				return 2;
+			}
+			else if(id==VTRUCK || id == HTRUCK) {
+				return 3;
+			}
+			return -1;
+		}
+
 		
 		public GameBoard copyGameBoard() {
 			ArrayList<Integer> newarr = new ArrayList<Integer>(arr);

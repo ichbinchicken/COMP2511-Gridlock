@@ -336,5 +336,10 @@ public class Puzzle {
 	public void printBoard() {
 		board.printBoard();
 	}
+	
+	
+	public int[] FindMoves(int r, int c) {
+		return board.FindMoves(r, c);
+	}
 
 }

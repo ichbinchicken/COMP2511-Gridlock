@@ -117,6 +117,7 @@ public class GameEngine  {
 		//return currPuzzle.GenCarList();
 	}
 	
+	//Get number of moves made on this puzzle
 	public int getMoves() {
 		return currPuzzle.getMoves();
 	}
@@ -125,7 +126,10 @@ public class GameEngine  {
 		return currPuzzle.getInitMoves();
 	}
 
-	
+	public int[] FindMoves(int r, int c) {
+		return currPuzzle.FindMoves(r, c);
+	}
+
 	
 
 

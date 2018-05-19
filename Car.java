@@ -43,6 +43,10 @@ public class Car {
 	private Bounds bounds;
 	private int initR;
 	private int initC;
+	private int[] moveSpace = {0,0,0,0};
+	private double totalOffset=0;
+	private Bounds moveBounds;
+	double initX,initY;
 	//private GameEngine engine;
 	//private double max;
 
@@ -71,8 +75,8 @@ public class Car {
 		}
 		carNode = new ImageView(IMAGE);
 	    //max=squareLength*6;
-        double initX = c*squareLength+1;
-        double initY = r*squareLength+1;
+        initX = c*squareLength+1;
+        initY = r*squareLength+1;
 	    carNode.setX(initX);
 	    carNode.setY(initY);
 	    bounds = new BoundingBox(b.getMinX()-initX, b.getMinY()-initY, b.getWidth(), b.getHeight());
@@ -129,6 +133,15 @@ public class Car {
                     //System.out.println("Car X: "+x+" Y: "+y);
 
                     carNode.toFront();
+                    
+                    moveSpace = boardController.FindMoves(r, c);
+                    int left = moveSpace[0];
+                    int up = moveSpace[1];
+                    int down = moveSpace[3];
+                    int right = moveSpace[2];
+                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY, 
+                    		squareLength*(length+right+left), squareLength*(length+up+down));
+
                 }
 
             }
@@ -137,25 +150,30 @@ public class Car {
         carNode.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+
                 BoardController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating()) {
                     dragging = true;
                     if (type == VERCAR || type == VERTRUCK) {
-                        if (!boardController.checkIntersection(Car.this)) {
+                    	//Check spaces up and down
                             double offsetY = event.getSceneY() - mousey;
+                            event.getY();
+
                             double newY = y + offsetY;
-                            y = setCoord(newY, bounds.getMinY(), bounds.getMaxY() - length * squareLength);
+                            y = setCoord(newY, moveBounds.getMinY(), moveBounds.getMaxY() - length * squareLength);
                             //carNode.relocate(x, y);
+
                             carNode.setLayoutY(y);
-                        }
+                        //}
                     } else {
 
                         if (!boardController.checkIntersection(Car.this)) {
                             double offsetX = event.getSceneX() - mousex;
 
                             double newX = x + offsetX;
-                            x = setCoord(newX, bounds.getMinX(), bounds.getMaxX() - length * squareLength);
-                            //carNode.relocate(x, y);
+                            //x = setCoord(newX, bounds.getMinX(), bounds.getMaxX() - length * squareLength);
+                            x = setCoord(newX, moveBounds.getMinX(), moveBounds.getMaxX() - length * squareLength);
+
                             carNode.setLayoutX(x);
                         }
                     }
@@ -221,11 +239,9 @@ public class Car {
 		double xshift = NtoCoord(newC-c);
 		double yshift = NtoCoord(newR-r);
 		Bounds cBnd = carNode.getBoundsInLocal();
-		//System.out.println("R|" + r + "C|"+ c);
 		double xstart = NtoCoord(initC)+cBnd.getWidth()/2+1; //I dont know why NtoCoord(c) shouldnt be added
 		double ystart = NtoCoord(initR)+cBnd.getHeight()/2+1;
-		//System.out.println("xstart"+ xstart + "Ystart" + ystart);
-		//x=carNode.getTran
+		//carNode.relocate(NtoCoord(c), NtoCoord(r));
 		Path p = new Path();
 		p.getElements().add(new MoveTo(xstart,ystart));
 		p.getElements().add(new LineTo(xstart+xshift, ystart+yshift));
@@ -244,6 +260,9 @@ public class Car {
 			public void handle(ActionEvent event) {
                 BoardController boardController = boardReference.get();
 				if (boardController != null) {
+					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
+					carNode.setTranslateY(0);
+					carNode.relocate(NtoCoord(c)+1, NtoCoord(r)+1); //Must set coordinates again to cancel translate
                     boardController.MakeMove(oldR, oldC, r, c);
                     boardController.AnimatingFin();
                 }
@@ -251,9 +270,6 @@ public class Car {
 
 		});
 
-		//Make the Car Drag Off Screen
-		//carNode.setY(y);
-		//carNode.setX(x);
 	}
 	
 	public int getR() {
