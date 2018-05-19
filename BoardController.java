@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
@@ -41,9 +42,10 @@ public class BoardController extends Controller {
     
     @FXML
     private Button buttonNewGame;
-    
     @FXML
     private Button buttonHint;
+    @FXML
+    private Button buttonMenu;
 
     private Rectangle curtain;
     private Label message;
@@ -58,11 +60,13 @@ public class BoardController extends Controller {
     private boolean GameWon = false;
     private boolean animating = false;
     private Car goalCar;
+    private Main main;
 
     private final Color boardColor = Color.ORANGE;
 
-    public BoardController(GameEngine engine) {
+    public BoardController(Stage s, GameEngine engine, Main main) {
         this.engine = engine;
+        this.main = main;
         nSquares = 6; //this will be replaced dynamically.
         totalSeconds = currSeconds = 3600;
         workload = new ArrayList<>();
@@ -158,6 +162,14 @@ public class BoardController extends Controller {
         		}
         	}
         });
+        
+        buttonMenu.setOnAction(new EventHandler<ActionEvent>() {
+        	@Override public void handle(ActionEvent e) {
+        		main.ShowMenuScreen();
+        	}
+        });
+
+
 
         // init timer
         countDown = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {

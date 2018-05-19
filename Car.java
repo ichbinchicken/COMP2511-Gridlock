@@ -167,7 +167,6 @@ public class Car {
                         //}
                     } else {
 
-                        if (!boardController.checkIntersection(Car.this)) {
                             double offsetX = event.getSceneX() - mousex;
 
                             double newX = x + offsetX;
@@ -175,7 +174,6 @@ public class Car {
                             x = setCoord(newX, moveBounds.getMinX(), moveBounds.getMaxX() - length * squareLength);
 
                             carNode.setLayoutX(x);
-                        }
                     }
                     mousey = event.getSceneY();
                     mousex = event.getSceneX();

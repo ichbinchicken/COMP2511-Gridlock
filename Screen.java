@@ -11,6 +11,8 @@ public abstract class Screen {
     private Stage stage;
     private FXMLLoader fxmlLoader;
     private Controller controller;
+    private Scene scene;
+    
 
     public Screen(String fxmlFile, String screenTile, Stage stage) {
         this.fxmlFile = fxmlFile;
@@ -25,7 +27,7 @@ public abstract class Screen {
         fxmlLoader.setController(controller);
         try {
             Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root, 800, 600);
+            scene = new Scene(root, 800, 600);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -33,6 +35,23 @@ public abstract class Screen {
         }
 
 
+    }
+    
+    public void loadShowSettings() {
+        stage.setTitle(screenTile);
+        fxmlLoader.setController(controller);
+        try {
+            Parent root = fxmlLoader.load();
+            scene = new Scene(root, 800, 600);
+            //stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void StageShow() {
+    	stage.setScene(scene);
+    	stage.show();
     }
 
     public void setController(Controller controller) {
