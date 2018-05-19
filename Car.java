@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.animation.PathTransition;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.LineTo;
@@ -113,16 +114,18 @@ public class Car {
 	    carNode.setOnMousePressed(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-	        	mousex = event.getSceneX();
-	        	mousey = event.getSceneY();
-
-	        	x = carNode.getLayoutX();
-	        	y = carNode.getLayoutY();
-                //x = getCoordInParent(X);
-                //y = getCoordInParent(Y);
-                //System.out.println("Car X: "+x+" Y: "+y);
-	        	
-	        	carNode.toFront();
+	        	if(!boardController.GetAnimating()) {
+		        	mousex = event.getSceneX();
+		        	mousey = event.getSceneY();
+	
+		        	x = carNode.getLayoutX();
+		        	y = carNode.getLayoutY();
+	                //x = getCoordInParent(X);
+	                //y = getCoordInParent(Y);
+	                //System.out.println("Car X: "+x+" Y: "+y);
+		        	
+		        	carNode.toFront();
+	        	}
 	
 	        }
 	    });
@@ -130,31 +133,33 @@ public class Car {
 	    carNode.setOnMouseDragged(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-	        	dragging=true;
-	        	if(type==VERCAR || type == VERTRUCK) {
-                    if(!boardController.checkIntersection(Car.this)) {
-		        		double offsetY = event.getSceneY() - mousey;
-		        		double newY = y + offsetY;
-		        		y = setCoord(newY, bounds.getMinY(), bounds.getMaxY()-length*squareLength);
-		        		//carNode.relocate(x, y);
-		        		carNode.setLayoutY(y);
-	        		}
-	        	}
-	        	else {
-
-	        		if(!boardController.checkIntersection(Car.this)) {
-                        double offsetX = event.getSceneX() - mousex;
-
-                        double newX = x + offsetX;
-                        x = setCoord(newX, bounds.getMinX(), bounds.getMaxX()-length*squareLength);
-		        		//carNode.relocate(x, y);
-                        carNode.setLayoutX(x);
-	        		}
-	        	}
-	    		mousey = event.getSceneY();
-	    		mousex = event.getSceneX();	        		
+	        	if(!boardController.GetAnimating()) {
+		        	dragging=true;
+		        	if(type==VERCAR || type == VERTRUCK) {
+	                    if(!boardController.checkIntersection(Car.this)) {
+			        		double offsetY = event.getSceneY() - mousey;
+			        		double newY = y + offsetY;
+			        		y = setCoord(newY, bounds.getMinY(), bounds.getMaxY()-length*squareLength);
+			        		//carNode.relocate(x, y);
+			        		carNode.setLayoutY(y);
+		        		}
+		        	}
+		        	else {
 	
-	    		event.consume();
+		        		if(!boardController.checkIntersection(Car.this)) {
+	                        double offsetX = event.getSceneX() - mousex;
+	
+	                        double newX = x + offsetX;
+	                        x = setCoord(newX, bounds.getMinX(), bounds.getMaxX()-length*squareLength);
+			        		//carNode.relocate(x, y);
+	                        carNode.setLayoutX(x);
+		        		}
+		        	}
+		    		mousey = event.getSceneY();
+		    		mousex = event.getSceneX();	        		
+		
+		    		event.consume();
+	        	}
 	
 	        }
 	    });
@@ -162,39 +167,41 @@ public class Car {
 	    carNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-	            dragging = false;
+	        	if(!boardController.GetAnimating()) {
+	        		dragging = false;
+	        	}
 	        }
 	    });
 	    
 	    carNode.setOnMouseReleased(new EventHandler<MouseEvent>() {
 	        @Override
 	        public void handle(MouseEvent event) {
-
-                x = carNode.getLayoutX();
-                y = carNode.getLayoutY();
-                //x = getCoordInParent(X);
-                //y = getCoordInParent(Y);
-
-	        	double scaledY=Math.round(y/squareLength) * squareLength;
-	        	double scaledX=Math.round(x/squareLength) * squareLength;
-
-	        	//carNode.relocate(scaledX, scaledY);
-
-	        	carNode.setLayoutX(scaledX);
-	        	carNode.setLayoutY(scaledY);
-	        	event.consume();
-	        	int oldR = r;
-	        	int oldC = c;
-	        	c=CoordtoN(carNode.getX()+ carNode.getLayoutX());
-	        	r=CoordtoN(carNode.getY()+ carNode.getLayoutY());
-	        	if(r!=oldR || c!=oldC) {
-	        		//Update Coordinates - tell game engine we have moved
-	        		boardController.MakeMove(oldR, oldC, r, c);
-	        		
-	        	}
-	        	//c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
-	        	//System.out.println("Coords r,c" + r+ ","+ c );
+	        	if(!boardController.GetAnimating() && dragging==true) {
+	                x = carNode.getLayoutX();
+	                y = carNode.getLayoutY();
+	                //x = getCoordInParent(X);
+	                //y = getCoordInParent(Y);
 	
+		        	double scaledY=Math.round(y/squareLength) * squareLength;
+		        	double scaledX=Math.round(x/squareLength) * squareLength;
+	
+		        	//carNode.relocate(scaledX, scaledY);
+	
+		        	carNode.setLayoutX(scaledX);
+		        	carNode.setLayoutY(scaledY);
+		        	event.consume();
+		        	int oldR = r;
+		        	int oldC = c;
+		        	c=CoordtoN(carNode.getX()+ carNode.getLayoutX());
+		        	r=CoordtoN(carNode.getY()+ carNode.getLayoutY());
+		        	if(r!=oldR || c!=oldC) {
+		        		//Update Coordinates - tell game engine we have moved
+		        		boardController.MakeMove(oldR, oldC, r, c);
+		        		
+		        	}
+		        	//c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
+		        	//System.out.println("Coords r,c" + r+ ","+ c );
+	        	}
 	        }
 	    });
 	    
@@ -203,20 +210,20 @@ public class Car {
 	public int getCarType() {
 		return type;
 	}
-
-	public void CarMakeMove(int newR, int newC) {
+	//Make move to newR and newC - animTime in ms
+	public void CarMakeAnimatingMove(int newR, int newC, int animTime) {
 		double xshift = NtoCoord(newC-c);
 		double yshift = NtoCoord(newR-r);
 		Bounds cBnd = carNode.getBoundsInLocal();
-		System.out.println("R|" + r + "C|"+ c);
+		//System.out.println("R|" + r + "C|"+ c);
 		double xstart = NtoCoord(initC)+cBnd.getWidth()/2+1; //I dont know why NtoCoord(c) shouldnt be added
 		double ystart = NtoCoord(initR)+cBnd.getHeight()/2+1;
-		System.out.println("xstart"+ xstart + "Ystart" + ystart);
+		//System.out.println("xstart"+ xstart + "Ystart" + ystart);
 		//x=carNode.getTran
 		Path p = new Path();
 		p.getElements().add(new MoveTo(xstart,ystart));
 		p.getElements().add(new LineTo(xstart+xshift, ystart+yshift));
-		PathTransition pt = new PathTransition(Duration.millis(4000),p);
+		PathTransition pt = new PathTransition(Duration.millis(animTime),p);
 		pt.setNode(carNode);
 		pt.setPath(p);
 		pt.setCycleCount(1);
@@ -226,7 +233,14 @@ public class Car {
 		int oldC=c;
 		r=newR;
 		c=newC;
-		boardController.MakeMove(oldR, oldC, r, c);
+		pt.setOnFinished(new EventHandler<ActionEvent>(){
+			@Override
+			public void handle(ActionEvent event) {
+				boardController.MakeMove(oldR, oldC, r, c);
+				boardController.AnimatingFin();
+			}
+
+		});
 
 		//Make the Car Drag Off Screen
 		//carNode.setY(y);

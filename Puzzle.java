@@ -65,7 +65,7 @@ public class Puzzle {
 		sb = list.removeFirst();
 		
 		int[] arr = sb.compareBoard(board);
-		System.out.println("ARRAY" + arr[0] + " " + arr[1] + " " + arr[2] + " "+ arr[3]);
+		//System.out.println("ARRAY" + arr[0] + " " + arr[1] + " " + arr[2] + " "+ arr[3]);
 		return arr;
 	}
 	
@@ -139,6 +139,7 @@ public class Puzzle {
 		default:
 			break;
 		}
+		board.printBoard();
 		numMoves++;
 		return isGoalState();
 		//if(isGoalState()) 

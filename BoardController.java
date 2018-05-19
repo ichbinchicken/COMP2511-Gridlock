@@ -54,6 +54,7 @@ public class BoardController extends Controller {
     private boolean running;
     private ArrayList<Car> workload;
     private boolean GameWon = false;
+    private boolean animating = false;
 
     private final Color boardColor = Color.ORANGE;
 
@@ -117,6 +118,8 @@ public class BoardController extends Controller {
                 boardPane.getChildren().clear();
                 currSeconds = totalSeconds;
                 drawBoard();
+                GameWon=false;
+                animating=false;
                 countDown.playFromStart();
             }
 
@@ -126,10 +129,12 @@ public class BoardController extends Controller {
             @Override
             public void handle(MouseEvent event) {
             	//workload = engine.GetCarList();
+            	
             	engine.RestartPuzzle();
                 boardPane.getChildren().clear();
                 currSeconds = totalSeconds;
                 GameWon=false;
+                animating=false;
                 drawBoard();
                 countDown.playFromStart();
             }
@@ -141,13 +146,14 @@ public class BoardController extends Controller {
         	public void handle (MouseEvent event) {
         		System.out.println("HINT");
         		int[] arr =engine.getNextMove();
-        		System.out.println(arr);
+        		//System.out.println(arr);
         		Car car =findCar(arr[0], arr[1]);
         		if(car!=null) {
-        			car.CarMakeMove(arr[2], arr[3]);
+        			animating=true;
+        			car.CarMakeAnimatingMove(arr[2], arr[3], 2000);
         		}
         		else {
-        			System.out.println("R"+ arr[0] + " " + "C"+arr[1]);
+        			//System.out.println("R"+ arr[0] + " " + "C"+arr[1]);
         		}
         	}
         });
@@ -273,16 +279,22 @@ public class BoardController extends Controller {
 				GameWon=true;
 				//Game has finished
 				Car car = findGoalCar();
-				car.CarMakeMove(car.getR(), engine.getBoardSize()-2);
+	    		animating=true;
+				car.CarMakeAnimatingMove(car.getR(), engine.getBoardSize()-2, 500);
 				//return true;
 			}
 			//return false;
     	}
     }
     
-    public void GetHint() {
-    	int[]  arr = engine.getNextMove();
-    	
+
+    
+    public boolean GetAnimating() {
+    	return animating;
+    }
+    
+    public void AnimatingFin() {
+    	animating=false;
     }
     private Car findGoalCar() {
     	for(Car car:workload) {

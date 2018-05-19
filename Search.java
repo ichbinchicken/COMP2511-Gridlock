@@ -138,8 +138,8 @@ public class Search {
 		GameBoard prev = closedMap.get(state.getArr());
         int step = (prev == null) ? 0 : FindPrev(prev,list) + 1;
         list.add(state);
-        System.out.println(step);
-        state.printBoard();
+        //System.out.println(step);
+       // state.printBoard();
         //System.out.println((state));
         return step;
 

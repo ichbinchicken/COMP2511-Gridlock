@@ -106,7 +106,7 @@ public class GameBoard { //Representation of the board
 						//Move down or right
 					}
 					
-					System.out.println("tC" +tc + "tR" + tr);
+					//System.out.println("tC" +tc + "tR" + tr);
 					trarr.add( tr);
 					tcarr.add(tc);
 					if(first==false) {
@@ -125,15 +125,42 @@ public class GameBoard { //Representation of the board
 			
 			int size = trarr.size(); //How far move +1
 			//if(direc == VCAR || direc== VTRUCK ) {
-				if(upleft=true) {
+				if(upleft==true) {
 					newR=trarr.get(0);
 					newC=tcarr.get(0);
+					r=trarr.get(size-1);
+					c=tcarr.get(size-1);
+					switch(direc) {
+					case VCAR: r=r-1; break;
+					case VTRUCK: r=r-2; break;
+					case HCAR: case GOALCAR: c=c-1;  break;
+					case HTRUCK: c=c-2; break;
+					
+					}
+				}
+				else {
+					r=trarr.get(0);
+					c=tcarr.get(0);
+					newR=trarr.get(size-1);
+					newC=tcarr.get(size-1);
+					switch(direc) {
+						case VCAR: newR=newR-1; break;
+						case VTRUCK: newR=newR-2; break;
+						case HCAR: case GOALCAR: newC=newC-1;  break;
+						case HTRUCK: newC=newC-2; break;
+					}
+				}
+				int[] array = {newR,newC,r,c};
+				return array;
+		}
+						
+				/*	}
 					if(direc==VCAR||direc==VTRUCK) {
-						r = newR+size-2;
+						r = newR+(size/2);
 						c = newC;
 					}
 					else {
-						c = newC+size-2;
+						c = newC+(size/2);
 						r = newR;
 					}
 					//r = trarr.get(size/2);
@@ -143,16 +170,16 @@ public class GameBoard { //Representation of the board
 					r=trarr.get(0);
 					c=tcarr.get(0);
 					if(direc==VCAR||direc==VTRUCK) {
-						newR = r-(size-2);
+						newR = r-(size/2);
 						c=newC;
 					}
 					else {
-						newC = c-(size-2);
+						newC = c-(size/2);
 						r=newR;
-					}
+					}*/
 					//newR=trarr.get(size/2);
 					//newC=tcarr.get(size/2);
-				}
+				//}
 			//}
 			//else {
 			//	if(upleft=true) {
@@ -185,11 +212,9 @@ public class GameBoard { //Representation of the board
 				}
 				newC=c;
 			}*/
-			int[] array = {r,c,newR,newC};
-			return array;
 			//return {r,c,newR,newC};
 
-		}
+		//}
 
 		
 		
@@ -205,6 +230,10 @@ public class GameBoard { //Representation of the board
 			return n;
 		}
 
+		private static final int  EMPTY=0;
+		private static final int  GOALCAR =5;
+		private static final int  HCAR=4; //Horizontal sliding
+		private static final int  HTRUCK =3;
 		private static final int  VCAR =1; //Horizontal sliding
 		private static final int  VTRUCK =2; //Horizontal sliding
 		
