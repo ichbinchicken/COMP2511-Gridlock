@@ -173,7 +173,7 @@ public class BoardController extends Controller {
         countDown.setCycleCount(Animation.INDEFINITE);
         countDown.playFromStart(); // initialise the timer at the first time
 
-        winCountDown = new Timeline(new KeyFrame(Duration.millis(animTime), new EventHandler<ActionEvent>() {
+        winCountDown = new Timeline(new KeyFrame(Duration.millis(animTime-43), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 stopGame(GAME_WON);
