@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.concurrent.*;
 
 import org.junit.Test;
-
+@Deprecated
 @SuppressWarnings("unused")
 public class SearchTest {
 

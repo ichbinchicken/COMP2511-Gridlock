@@ -1,6 +1,5 @@
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,7 +12,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -26,6 +24,9 @@ public class BoardController extends Controller {
 	// public static final int  VERT=0;
 	// public static final int HORIZ=1;
 	private static final int  GOALCAR =5;
+    private static final String GAME_OVER = "GAME OVER";
+    private static final String GAME_WON = "YOU WIN!";
+    private static final int animTime = 500;
 
     private GameEngine engine;
 
@@ -45,21 +46,23 @@ public class BoardController extends Controller {
     private Button buttonHint;
 
     private Rectangle curtain;
-    private Label gameOver;
+    private Label message;
     private double squareWidth;
     private int nSquares;
     private Timeline countDown;
+    private Timeline winCountDown;
     private final int totalSeconds;  // The duration of game, should not changed
     private int currSeconds;
     private boolean running;
     private ArrayList<Car> workload;
     private boolean GameWon = false;
     private boolean animating = false;
+    private Car goalCar;
 
     private final Color boardColor = Color.ORANGE;
 
     public BoardController(GameEngine engine) {
-    	this.engine = engine;
+        this.engine = engine;
         nSquares = 6; //this will be replaced dynamically.
         totalSeconds = currSeconds = 3600;
         workload = new ArrayList<>();
@@ -76,20 +79,18 @@ public class BoardController extends Controller {
         curtain.setY(0);
 
         // init game over message
-        gameOver = new Label("GAME OVER");
-        gameOver.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
-        gameOver.setTextFill(Color.WHITESMOKE);
+        message = new Label("");
+        message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
+        message.setTextFill(Color.WHITESMOKE);
         // place the label in the centre
-        gameOver.layoutXProperty().bind(boardPane.widthProperty().subtract(gameOver.widthProperty()).divide(2));
-        gameOver.layoutYProperty().bind(boardPane.heightProperty().subtract(gameOver.heightProperty()).divide(2));
+        message.layoutXProperty().bind(boardPane.widthProperty().subtract(message.widthProperty()).divide(2));
+        message.layoutYProperty().bind(boardPane.heightProperty().subtract(message.heightProperty()).divide(2));
 
         //GenNewPuzzle();
 
-        // must call drawBoard after curtain and gameOver are init'd, and after GenNewPuzzle
+        // must call drawBoard after curtain and message are init'd, and after GenNewPuzzle
         drawBoard();
 
-
-        
         // init buttons
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -165,27 +166,31 @@ public class BoardController extends Controller {
                 currSeconds--;
                 totalTime.setText(convertTime(currSeconds));
                 if (currSeconds <= 0) {
-                    countDown.stop();
-                    buttonPause.setDisable(true);
-                    curtain.setVisible(true);
-                    curtain.toFront();
-                    gameOver.setVisible(true);
-                    gameOver.toFront();
+                    stopGame(GAME_OVER);
                 }
             }
         }));
-
         countDown.setCycleCount(Animation.INDEFINITE);
         countDown.playFromStart(); // initialise the timer at the first time
+
+        winCountDown = new Timeline(new KeyFrame(Duration.millis(animTime), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                stopGame(GAME_WON);
+            }
+        }));
+        winCountDown.setCycleCount(1);
+
     }
 
     private void drawBoard() {
         running = true;
         buttonPause.setDisable(false);
         buttonPause.setText("Pause");
+        buttonHint.setDisable(false);
         totalTime.setText(convertTime(totalSeconds));
         curtain.setVisible(false);
-        gameOver.setVisible(false);
+        message.setVisible(false);
 
         Rectangle[][] rec = new Rectangle[nSquares][nSquares];
 
@@ -204,7 +209,7 @@ public class BoardController extends Controller {
         drawBorder();
         drawCars();
         boardPane.getChildren().add(curtain);
-        boardPane.getChildren().add(gameOver);
+        boardPane.getChildren().add(message);
     }
 
 
@@ -236,12 +241,17 @@ public class BoardController extends Controller {
             Node car = c.getCar();
             boardPane.getChildren().add(car);
             car.toFront();
+            if (c.getCarType() == GOALCAR) {
+                goalCar = c;
+            }
         }
 
     }
 
     public boolean checkIntersection(Car car) {
         Bounds bounds = car.getCar().getBoundsInParent();
+        //Bounds bounds = new BoundingBox(tmpBounds.getMinX()-0.5, tmpBounds.getMinY()-0.5,
+        //        tmpBounds.getWidth()+1, tmpBounds.getHeight()+1);
         for (Car c: workload) {
             if (c == car) {
                 continue;
@@ -253,6 +263,39 @@ public class BoardController extends Controller {
         }
         return false;
     }
+
+    private void stopGame(String msg) {
+        countDown.stop();
+        buttonPause.setDisable(true);
+        buttonHint.setDisable(true);
+        curtain.setVisible(true);
+        curtain.toFront();
+        message.setText(msg);
+        message.setVisible(true);
+        message.toFront();
+    }
+    /*
+    public Bounds getFreeZone(Car car) {
+        Bounds bounds = car.getCar().getBoundsInParent();
+        double minX = bounds.getMinX();
+        double minY = bounds.getMinY();
+        double maxX = bounds.getMaxX();
+        double maxY = bounds.getMaxY();
+        for (Car c: workload) {
+            if (c == car) {
+                continue;
+            }
+            Bounds cbounds = c.getCar().getBoundsInParent();
+            if (cbounds.getMaxX() >= minX &&) {
+                minX = cbounds.getMaxX();
+            }
+
+            if(cbounds.intersects(bounds)) {
+            }
+        }
+
+    }
+    */
 
     private String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
@@ -276,11 +319,10 @@ public class BoardController extends Controller {
     public void MakeMove(int oldR, int oldC, int r, int c) {
     	if(!GameWon) {
 			if(engine.MakeMove(oldR, oldC, r,c)) {
-				GameWon=true;
 				//Game has finished
-				Car car = findGoalCar();
 	    		animating=true;
-				car.CarMakeAnimatingMove(car.getR(), engine.getBoardSize()-2, 500);
+				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, animTime);
+                GameWon=true;
 				//return true;
 			}
 			//return false;
@@ -295,7 +337,12 @@ public class BoardController extends Controller {
     
     public void AnimatingFin() {
     	animating=false;
+    	if (GameWon) {
+            winCountDown.playFromStart();
+        }
     }
+
+    /*
     private Car findGoalCar() {
     	for(Car car:workload) {
     		if(car.getCarType()==GOALCAR) {
@@ -304,7 +351,8 @@ public class BoardController extends Controller {
     	}
     	return null;
     }
-    
+    */
+
     private Car findCar(int r,int c) {
     	for(Car car: workload) {
     		if(r==car.getR() && c==car.getC()) {
