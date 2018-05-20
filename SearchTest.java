@@ -153,7 +153,7 @@ public class SearchTest {
 	//}
 	
 	@Test
-	public void ThreadTester() {
+	public void ThreadTester() throws InterruptedException {
 		int NumDifficulties=5;
 		ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(5);
 		BoundedQueue<Puzzle> queue=null;

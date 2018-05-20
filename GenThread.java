@@ -24,6 +24,7 @@ public class GenThread implements Runnable
       @param count the number of greetings to produce
    */
 	public GenThread(ArrayList<BoundedQueue<Puzzle>> queueList, int count, int size, int minMoves) {
+		System.out.println("New Thread");
 		this.queueList = queueList;
 		this.count = count;
 		this.size=size;
@@ -61,7 +62,7 @@ public class GenThread implements Runnable
 
 		try {
 			int minMoves = findSmallestQueue();
-			while(!queueListFull() && count < 1000) {
+			while(!queueListFull() || count > 1000) {
 				if(minMoves==0) {
 					return; //All queues full
 				}
@@ -87,14 +88,19 @@ public class GenThread implements Runnable
 				}
 				if(!queue.isFull()) {
 					queue.add(puzzle);
-					System.out.println(moves);
+					//System.out.println(moves);
 					i++;
+					//System.out.println("Thread i "+i +"Count"+count);
 				}
 				if(i>count) {
+					System.out.println("End Thread");
+
 					return;
 				}
 		        Thread.sleep((int) (Math.random() * DELAY));
 			}
+			System.out.println("End Thread");
+
 			return;
 		}
 	catch (InterruptedException exception){	

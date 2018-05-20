@@ -1,8 +1,14 @@
+import java.util.concurrent.locks.*;
+
+
 /** 
     A first-in, first-out bounded collection of objects. 
 */ 
+
+
 public class BoundedQueue<E>
 { 
+	//Monitor monitor = new Monitor();
    /** 
        Constructs an empty queue. 
        @param capacity the maximum capacity of the queue 
@@ -13,6 +19,7 @@ public class BoundedQueue<E>
       head = 0; 
       tail = 0; 
       size = 0;
+      this.capacity = capacity;
    } 
 
    /** 
@@ -20,47 +27,69 @@ public class BoundedQueue<E>
        @return the object that has been removed from the queue
        @precondition !isEmpty()
    */ 
-   public E remove() 
+   public E remove() throws InterruptedException
    { 
-      if (debug) System.out.print("removeFirst");
-      @SuppressWarnings("unchecked")
-	E r = (E) elements[head]; 
-      if (debug) System.out.print(".");
-      head++;
-      if (debug) System.out.print(".");
-      size--;
-      if (head == elements.length) 
-      {
-         if (debug) System.out.print(".");
-         head = 0; 
-      }
-      if (debug) 
-         System.out.println("head=" + head + ",tail=" + tail 
-            + ",size=" + size);
-      return r; 
+	  lock.lock();
+	  try {
+		  while(size==0) {
+			  notEmpty.await();
+		  }
+	      if (debug) System.out.print("removeFirst");
+	      @SuppressWarnings("unchecked")
+		E r = (E) elements[head]; 
+	      if (debug) System.out.print(".");
+	      head++;
+	      if (debug) System.out.print(".");
+	      size--;
+	      if (head == elements.length) 
+	      {
+	         if (debug) System.out.print(".");
+	         head = 0; 
+	      }
+	      if (debug) 
+	         System.out.println("head=" + head + ",tail=" + tail 
+	            + ",size=" + size);
+	      notFull.signal();
+	      return r; 
+	  }
+	  finally {
+		  lock.unlock();
+	  }
    } 
 
    /** 
        Appends an object at the tail. 
        @param newValue the object to be appended 
+ * @throws InterruptedException 
        @precondition !isFull();
    */ 
-   public void add(E newValue) 
+   public void add(E newValue) throws InterruptedException 
    { 
-      if (debug) System.out.print("add");
-      elements[tail] = newValue; 
-      if (debug) System.out.print(".");
-      tail++;
-      if (debug) System.out.print(".");
-      size++;
-      if (tail == elements.length) 
-      {
-         if (debug) System.out.print(".");
-         tail = 0; 
-      }
-      if (debug) 
-         System.out.println("head=" + head + ",tail=" + tail 
-            + ",size=" + size);
+	  lock.lock();
+	  try {
+		  while(size==capacity) {
+			  notFull.await();
+		  }
+	  
+	      if (debug) System.out.print("add");
+	      elements[tail] = newValue; 
+	      if (debug) System.out.print(".");
+	      tail++;
+	      if (debug) System.out.print(".");
+	      size++;
+	      if (tail == elements.length) 
+	      {
+	         if (debug) System.out.print(".");
+	         tail = 0; 
+	      }
+	      if (debug) 
+	         System.out.println("head=" + head + ",tail=" + tail 
+	            + ",size=" + size);
+	      notEmpty.signal();
+	  } finally {
+		  lock.unlock();
+	  }
+	  
    } 
 
    public boolean isFull() 
@@ -79,8 +108,13 @@ public class BoundedQueue<E>
    }
 
    private Object[] elements; 
+   private int capacity;
    private int head; 
    private int tail; 
    private int size;
    private boolean debug;
+   private final Lock lock = new ReentrantLock();
+   private final Condition notFull = lock.newCondition();
+   private final Condition notEmpty = lock.newCondition();
+
 }

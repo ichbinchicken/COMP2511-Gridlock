@@ -11,7 +11,7 @@ public abstract class Screen {
     private Stage stage;
     private FXMLLoader fxmlLoader;
     private Controller controller;
-    private Scene scene;
+    protected Scene scene;
     
 
     public Screen(String fxmlFile, String screenTile, Stage stage) {
@@ -56,5 +56,9 @@ public abstract class Screen {
 
     public void setController(Controller controller) {
         this.controller = controller;
+    }
+    
+    public Scene getScene() {
+    	return scene;
     }
 }

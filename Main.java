@@ -1,12 +1,13 @@
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+//import javafx.fxml.FXMLLoader;
+//import javafx.scene.Parent;
+//import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 	Screen gameScreen;
 	Screen menuScreen;
+	GameEngine engine;
 	public Main() {
 		
 	}
@@ -20,7 +21,7 @@ public class Main extends Application {
     	//primaryStage.show();
     	
         primaryStage.setResizable(false);
-        GameEngine engine = new GameEngine();
+        engine = new GameEngine();
         gameScreen = new BoardScreen(primaryStage,engine, this);
         menuScreen = new MenuScreen(primaryStage,engine, this);
         gameScreen.loadShowSettings();

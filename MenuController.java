@@ -6,8 +6,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.MouseEvent;
-import javafx.stage.Stage;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+
 
 public class MenuController extends Controller{
 	private Main main;
@@ -23,9 +25,23 @@ public class MenuController extends Controller{
 
         buttonStartGame.setOnAction(new EventHandler<ActionEvent>() {
         	@Override public void handle(ActionEvent e) {
+        		engine.getNewPuzzle();
         		main.ShowGameScreen();
         	}
         });
+        
+        sliderDifficulty.valueProperty().addListener(new ChangeListener<Number>() {
+        	public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+        		System.out.println(new_val);
+        		double difficulty = sliderDifficulty.getValue();
+        		System.out.println("DIFF"+difficulty);
+
+        		engine.SetDifficulty((int)difficulty);
+        	}
+        });
+        
+        //buttonExit.setOnAction(actionEvent -> Platform.exit());
 	}
 
         

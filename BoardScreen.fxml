@@ -61,7 +61,7 @@
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
                   </font>
                </Label>
-               <Label layoutX="82.0" layoutY="130.0" text="0">
+               <Label fx:id="movesMade" layoutX="82.0" layoutY="130.0" text="0">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
                   </font>

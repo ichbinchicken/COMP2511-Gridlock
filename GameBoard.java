@@ -168,7 +168,6 @@ public class GameBoard { //Representation of the board
 			int size = getSize(id);
 			int cRight = c+(size-1);
 			int rDown = r+(size-1);
-			int flag=0;
 			boolean[] flags = {false,false,false,false};
 			boolean[] goalF = {true,false,true,false};
 			boolean[] goalH = {false,true,false,true};

@@ -1,7 +1,6 @@
 import javafx.fxml.FXML;
 import javafx.stage.Stage;
 import javafx.scene.control.TableView;
-import javafx.application.Application;
 
 public class BoardScreen extends Screen {
 	//private GameEngine engine;
@@ -17,6 +16,14 @@ public class BoardScreen extends Screen {
         controller = new BoardController(s,engine, main);
         super.setController(controller);
         stage = s;
+    }
+    
+    @Override
+    public void StageShow() {
+    	BoardController bcontroller = (BoardController) controller;
+    	bcontroller.GetNewBoard();
+    	stage.setScene(scene);
+    	stage.show();
     }
 
 

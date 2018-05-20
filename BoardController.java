@@ -36,6 +36,8 @@ public class BoardController extends Controller {
     @FXML
     private Label totalTime;
     @FXML
+    private Label movesMade;
+    @FXML
     private Button buttonPause;
     @FXML
     private Button buttonRestart;
@@ -119,13 +121,7 @@ public class BoardController extends Controller {
             @Override
             public void handle(MouseEvent event) {
             	//workload = engine.GetCarList();
-            	engine.getNewPuzzle();
-                boardPane.getChildren().clear();
-                currSeconds = totalSeconds;
-                drawBoard();
-                GameWon=false;
-                animating=false;
-                countDown.playFromStart();
+            	GetNewBoard();
             }
 
         });
@@ -142,6 +138,8 @@ public class BoardController extends Controller {
                 animating=false;
                 drawBoard();
                 countDown.playFromStart();
+                movesMade.setText("0");
+
             }
         });
         
@@ -149,7 +147,6 @@ public class BoardController extends Controller {
         buttonHint.setOnMouseClicked(new EventHandler <MouseEvent>() {
         	@Override
         	public void handle (MouseEvent event) {
-        		System.out.println("HINT");
         		int[] arr =engine.getNextMove();
         		//System.out.println(arr);
         		Car car =findCar(arr[0], arr[1]);
@@ -339,6 +336,8 @@ public class BoardController extends Controller {
 			}
 			//return false;
     	}
+    	movesMade.setText(Integer.toString(engine.getMoves()));
+
     }
     
 
@@ -385,7 +384,19 @@ public class BoardController extends Controller {
 		return engine.FindMoves(r, c);
 	}
 
-    
+    public void GetNewBoard() {
+    	engine.getNewPuzzle();
+        boardPane.getChildren().clear();
+        currSeconds = totalSeconds;
+        drawBoard();
+        GameWon=false;
+        animating=false;
+        countDown.playFromStart();
+        movesMade.setText("0");
+
+    }
+	
+	
    /* private void GenNewPuzzle(){
     	//puzzle = engine.getNewPuzzle();
         //puzzle = new Puzzle(6,6);

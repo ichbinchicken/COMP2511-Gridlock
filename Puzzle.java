@@ -99,7 +99,7 @@ public class Puzzle {
 			id = board.getRC(GoalR,i);
 		}
 		if(id==GOALCAR) {
-			System.out.println("GOAL STATE");
+			//System.out.println("GOAL STATE");
 			return true;
 		}
 		return false;
@@ -139,7 +139,7 @@ public class Puzzle {
 		default:
 			break;
 		}
-		board.printBoard();
+		//board.printBoard();
 		numMoves++;
 		return isGoalState();
 		//if(isGoalState()) 

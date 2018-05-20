@@ -18,12 +18,12 @@ public class Car {
     private Image IMAGE;
     private ImageView carNode;
 	private static final int  GOALCAR=5;
-	private static final int  HORCAR=4;
-	private static final int  HORTRUCK=3;
+	//private static final int  HORCAR=4;
+	//private static final int  HORTRUCK=3;
 	private static final int  VERCAR=1;
 	private static final int  VERTRUCK=2;
-	private static final int X = 0;
-    private static final int Y = 0;
+	//private static final int X = 0;
+    //private static final int Y = 0;
 
 	private int r;
     private int c;
@@ -152,7 +152,8 @@ public class Car {
             public void handle(MouseEvent event) {
 
                 BoardController boardController = boardReference.get();
-                if (boardController!= null && !boardController.GetAnimating()) {
+                if (boardController!= null && !boardController.GetAnimating() && moveBounds!=null) {
+
                     dragging = true;
                     if (type == VERCAR || type == VERTRUCK) {
                     	//Check spaces up and down
