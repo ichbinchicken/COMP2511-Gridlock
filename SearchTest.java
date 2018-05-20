@@ -152,7 +152,7 @@ public class SearchTest {
 		//System.out.println("ENDBOARD\\\\");
 	//}
 	
-	@Test
+	/*@Test
 	public void ThreadTester() throws InterruptedException {
 		int NumDifficulties=5;
 		ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(5);
@@ -176,7 +176,7 @@ public class SearchTest {
         queue = queueList.get(NumDifficulties-1);
         Puzzle node = queue.remove();
         node.printBoard();
-	}
+	}*/
 	
 	
 /*	@Test
@@ -236,6 +236,33 @@ public class SearchTest {
 		//System.out.println("ENDBOARD\\\\");
 	}**/
 	
+	
+	
+		@Test
+
+		public void SizeTest() {
+			Puzzle p = new Puzzle(7,10);
+			System.out.println(p.getInitMoves());
+			p.printBoard();
+			int[] arr = p.getBestMove();
+			p.MakeMove(arr[0], arr[1], arr[2], arr[3]);
+			arr = p.getBestMove();
+			p.printBoard();
+
+			p.MakeMove(arr[0], arr[1], arr[2], arr[3]);
+			arr = p.getBestMove();
+			p.printBoard();
+
+			p.MakeMove(arr[0], arr[1], arr[2], arr[3]);
+			p.printBoard();
+
+			
+	        
+	        /*queue = queueList.get(NumDifficulties-1);
+	        Puzzle node = queue.remove();
+	        node.printBoard();*/
+		}
+
 	
 
 }

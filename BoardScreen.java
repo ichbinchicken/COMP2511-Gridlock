@@ -1,11 +1,11 @@
-import javafx.fxml.FXML;
+//import javafx.fxml.FXML;
 import javafx.stage.Stage;
-import javafx.scene.control.TableView;
+//import javafx.scene.control.TableView;
 
 public class BoardScreen extends Screen {
 	//private GameEngine engine;
-    @FXML
-    private TableView table;
+    //@FXML
+    //private TableView table;
 
     private Controller controller;
     private Stage stage;

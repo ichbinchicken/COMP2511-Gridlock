@@ -21,6 +21,7 @@ public class Search {
 	Queue<GameBoard> queue;
 	int Cmax = 6;
 	int Rmax = 6;
+	int Size = 6;
 	int GoalC = Cmax-1;
 	int GoalR = 2;
 	//int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
@@ -31,7 +32,11 @@ public class Search {
 	
 	
 	//private GameBoard arr;
-	public Search(int GoalR) {
+	public Search(int GoalR, int Size) {
+		this.Cmax=Size;
+		this.Rmax=Size;
+		this.Size=Size;
+		GoalC = Size-1;
 		this.GoalR= GoalR;
 	}
 
@@ -51,7 +56,7 @@ public class Search {
 		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
 		Queue<GameBoard> solveList = new LinkedList<GameBoard>();
 		ArrayList<Integer> arr = board.getArr();
-		GameBoard curr = new GameBoard(arr,-1);
+		GameBoard curr = new GameBoard(arr,-1, Size);
 		addQueue(curr,null);
 		boolean solved = false;
 		//gen=true;

@@ -65,27 +65,35 @@ public class BoundedQueue<E>
    */ 
    public void add(E newValue) throws InterruptedException 
    { 
+	  boolean flag=false;
 	  lock.lock();
 	  try {
 		  while(size==capacity) {
 			  notFull.await();
 		  }
-	  
-	      if (debug) System.out.print("add");
-	      elements[tail] = newValue; 
-	      if (debug) System.out.print(".");
-	      tail++;
-	      if (debug) System.out.print(".");
-	      size++;
-	      if (tail == elements.length) 
-	      {
-	         if (debug) System.out.print(".");
-	         tail = 0; 
-	      }
-	      if (debug) 
-	         System.out.println("head=" + head + ",tail=" + tail 
-	            + ",size=" + size);
-	      notEmpty.signal();
+		 // for( Object item : elements) {
+			  //if(item.equals(newValue)) {
+			//	  flag=true;
+			//	  break;
+			 // }
+		  //}
+		  if(flag!=true) {
+			  if (debug) System.out.print("add");
+		      elements[tail] = newValue; 
+		      if (debug) System.out.print(".");
+		      tail++;
+		      if (debug) System.out.print(".");
+		      size++;
+		      if (tail == elements.length) 
+		      {
+		         if (debug) System.out.print(".");
+		         tail = 0; 
+		      }
+		      if (debug) 
+		         System.out.println("head=" + head + ",tail=" + tail 
+		            + ",size=" + size);
+		      notEmpty.signal();
+		  }
 	  } finally {
 		  lock.unlock();
 	  }

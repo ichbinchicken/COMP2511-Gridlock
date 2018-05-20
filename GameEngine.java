@@ -11,7 +11,8 @@ public class GameEngine  {
 	private BoundedQueue<Puzzle> queue=null;
 	private ExecutorService executor;
 	private boolean GameWin = false;
-	private int currDifficulty=0;
+	private int currDifficulty=2;
+	private int size=6;
 
 
 	Puzzle currPuzzle;
@@ -25,11 +26,11 @@ public class GameEngine  {
 		//Start up 5 background threads to quickly generate a few puzzles
 		//One thread will be running until all puzzles are full
 		executor = Executors.newFixedThreadPool(NumThreads);
-        Runnable run = new GenThread(queueList,10000, 6, 2);
+        Runnable run = new GenThread(queueList,100000, size, 2);
         executor.execute(run);
 
 		for(int i=0;i<NumThreads-1;i++) {
-			run = new GenThread(queueList,10000, 6, 2);
+			run = new GenThread(queueList,100000, size, 2);
 			executor.execute(run);
 		}
 		//Thread t = new Thread(run);
@@ -46,7 +47,7 @@ public class GameEngine  {
 		if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
 			currPuzzle.RestartPuzzle();
 			try {
-				if(!queue.isFull()) {
+				if(!queue.isFull() ) {
 					queue.add(currPuzzle);
 				}
 				//currPuzzle = queue.remove();
@@ -104,6 +105,10 @@ public class GameEngine  {
 		        		}
 		        	}
 		        }*/
+		        System.out.println("QUEUE IS EMPTY - TRY EASIER GAME");
+		        if(currDifficulty!=0) {
+		        	queue = queueList.get(currDifficulty-1);
+		        }
 		        
 	        }
 	        try {
@@ -188,6 +193,8 @@ public class GameEngine  {
 			currDifficulty=0;
 		}
 	}
+	
+	
 
 
     

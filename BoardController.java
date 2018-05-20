@@ -69,7 +69,7 @@ public class BoardController extends Controller {
     public BoardController(Stage s, GameEngine engine, Main main) {
         this.engine = engine;
         this.main = main;
-        nSquares = 6; //this will be replaced dynamically.
+        nSquares = engine.getBoardSize(); //this will be replaced dynamically.
         totalSeconds = currSeconds = 3600;
         workload = new ArrayList<>();
         running = true; // this is to check whether the game is paused. Initially, it's running.
@@ -397,6 +397,9 @@ public class BoardController extends Controller {
     }
 	
 	
+    
+    
+    
    /* private void GenNewPuzzle(){
     	//puzzle = engine.getNewPuzzle();
         //puzzle = new Puzzle(6,6);

@@ -33,9 +33,9 @@ public class MenuController extends Controller{
         sliderDifficulty.valueProperty().addListener(new ChangeListener<Number>() {
         	public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {
-        		System.out.println(new_val);
+        		//System.out.println(new_val);
         		double difficulty = sliderDifficulty.getValue();
-        		System.out.println("DIFF"+difficulty);
+        		//System.out.println("DIFF"+difficulty);
 
         		engine.SetDifficulty((int)difficulty);
         	}

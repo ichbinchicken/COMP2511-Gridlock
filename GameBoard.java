@@ -4,14 +4,15 @@ import java.util.Arrays;
 public class GameBoard { //Representation of the board
 		 private ArrayList<Integer> arr; //Current 
 		 private int moves=-1;
-		 private int n=6;
+		 private int Size;
 
 		 //int GoalRow;
 		 
 		 
-		public GameBoard(ArrayList<Integer> arr, int moves) {
+		public GameBoard(ArrayList<Integer> arr, int moves, int Size) {
 			this.arr = arr;
 			this.moves = moves;
+			this.Size = Size;
 		}
 		
 		public int get(int i) {
@@ -47,7 +48,7 @@ public class GameBoard { //Representation of the board
 		}
 		
 		private int RCtoI(int r, int c) {
-			return r * n + c;
+			return r * Size + c;
 		}
 		
 		public int size() {
@@ -69,8 +70,8 @@ public class GameBoard { //Representation of the board
 
 		public void printBoard() {
 			
-			for(int i =0; i<n*n;i++) {
-				if(i%n==0) {
+			for(int i =0; i<Size*Size;i++) {
+				if(i%Size==0) {
 				    System.out.print('\n');
 				}
 			    System.out.format(" %2d", arr.get(i));
@@ -97,8 +98,8 @@ public class GameBoard { //Representation of the board
 				type2 = oldB.get(i);
 				if(type1!=type2) {
 					
-					int tc=i%(n);
-					int tr=(int)Math.floor(i/(n));
+					int tc=i%(Size);
+					int tr=(int)Math.floor(i/(Size));
 					if(type1==0) {
 						//Move up or left
 						
@@ -183,7 +184,7 @@ public class GameBoard { //Representation of the board
 					else {
 						flags[0]=true;
 					}
-					if(cRight+j < n && (arr.get(RCtoI(r,cRight+j))==0) && flags[2] ==false) { //RIGHT
+					if(cRight+j < Size && (arr.get(RCtoI(r,cRight+j))==0) && flags[2] ==false) { //RIGHT
 						spaces[2]++;
 					}
 					else {
@@ -197,7 +198,7 @@ public class GameBoard { //Representation of the board
 					else {
 						flags[1]=true;
 					}
-					if(rDown+j < n && arr.get(RCtoI(rDown+j,c))==0 && flags[3]==false){
+					if(rDown+j < Size && arr.get(RCtoI(rDown+j,c))==0 && flags[3]==false){
 						spaces[3]++;
 					}
 					else {
@@ -217,6 +218,17 @@ public class GameBoard { //Representation of the board
 		}
 		
 		
+		@Override
+		public boolean equals(Object obj) {
+			if(obj==null) {
+				return false;
+			}
+			GameBoard other = (GameBoard) obj;
+			if(arr.equals(other.getArr())) {
+				return true;
+			}
+			return false;
+		}
 		
 		private int getSize(int id) { //Check this for scaling
 			if(id==EMPTY) {
@@ -234,7 +246,7 @@ public class GameBoard { //Representation of the board
 		
 		public GameBoard copyGameBoard() {
 			ArrayList<Integer> newarr = new ArrayList<Integer>(arr);
-			GameBoard n= new GameBoard(newarr,moves);
+			GameBoard n= new GameBoard(newarr,moves, Size);
 			return n;
 		}
 

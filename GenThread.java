@@ -13,7 +13,7 @@ public class GenThread implements Runnable
 	private static final int  BACH =9;
 	private static final int  HSC =5;
 	private static final int  SC =2;
-	int size=6;
+	int size;
 	int minMoves=SC;
 
 
@@ -88,7 +88,7 @@ public class GenThread implements Runnable
 				}
 				if(!queue.isFull()) {
 					queue.add(puzzle);
-					//System.out.println(moves);
+					System.out.println(moves);
 					i++;
 					//System.out.println("Thread i "+i +"Count"+count);
 				}

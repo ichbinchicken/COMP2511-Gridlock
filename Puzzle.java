@@ -31,13 +31,14 @@ public class Puzzle {
 		//arr= new ArrayList<Integer>(n*n);
 		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
 		this.Size=n;
+		GoalC = Size-1;
 		Random rand = new Random(System.currentTimeMillis());
-		GoalR = rand.nextInt(5);
-		int maxCars=13;
+		GoalR = rand.nextInt(Size-1);
+		int maxCars=20;
 		int CarP = 80;
 		int VerP = 60;
 		GameBoard newBoard=null;
-		search=new Search(GoalR);
+		search=new Search(GoalR,n);
 		//while(moves < minMoves) {
 		if(minMoves<7) {
 			maxCars -= 	rand.nextInt(7);
@@ -50,6 +51,7 @@ public class Puzzle {
 
 		initial = newBoard.copyGameBoard(); //For reset
 		board = newBoard;
+		//board.printBoard();
 		//GenCarList();
 	}
 	
@@ -139,8 +141,9 @@ public class Puzzle {
 		default:
 			break;
 		}
-		//board.printBoard();
+		board.printBoard();
 		numMoves++;
+		
 		return isGoalState();
 		//if(isGoalState()) 
 	}
@@ -229,7 +232,7 @@ public class Puzzle {
 	//In general - hardest solutions roughly ~13, 80, 60
 	public GameBoard GenSolution(int maxCars, int carProb, int verProb) {
 		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(Size*Size, 0));
-		GameBoard board = new GameBoard(arr,-1);
+		GameBoard board = new GameBoard(arr,-1, Size);
 
 		Random rand = new Random(System.currentTimeMillis()+1);
 		int type;
@@ -245,8 +248,8 @@ public class Puzzle {
 		int j=0;
 		while(j<100 && carCount <= maxCars) {
 			type=1;
-			r = rand.nextInt(5);
-			c = rand.nextInt(5);
+			r = rand.nextInt(Size-1);
+			c = rand.nextInt(Size-1);
 			int r1 = rand.nextInt(101);
 			int r2 = rand.nextInt(101);
 			if(r1>carProb) {
@@ -265,7 +268,10 @@ public class Puzzle {
 					type=VCAR;
 				}
 			}
-			if(addCar(board,r,c,type)) {
+			if(r == GoalR && (type==HCAR || type ==HTRUCK)) {
+				//Dont add car 
+			}
+			else if(addCar(board,r,c,type)) {
 				carCount++;
 			}
 			j++;
@@ -340,6 +346,23 @@ public class Puzzle {
 	
 	public int[] FindMoves(int r, int c) {
 		return board.FindMoves(r, c);
+	}
+
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null) {
+			return false;
+		}
+		Puzzle other = (Puzzle) obj;
+		if(initial.equals(other.getInitial())){
+			return true;
+		}
+		return false;
+	}
+	
+	public GameBoard getInitial(){
+		return initial;
 	}
 
 }
