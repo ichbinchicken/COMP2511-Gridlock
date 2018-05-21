@@ -46,7 +46,7 @@
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="16.0" />
                   </font>
                </Button>
-               <Label layoutX="24.0" layoutY="90.0" prefHeight="16.0" prefWidth="56.0" text="Time:">
+               <Label layoutX="24.0" layoutY="90.0" prefHeight="16.0" prefWidth="56.0" text="Countdown:">
                   <font>
                      <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
                   </font>

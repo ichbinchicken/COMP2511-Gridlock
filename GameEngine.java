@@ -225,7 +225,7 @@ public class GameEngine  {
 			case STORY:
 				return currPuzzle.getInitMoves()+10;
 			case FREEPLAY:
-				return 3600*60;
+				return 10;//3600*60;
 			default:
 				return 0;
 		}
