@@ -9,6 +9,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.stage.Stage;
 
 
 public class MenuController extends Controller{
@@ -29,7 +30,15 @@ public class MenuController extends Controller{
         		main.ShowGameScreen();
         	}
         });
-        
+
+        buttonExit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage s = (Stage) buttonExit.getScene().getWindow();
+                s.close();
+            }
+        });
+
         sliderDifficulty.valueProperty().addListener(new ChangeListener<Number>() {
         	public void changed(ObservableValue<? extends Number> ov,
                 Number old_val, Number new_val) {

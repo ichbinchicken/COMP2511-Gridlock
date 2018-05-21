@@ -43,7 +43,7 @@
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
-      <Button fx:id="buttonStartGame11" layoutX="512.0" layoutY="477.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Exit">
+      <Button fx:id="buttonExit" layoutX="512.0" layoutY="477.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Exit">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
