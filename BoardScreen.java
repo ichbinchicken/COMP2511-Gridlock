@@ -11,7 +11,7 @@ public class BoardScreen extends Screen {
     private Stage stage;
 
     public BoardScreen(Stage s, GameEngine engine, Main main) {
-        super("BoardScreen.fxml", "Gradlock", s);
+        super("view/BoardScreen.fxml", "Gradlock", s);
     	//this.engine = engine;
         controller = new BoardController(s,engine, main);
         super.setController(controller);

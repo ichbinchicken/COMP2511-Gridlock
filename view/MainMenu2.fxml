@@ -9,53 +9,53 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="buttonSize" layoutX="374.0" layoutY="201.0" mnemonicParsing="false" text="Size" />
-      <ImageView fitHeight="202.0" fitWidth="568.0" layoutX="116.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="buttonSize" layoutX="378.0" layoutY="200.0" mnemonicParsing="false" text="Size" />
+      <ImageView fitHeight="202.0" fitWidth="568.0" layoutX="107.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/Logo.JPG" />
          </image>
       </ImageView>
-      <Text layoutX="316.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Single Player">
+      <Text layoutX="315.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Single Player">
+         <font>
+            <Font size="27.0" />
+         </font>
+      </Text>
+      <Slider fx:id="sliderDifficulty" blockIncrement="1.0" layoutX="293.0" layoutY="273.0" majorTickUnit="1.0" max="4.0" minorTickCount="0" prefHeight="25.0" prefWidth="215.0" showTickMarks="true" snapToTicks="true" />
+      <Label fx:id="labelDifficulty" alignment="CENTER" layoutX="289.0" layoutY="251.0" prefHeight="17.0" prefWidth="223.0" text="School Certificate" textAlignment="CENTER" />
+      <Text layoutX="150.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mode">
          <font>
             <Font size="30.0" />
          </font>
       </Text>
-      <Slider fx:id="sliderDifficulty" blockIncrement="1.0" layoutX="322.0" layoutY="286.0" majorTickUnit="1.0" max="4.0" minorTickCount="0" showTickMarks="true" snapToTicks="true" />
-      <Label fx:id="labelDifficulty" alignment="CENTER" layoutX="321.0" layoutY="262.0" prefHeight="17.0" prefWidth="140.0" text="School Certificate" textAlignment="CENTER" />
-      <Text layoutX="76.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Game Mode">
-         <font>
-            <Font size="30.0" />
-         </font>
-      </Text>
-      <Button fx:id="buttonStartGame" layoutX="290.0" layoutY="375.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Start Game">
+      <Button fx:id="buttonStartGame" layoutX="298.0" layoutY="412.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Start Game">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
-      <ToggleButton fx:id="toggleTimed" layoutX="272.0" layoutY="327.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" selected="true" text="Timed">
+      <ToggleButton fx:id="toggleTimed" layoutX="285.0" layoutY="341.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" selected="true" text="Timed">
          <toggleGroup>
             <ToggleGroup fx:id="Group" />
          </toggleGroup></ToggleButton>
-      <ToggleButton fx:id="toggleFreePlay" layoutX="450.0" layoutY="327.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="69.0" text="Free Play" toggleGroup="$Group" />
-      <ToggleButton fx:id="toggleStory" layoutX="361.0" layoutY="326.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Story" toggleGroup="$Group" />
-      <Button fx:id="buttonStartGame1" layoutX="104.0" layoutY="477.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Multiplayer">
+      <ToggleButton fx:id="toggleFreePlay" layoutX="491.0" layoutY="341.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="76.0" text="Free Play" toggleGroup="$Group" />
+      <ToggleButton fx:id="toggleStory" layoutX="387.0" layoutY="341.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Story" toggleGroup="$Group" />
+      <Button fx:id="buttonMultiplayer" layoutX="68.0" layoutY="477.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Multiplayer">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
-      <Button fx:id="buttonExit" layoutX="512.0" layoutY="477.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Exit">
+      <Button fx:id="buttonExit" layoutX="531.0" layoutY="476.0" mnemonicParsing="false" prefHeight="55.0" prefWidth="203.0" text="Exit">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
       <Button fx:id="buttonHelp" layoutX="758.0" layoutY="21.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" text="?" />
-      <ToggleButton fx:id="toggleSpeaker" layoutX="715.0" layoutY="21.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="28.0" text="🔊" />
-      <Text layoutX="116.0" layoutY="312.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty">
+      <ToggleButton fx:id="toggleSpeaker" layoutX="710.0" layoutY="21.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="35.0" text="🔊" />
+      <Text layoutX="126.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty">
          <font>
             <Font size="30.0" />
          </font>
       </Text>
-      <Text layoutX="174.0" layoutY="225.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Size">
+      <Text layoutX="160.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Size">
          <font>
             <Font size="30.0" />
          </font>
