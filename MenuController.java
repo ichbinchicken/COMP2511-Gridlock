@@ -35,9 +35,11 @@ public class MenuController extends Controller{
         		Mode mode = Mode.TIMED;
         		if(t==toggleFreePlay) {
         			mode = Mode.FREEPLAY;
+
         		}
         		else if(t==toggleTimed) {
         			mode = Mode.TIMED;
+
         		}
         		else if(t==toggleStory) {
         			mode = Mode.STORY;
@@ -50,7 +52,24 @@ public class MenuController extends Controller{
         		main.ShowGameScreen();
         	}
         });
-
+        
+        ModeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+        	public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle newToggle) {
+        		if(newToggle!=toggleStory ) {
+        				sliderDifficulty.setDisable(false);
+                		double difficulty = sliderDifficulty.getValue();
+                		String text = getDiffString(difficulty);
+                		labelDifficulty.setText(text);
+        				
+        			}
+        		if(newToggle==toggleStory) {
+        			if(newToggle.isSelected())
+        			sliderDifficulty.setDisable(true);
+        			labelDifficulty.setText("Story Mode");
+        		}
+        	}
+        });
+        
         buttonExit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -64,28 +83,7 @@ public class MenuController extends Controller{
                 Number old_val, Number new_val) {
         		//System.out.println(new_val);
         		double difficulty = sliderDifficulty.getValue();
-        		int diff = (int) Math.round(difficulty);
-        		String text;
-        		switch(diff) {
-        		case 0:
-        			text="School Certificate";
-        			break;
-        		case 1:
-        			text="Higher School Certificate";
-        			break;
-        		case 2:
-        			text="Bachelor Degree";
-        			break;
-        		case 3:
-        			text="Masters Degree";
-        			break;
-				case 4:
-					text="Doctoral Degree";
-					break;
-				default:
-					text="SC";
-				}
-        		
+        		String text = getDiffString(difficulty);
         		labelDifficulty.setText(text);
 
         		engine.SetDifficulty((int)difficulty);
@@ -95,7 +93,31 @@ public class MenuController extends Controller{
         //buttonExit.setOnAction(actionEvent -> Platform.exit());
 	}
 
-        
+        private String getDiffString(double difficulty) {
+    		int diff = (int) Math.round(difficulty);
+    		String text;
+    		switch(diff) {
+    		case 0:
+    			text="School Certificate";
+    			break;
+    		case 1:
+    			text="Higher School Certificate";
+    			break;
+    		case 2:
+    			text="Bachelor Degree";
+    			break;
+    		case 3:
+    			text="Masters Degree";
+    			break;
+			case 4:
+				text="Doctoral Degree";
+				break;
+			default:
+				text="SC";
+			}
+    		return text;
+
+        }
         
         @FXML
         private Button buttonStartGame;

@@ -26,8 +26,8 @@ public class BoardController extends Controller {
 	// public static final int  VERT=0;
 	// public static final int HORIZ=1;
 	private static final int  GOALCAR =5;
-    private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN"};
-    private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your moves: ", "Min moves: ", "Your grade: "};
+    private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
+    private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
     private static final int animTime = 500;
 
     private GameEngine engine;
@@ -299,7 +299,7 @@ public class BoardController extends Controller {
 
     private void stopGame(String msg) {
         double boardHeight = boardPane.getPrefHeight();
-        double boardWidth = boardPane.getWidth();
+        //double boardWidth = boardPane.getWidth();
 
         countDown.stop();
         buttonPause.setDisable(true);
@@ -320,7 +320,7 @@ public class BoardController extends Controller {
             int minMoves = engine.getMinMoves()-1;
             details[2] = new Label(GAME_WON_MSGS[3]+minMoves);
             details[2].setLayoutY(boardHeight*7/12);
-            details[3] = new Label(GAME_WON_MSGS[4]+0);  // needs to be replaced by actual grade
+            details[3] = new Label(GAME_WON_MSGS[4]+engine.CalculateGrade(currSeconds).getString());  // needs to be replaced by actual grade
             details[3].setLayoutY(boardHeight*2/3);
 
             boardPane.getChildren().addAll(details);
@@ -335,10 +335,26 @@ public class BoardController extends Controller {
         } else {
             message.setLayoutY(boardHeight*3/8);
             Label prompt = new Label("TRY AGAIN");
+            Label[] details = new Label[2];
+
             prompt.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 30));
             prompt.setTextFill(Color.WHITESMOKE);
             prompt.setTextAlignment(TextAlignment.CENTER);
-            prompt.setLayoutY(boardHeight*13/24);
+            prompt.setLayoutY(boardHeight*16/24);
+            details[0] = new Label(GAME_OVER_MSGS[2]+engine.getMoves());
+            details[0].setLayoutY(boardHeight/2);
+            int minMoves = engine.getMinMoves()-1;
+            details[1] = new Label(GAME_OVER_MSGS[3]+minMoves);
+            details[1].setLayoutY(boardHeight*14/24);
+            boardPane.getChildren().addAll(details);
+
+            for(int i = 0; i < 2; i++) {
+                setCenterX(details[i]);
+                details[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+                details[i].setTextFill(Color.WHITESMOKE);
+                details[i].setTextAlignment(TextAlignment.CENTER);
+                details[i].toFront();
+            }
             setCenterX(prompt);
             boardPane.getChildren().add(prompt);
             prompt.toFront();

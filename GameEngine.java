@@ -198,13 +198,13 @@ public class GameEngine  {
 	}
 	
 	public GradeLvl CalculateGrade(int timeLeft) {
-		if(timeLeft>=10 && getMoves()<=getMinMoves()) {
+		if( getMoves()<getMinMoves()) {
 			return GradeLvl.HD;
 		}
-		if(timeLeft>=5 && getMoves()<=getMinMoves()*1.5) {
+		if( getMoves()<=getMinMoves()*1.5) {
 			return GradeLvl.D;
 		}
-		if(timeLeft>=5 && getMoves()<=getMinMoves()*2) {
+		if( getMoves()<=getMinMoves()*2) {
 			return GradeLvl.C;
 		}
 		if(timeLeft>0) {
@@ -301,7 +301,7 @@ public class GameEngine  {
 			case TIMED:
 				return currPuzzle.getInitMoves()+10;
 			case STORY:
-				return currPuzzle.getInitMoves()+1000; //For testing - dec to 10 for real
+				return currPuzzle.getInitMoves()+10; //For testing - dec to 10 for real
 			case FREEPLAY:
 				return 3600*60;
 			default:
