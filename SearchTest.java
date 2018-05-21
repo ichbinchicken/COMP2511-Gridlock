@@ -244,11 +244,11 @@ public class SearchTest {
 			Puzzle p=null;
 			int moves=0;
 			int i=0;
-			while(i<30) {
+			while(i<100) {
 				while(moves<20) {
 					p = new Puzzle(7,10, true);
 					moves = p.getInitMoves();
-					System.out.println(moves);
+					//System.out.println(moves);
 				}
 				System.out.println(p.getInitMoves());
 				System.out.println(p.GetBoard());

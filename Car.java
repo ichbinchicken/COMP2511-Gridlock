@@ -38,7 +38,7 @@ public class Car {
 	private double mousey;
 	//private BoardController boardController;
 	private WeakReference<BoardController> boardReference;
-	private Bounds bounds;
+	//private Bounds bounds;
 	private int initR;
 	private int initC;
 	private int[] moveSpace = {0,0,0,0};
@@ -76,7 +76,7 @@ public class Car {
         initY = r*squareLength+1;
 	    carNode.setX(initX);
 	    carNode.setY(initY);
-	    bounds = new BoundingBox(b.getMinX()-initX, b.getMinY()-initY, b.getWidth(), b.getHeight());
+	    //bounds = new BoundingBox(b.getMinX()-initX, b.getMinY()-initY, b.getWidth(), b.getHeight());
 	    
 	    if(type==VERCAR || type == VERTRUCK) {
 	    	//carNode.setWidth(squareLength);
@@ -100,9 +100,9 @@ public class Car {
 	}
 
 
-	private double mRound(double value, double factor) {
+	/*private double mRound(double value, double factor) {
 		return Math.round(value/factor) * factor;
-	}
+	}*/
 	
 
 	private int CoordtoN(double coord) {

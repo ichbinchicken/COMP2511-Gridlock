@@ -41,6 +41,10 @@ public class Search {
 	}
 
 	
+	
+	public void Clear() {
+		closedMap=null;
+	}
 
 	/**
 	 * @param state Finished state

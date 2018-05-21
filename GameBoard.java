@@ -256,5 +256,17 @@ public class GameBoard { //Representation of the board
 		private static final int  HTRUCK =3;
 		private static final int  VCAR =1; //Horizontal sliding
 		private static final int  VTRUCK =2; //Horizontal sliding
+
+		public int findGoalCarR() {
+			for(int i=0; i<arr.size();i++) {
+				if(arr.get(i)==GOALCAR) {
+					int r = (int)Math.floor(i/Size);
+					//System.out.println(i +"|Row ="+r);
+					return r;
+				}
+			}
+			System.out.println("COULDN'T FIND GOAL");
+			return -1;
+		}
 		
 	}

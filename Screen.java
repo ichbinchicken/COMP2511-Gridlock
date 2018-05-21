@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public abstract class Screen {
-    private String fxmlFile;
+   // private String fxmlFile;
     private String screenTile;
     private Stage stage;
     private FXMLLoader fxmlLoader;
@@ -15,7 +15,7 @@ public abstract class Screen {
     
 
     public Screen(String fxmlFile, String screenTile, Stage stage) {
-        this.fxmlFile = fxmlFile;
+       // this.fxmlFile = fxmlFile;
         this.screenTile = screenTile;
         this.stage = stage;
         this.controller = null;

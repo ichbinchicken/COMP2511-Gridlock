@@ -178,6 +178,13 @@ public class BoardController extends Controller {
                 totalTime.setText(convertTime(currSeconds));
                 if (currSeconds <= 0) {
                     stopGame(GAME_OVER);
+                	engine.GameLoss();
+                	if(engine.getMode()==Mode.STORY) {
+                        buttonNewGame.setDisable(true);
+
+                		
+                	}
+
                 }
             }
         }));
@@ -199,6 +206,7 @@ public class BoardController extends Controller {
         running = true;
         buttonPause.setDisable(false);
         buttonPause.setText("Pause");
+        buttonNewGame.setDisable(false);
         totalTime.setText(convertTime(totalSeconds));
         curtain.setVisible(false);
         message.setVisible(false);
@@ -347,6 +355,7 @@ public class BoardController extends Controller {
 	    		animating=true;
 				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, animTime);
                 GameWon=true;
+                engine.GameWon(currSeconds);
 				//return true;
 			}
 			//return false;
@@ -364,6 +373,7 @@ public class BoardController extends Controller {
     public void AnimatingFin() {
     	animating=false;
     	if (GameWon) {
+    		
             winCountDown.playFromStart();
         }
     }

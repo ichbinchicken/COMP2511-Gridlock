@@ -1,8 +1,8 @@
 import javafx.event.EventHandler;
 import javafx.geometry.BoundingBox;
 import javafx.geometry.Bounds;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+//import javafx.scene.image.Image;
+//import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,13 +23,13 @@ public class Homework {
     private double mousey;
     private double x;
     private double y;
-    private boolean dragging;
+   // private boolean dragging;
     private boolean moveToFront;
 
     public Homework(double initX, double initY, double width, double height, Color fillColor, Pane pane, double squareWidth) {
         slider = new Rectangle();
-        Image IMAGE = new Image("https://en.wikipedia.org/wiki/Rush_Hour_(puzzle)#/media/File:Rush_Hour_sliding_block_puzzle.jpg");
-        ImageView redCar = new ImageView(IMAGE);
+      //  Image IMAGE = new Image("https://en.wikipedia.org/wiki/Rush_Hour_(puzzle)#/media/File:Rush_Hour_sliding_block_puzzle.jpg");
+      //  ImageView redCar = new ImageView(IMAGE);
         
         slider.setX(initX);
         slider.setY(initY);
@@ -58,7 +58,7 @@ public class Homework {
         this.y = 0;
         mousex = 0;
         mousey = 0;
-        dragging = false;
+        //dragging = false;
         moveToFront = true;
 
         addMouseEvent();
@@ -108,7 +108,7 @@ public class Homework {
                 slider.setLayoutX(scaledX);
                 slider.setLayoutY(scaledY);
 
-                dragging = true;
+               // dragging = true;
 
                 // again set current Mouse x AND y position
                 System.out.println("eventX is "+event.getSceneX()+", eventY is "+event.getSceneY());
@@ -128,7 +128,7 @@ public class Homework {
                 double scaledY = Math.round(y / squareWidth) * squareWidth;
                 slider.setLayoutX(scaledX);
                 slider.setLayoutY(scaledY);
-                dragging = false;
+              //  dragging = false;
             }
         });
     }
@@ -144,7 +144,7 @@ public class Homework {
     }
     
     
-    private void checkIntersection() {
+   //private void checkIntersection() {
     	
-    }
+ //  }
 }

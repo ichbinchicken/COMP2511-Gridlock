@@ -15,8 +15,8 @@ public class GameEngine  {
 	private int currDifficulty=0;
 	private int size=6;
 	private Mode gameMode = Mode.TIMED;
-	
 	private int StoryLevel=0;
+	private ArrayList<GradeLvl> gradeList;  
 
 
 	Puzzle currPuzzle;
@@ -81,6 +81,9 @@ public class GameEngine  {
 			currPuzzle = p;
 
 		}
+		else if(size>6) {
+			currPuzzle = new Puzzle(size,2,false);
+		}
 		else{
 			if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
 			currPuzzle.RestartPuzzle();
@@ -137,18 +140,87 @@ public class GameEngine  {
 	public boolean MakeMove(int r,int c,int newR,int newC) {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
 		if(ret==true) {
-			GameWin=true;
-			if(gameMode== Mode.STORY) {
-				StoryLevel++;
-				if(StoryLevel<=2) {
-					size++;
-				}
-				if(StoryLevel>2) {
-					IncrementDifficulty();
-				}
-			}
 		}
 		return ret;
+	}
+	
+	public GradeLvl GameWon(int time) {
+		GameWin=true;
+		GradeLvl gdlvl = CalculateGrade(time);
+		if(gameMode== Mode.STORY) {
+			gradeList.add(gdlvl);
+			StoryLevel++;
+			if(StoryLevel==10) {
+				//BEATEN STORY MODE - GIVE GRADE
+				GetFinalGrade();
+			}
+			if(StoryLevel<=2) {
+				size++;
+			}
+			else if(StoryLevel>=8) {
+				size=7;
+			}
+			else if(StoryLevel>2) {
+				IncrementDifficulty();
+			}
+			
+		}
+		System.out.println(gdlvl.getString());
+		return gdlvl;
+
+	}
+	
+	public GradeLvl GetFinalGrade() {
+		float mark=0;
+		for(GradeLvl glv: gradeList) {
+			mark+=glv.getMark();
+		}
+		mark=mark/gradeList.size();
+		int Fmark=(int)Math.round(mark);
+		System.out.println("FINAL GRADE" + Fmark);
+		switch(Fmark) {
+		case 0:
+			return GradeLvl.F;
+		case 1:
+			return GradeLvl.PC;
+		case 2:
+			return GradeLvl.P;
+		case 3:
+			return GradeLvl.C;
+		case 4:
+			return GradeLvl.D;
+		case 5:
+			return GradeLvl.HD;
+		default:
+			return GradeLvl.HD;
+		}
+
+	}
+	
+	public GradeLvl CalculateGrade(int timeLeft) {
+		if(timeLeft>=10 && getMoves()<=getMinMoves()) {
+			return GradeLvl.HD;
+		}
+		if(timeLeft>=5 && getMoves()<=getMinMoves()*1.5) {
+			return GradeLvl.D;
+		}
+		if(timeLeft>=5 && getMoves()<=getMinMoves()*2) {
+			return GradeLvl.C;
+		}
+		if(timeLeft>0) {
+			return GradeLvl.P;
+		}
+		return GradeLvl.F;
+		
+	}
+	public void GameLoss() {
+		if(gameMode==Mode.STORY) {
+			StoryLevel=0;
+			GradeLvl gdlvl = CalculateGrade(0);
+			gradeList.add(gdlvl);
+			gdlvl = GetFinalGrade();
+			System.out.println("LOSS WITH" + gdlvl.getString());
+		}
 	}
 	
 	public int[] getNextMove() {
@@ -175,6 +247,8 @@ public class GameEngine  {
 	public int getMoves() {
 		return currPuzzle.getMoves();
 	}
+
+
 	
 	public int getMinMoves() {
 		return currPuzzle.getInitMoves();
@@ -210,9 +284,12 @@ public class GameEngine  {
 		switch(gameMode) {
 		case STORY:
 			currDifficulty=0;
+			StoryLevel=0;
 			size=4;
+			gradeList = new ArrayList<GradeLvl>(10);
 			break;
 		case FREEPLAY: case TIMED:
+			
 			size=6;
 			break;
 		}
@@ -224,7 +301,7 @@ public class GameEngine  {
 			case TIMED:
 				return currPuzzle.getInitMoves()+10;
 			case STORY:
-				return currPuzzle.getInitMoves()+10;
+				return currPuzzle.getInitMoves()+1000; //For testing - dec to 10 for real
 			case FREEPLAY:
 				return 3600*60;
 			default:
@@ -236,6 +313,7 @@ public class GameEngine  {
 	}
 	
 	
+
 	
 	
 

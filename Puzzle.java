@@ -56,7 +56,12 @@ public class Puzzle {
 			board = newBoard;
 		}
 		else {
-			
+			Random random = new Random();
+			GameBoard nB = StoredBoard.values()[random.nextInt(StoredBoard.values().length)].getBoard();
+			board = nB.copyGameBoard();
+			initial = nB.copyGameBoard();
+			minInitMoves=board.getMoves();
+			GoalR = board.findGoalCarR();
 		}
 	}
 	
