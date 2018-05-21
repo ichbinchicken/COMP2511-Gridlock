@@ -8,13 +8,14 @@ public class GenThread implements Runnable
 	ArrayList<BoundedQueue<Puzzle>> queueList;
 	private BoundedQueue<Puzzle> queue=null;
 	private int count;
+	/*private static final int  ULTRAPHD =18;
 	private static final int  PHD =18;
 	private static final int  MASTERS =14;
 	private static final int  BACH =9;
 	private static final int  HSC =5;
-	private static final int  SC =2;
+	private static final int  SC =2;*/
 	int size;
-	int minMoves=SC;
+	int minMoves=Difficulty.SC.getMoves();
 
 
    /**
@@ -40,55 +41,69 @@ public class GenThread implements Runnable
 		return true;
 	}
 	
-	private int findSmallestQueue() {
+	private Difficulty findSmallestQueue() {
 		for(int i=0;i<queueList.size();i++) {
 			queue = queueList.get(i);
 			if(queue.isFull()==false) {
 				switch(i) {
-				case 0: return SC;
-				case 1: return HSC;
-				case 2: return BACH;
-				case 3: return MASTERS;
-				case 4: return PHD;
+				case 0: return Difficulty.SC;
+				case 1: return Difficulty.HSC;
+				case 2: return Difficulty.BACH;
+				case 3: return Difficulty.MASTERS;
+				case 4: return Difficulty.PHD;
+				//case 5: return Difficulty.ULTRAPHD;
 				
 				}
 			}
 		}
-		return 0;
+		return null;
 	}
 	
 	public void run() {
 		int i=1;
 
 		try {
-			int minMoves = findSmallestQueue();
+			Difficulty diff = findSmallestQueue();
+			minMoves=0;
+			if(diff!=null) {
+				minMoves=diff.getMoves();
+			}
 			while(!queueListFull() || count > 1000) {
 				if(minMoves==0) {
 					return; //All queues full
 				}
 				Puzzle puzzle = new Puzzle(size,minMoves);
 				int moves = puzzle.getInitMoves();
-				if(moves>=PHD) {
-					queue = queueList.get(4);
-				}
-				else if(moves>=MASTERS) {
-					queue = queueList.get(3);
-				}				
-				else if(moves>=BACH) {
-					queue = queueList.get(2);
-				}
-				else if(moves>=HSC) {
-					queue = queueList.get(1);
-				}
-				else if(moves>1) {
-					queue = queueList.get(0);
+				if(size>6) {
+					if(moves>=Difficulty.PHD.getMoves()) {
+						System.out.println("ADD 7QUEUE" +moves);
+
+						queue = queueList.get(5);
+					}
 				}
 				else {
-					continue;
+					if(moves>=Difficulty.PHD.getMoves()) {
+						queue = queueList.get(4);
+					}
+					else if(moves>=Difficulty.MASTERS.getMoves()) {
+						queue = queueList.get(3);
+					}				
+					else if(moves>=Difficulty.BACH.getMoves()) {
+						queue = queueList.get(2);
+					}
+					else if(moves>=Difficulty.HSC.getMoves()) {
+						queue = queueList.get(1);
+					}
+					else if(moves>=Difficulty.SC.getMoves()) {
+						queue = queueList.get(0);
+					}
+					else {
+						continue;
+					}
 				}
 				if(!queue.isFull()) {
 					queue.add(puzzle);
-					System.out.println(moves);
+					//System.out.println(moves);
 					i++;
 					//System.out.println("Thread i "+i +"Count"+count);
 				}

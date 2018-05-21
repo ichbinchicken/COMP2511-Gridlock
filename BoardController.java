@@ -55,7 +55,7 @@ public class BoardController extends Controller {
     private int nSquares;
     private Timeline countDown;
     private Timeline winCountDown;
-    private final int totalSeconds;  // The duration of game, should not changed
+    private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
     private int currSeconds;
     private boolean running;
     private ArrayList<Car> workload;
@@ -69,14 +69,16 @@ public class BoardController extends Controller {
     public BoardController(Stage s, GameEngine engine, Main main) {
         this.engine = engine;
         this.main = main;
-        nSquares = engine.getBoardSize(); //this will be replaced dynamically.
-        totalSeconds = currSeconds = 3600;
+        totalSeconds = currSeconds = engine.getTime();
         workload = new ArrayList<>();
         running = true; // this is to check whether the game is paused. Initially, it's running.
     }
 
     @FXML
     public void initialize() {
+    	engine.getNewPuzzle();
+        nSquares = engine.getBoardSize(); //this will be replaced dynamically.
+
         this.squareWidth = boardPane.getPrefWidth()/nSquares;
 
         // init curtain
@@ -193,14 +195,23 @@ public class BoardController extends Controller {
     }
 
     private void drawBoard() {
+    	Mode mode = engine.getMode();
         running = true;
         buttonPause.setDisable(false);
         buttonPause.setText("Pause");
-        buttonHint.setDisable(false);
         totalTime.setText(convertTime(totalSeconds));
         curtain.setVisible(false);
         message.setVisible(false);
-
+        if(mode==Mode.STORY) {
+            buttonHint.setDisable(true);
+            buttonRestart.setDisable(true);
+            buttonNewGame.setDisable(true);
+        }
+        else {
+            buttonHint.setDisable(false);
+            buttonRestart.setDisable(false);
+            buttonNewGame.setDisable(false);
+        }
         Rectangle[][] rec = new Rectangle[nSquares][nSquares];
 
         for (int i = 0; i < nSquares; i ++) {
@@ -277,12 +288,16 @@ public class BoardController extends Controller {
         countDown.stop();
         buttonPause.setDisable(true);
         buttonHint.setDisable(true);
+        buttonNewGame.setDisable(false);
         curtain.setVisible(true);
         curtain.toFront();
         message.setText(msg);
         message.setVisible(true);
         message.toFront();
     }
+    
+    
+
     /*
     public Bounds getFreeZone(Car car) {
         Bounds bounds = car.getCar().getBoundsInParent();
@@ -386,7 +401,11 @@ public class BoardController extends Controller {
 
     public void GetNewBoard() {
     	engine.getNewPuzzle();
+        nSquares = engine.getBoardSize(); //this will be replaced dynamically.
+        this.squareWidth = boardPane.getPrefWidth()/nSquares;
+
         boardPane.getChildren().clear();
+        totalSeconds = engine.getTime();
         currSeconds = totalSeconds;
         drawBoard();
         GameWon=false;

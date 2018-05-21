@@ -71,12 +71,12 @@ public class BoundedQueue<E>
 		  while(size==capacity) {
 			  notFull.await();
 		  }
-		 // for( Object item : elements) {
-			  //if(item.equals(newValue)) {
-			//	  flag=true;
-			//	  break;
-			 // }
-		  //}
+		  for( Object item : elements) {
+			  if(item!=null && item.equals(newValue)) {
+				  flag=true;
+				  break;
+			 }
+		  }
 		  if(flag!=true) {
 			  if (debug) System.out.print("add");
 		      elements[tail] = newValue; 
@@ -99,6 +99,37 @@ public class BoundedQueue<E>
 	  }
 	  
    } 
+   
+   
+   public void Forceadd(E newValue) throws InterruptedException 
+   { 
+	  lock.lock();
+	  try {
+		  while(size==capacity) {
+			  notFull.await();
+		  }
+			 if (debug) System.out.print("add");
+		      elements[tail] = newValue; 
+		      if (debug) System.out.print(".");
+		      tail++;
+		      if (debug) System.out.print(".");
+		      size++;
+		      if (tail == elements.length) 
+		      {
+		         if (debug) System.out.print(".");
+		         tail = 0; 
+		      }
+		      if (debug) 
+		         System.out.println("head=" + head + ",tail=" + tail 
+		            + ",size=" + size);
+		      notEmpty.signal();
+		  
+	  } finally {
+		  lock.unlock();
+	  }
+	  
+   } 
+
 
    public boolean isFull() 
    { 
