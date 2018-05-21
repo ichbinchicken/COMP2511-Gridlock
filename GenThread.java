@@ -72,7 +72,7 @@ public class GenThread implements Runnable
 				if(minMoves==0) {
 					return; //All queues full
 				}
-				Puzzle puzzle = new Puzzle(size,minMoves);
+				Puzzle puzzle = new Puzzle(size,minMoves, true);
 				int moves = puzzle.getInitMoves();
 				if(size>6) {
 					if(moves>=Difficulty.PHD.getMoves()) {
