@@ -6,13 +6,17 @@ import java.util.concurrent.Executors;
 
 public class GameEngine  {
 	private static final int NumDifficulties=5;
+	//private static final int NumDiffSizes = 3;
 	private static final int NumThreads = 5;
 	private ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(NumDifficulties);
 	private BoundedQueue<Puzzle> queue=null;
 	private ExecutorService executor;
 	private boolean GameWin = false;
-	private int currDifficulty=2;
+	private int currDifficulty=0;
 	private int size=6;
+	private Mode gameMode = Mode.TIMED;
+	
+	private int StoryLevel=0;
 
 
 	Puzzle currPuzzle;
@@ -23,6 +27,7 @@ public class GameEngine  {
 			queue = new BoundedQueue<Puzzle>(50);
 			queueList.add(queue);
 		}
+		//queue.setDebug(true);
 		//Start up 5 background threads to quickly generate a few puzzles
 		//One thread will be running until all puzzles are full
 		executor = Executors.newFixedThreadPool(NumThreads);
@@ -39,93 +44,88 @@ public class GameEngine  {
 
         //queue = queueList.get(NumDifficulties-1);
 
-        getNewPuzzle();
+        getAnyPuzzle();
 
     }
 	
+    public Puzzle getAnyPuzzle() {
+    	int tempDiff=0;
+        while(1!=2) {
+        	queue = queueList.get(tempDiff);
+        	if(!queue.isEmpty()) {
+        		break;
+        	}
+        	tempDiff--;
+        	if(tempDiff==-1) {
+        		tempDiff=NumDifficulties-1;
+        	}
+        }
+        try {
+			currPuzzle = queue.remove();
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        return currPuzzle;
+        
+    }
+    
 	public Puzzle getNewPuzzle(){
-		if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
+		if(size<6) {
+			Puzzle p=null;
+			int moves=0;
+			while(moves<2) {
+				p = new Puzzle(size,2);
+				moves = p.getInitMoves();
+			}
+			currPuzzle = p;
+
+		}
+		else{
+			if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
 			currPuzzle.RestartPuzzle();
 			try {
+				
 				if(!queue.isFull() ) {
-					queue.add(currPuzzle);
+					queue.Forceadd(currPuzzle);
 				}
-				//currPuzzle = queue.remove();
-
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//DecrementDifficulty();
-			//return currPuzzle;
 		}
-		///else if(currPuzzle!=null) {
-		//	//IncrementDifficulty();
-		//}
-		//currDifficulty= (currDifficulty++)%(NumDifficulties-1);
-		//currDifficulty=NumDifficulties-1;
-		//currDifficulty=currDifficulty+1;
-		//currDifficulty=currDifficulty%(NumDifficulties-1);
-		//else {
 			GameWin=false;
-			//if(currDifficulty<0) {
-			//	currDifficulty=0;
-			//}
 	        queue = queueList.get(currDifficulty);
 	        if(queue.isEmpty()) {
-	        	/*Generate more boards quickly
-	    		ExecutorService executor = Executors.newFixedThreadPool(NumThreads);
-	    		for(int i=0;i<NumThreads;i++) {
-	    			Runnable run = new GenThread(queueList,10, 6, 2);
-	    			executor.execute(run);
-	    		}
-	            executor.shutdown();
-	            while(!executor.isTerminated()) {
-	            	executor.isTerminated();
-	            }*/
-	        	
-	    		//for(int i=0;i<NumThreads;i++) {
-	    		//	Runnable run = new GenThread(queueList,10, 6, 2);
-	    		//	executor.execute(run);
-	    		//}
-	    		/*queue.
-		        if(queue.isEmpty()) {
-		        	if(currDifficulty!=0) { //Give an easier puzzle
-		        		currDifficulty--;
-		        		return getNewPuzzle();
+		        System.out.println("QUEUE IS EMPTY - TRY EASIER GAME" + currDifficulty);
+		        int tempDiff=currDifficulty;
+	        	int inc=-1;
+		        while(1!=2) {
+		        	queue = queueList.get(tempDiff);
+		        	if(!queue.isEmpty()) {
+		        		break;
+		        	}
+		        	tempDiff = tempDiff+inc;
+		        	if(tempDiff==-1) {
+		        		inc=1;
+		        		tempDiff=0;
+		        	}
+		        	if(tempDiff>=NumDifficulties) {
+		        		inc=-1;
+		        		tempDiff = NumDifficulties-1;
+		        	}
 		        	
-		        	}
-		        	else {
-		        		while(queue.isEmpty()) {
-		        			try {
-								Thread.sleep(10);
-							} catch (InterruptedException e) {
-								System.out.println("Exception Catch");
-							}
-		        		}
-		        	}
-		        }*/
-		        System.out.println("QUEUE IS EMPTY - TRY EASIER GAME");
-		        if(currDifficulty!=0) {
-		        	queue = queueList.get(currDifficulty-1);
 		        }
 		        
 	        }
+	        
 	        try {
 				currPuzzle = queue.remove();
-				//Runnable run = new GenThread(queueList,1, 6, 2);
-				//executor.execute(run);
 	
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//Runnable run = new GenThread(queueList,10, 6, 2);
-			//Thread t = new Thread(run);
-			//t.start();
-			//currPuzzle = new Puzzle(6,6);
-			//currPuzzle.getBestMove();
-		
+		}
+	        size = currPuzzle.getSize();
 			return currPuzzle;
 		
 	}
@@ -138,6 +138,15 @@ public class GameEngine  {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
 		if(ret==true) {
 			GameWin=true;
+			if(gameMode== Mode.STORY) {
+				StoryLevel++;
+				if(StoryLevel<=2) {
+					size++;
+				}
+				if(StoryLevel>2) {
+					IncrementDifficulty();
+				}
+			}
 		}
 		return ret;
 	}
@@ -194,9 +203,41 @@ public class GameEngine  {
 		}
 	}
 	
+
+	//May be other settings required
+	public void setMode(Mode mode) {
+		gameMode = mode;
+		switch(gameMode) {
+		case STORY:
+			currDifficulty=0;
+			size=4;
+			break;
+		case FREEPLAY: case TIMED:
+			break;
+		}
+		System.out.println("GAME MODE" +gameMode);
+	}
+
+	public int getTime() {
+		switch(gameMode) {
+			case TIMED:
+				return currPuzzle.getInitMoves()+10;
+			case STORY:
+				return currPuzzle.getInitMoves()+10;
+			case FREEPLAY:
+				return 3600*60;
+			default:
+				return 0;
+		}
+	}
+	public Mode getMode() {
+		return gameMode;
+	}
+	
+	
+	
 	
 
 
-    
 
 }

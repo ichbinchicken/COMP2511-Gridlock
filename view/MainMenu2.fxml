@@ -21,7 +21,7 @@
          </font>
       </Text>
       <Slider fx:id="sliderDifficulty" blockIncrement="1.0" layoutX="322.0" layoutY="286.0" majorTickUnit="1.0" max="4.0" minorTickCount="0" showTickMarks="true" snapToTicks="true" />
-      <Label fx:id="labelDifficulty" layoutX="378.0" layoutY="262.0" text="Label" />
+      <Label fx:id="labelDifficulty" alignment="CENTER" layoutX="321.0" layoutY="262.0" prefHeight="17.0" prefWidth="140.0" text="School Certificate" textAlignment="CENTER" />
       <Text layoutX="76.0" layoutY="351.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Game Mode">
          <font>
             <Font size="30.0" />

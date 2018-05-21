@@ -34,17 +34,14 @@ public class Car {
 	private double squareLength;
 	private int type;
 	private boolean dragging;
-	private boolean movetoFront;
 	private double mousex;
 	private double mousey;
 	//private BoardController boardController;
 	private WeakReference<BoardController> boardReference;
-	private double min=0;
 	private Bounds bounds;
 	private int initR;
 	private int initC;
 	private int[] moveSpace = {0,0,0,0};
-	private double totalOffset=0;
 	private Bounds moveBounds;
 	double initX,initY;
 	//private GameEngine engine;
