@@ -241,22 +241,16 @@ public class SearchTest {
 		@Test
 
 		public void SizeTest() {
-			Puzzle p = new Puzzle(7,10);
+			Puzzle p=null;
+			int moves=0;
+			while(moves<20) {
+				p = new Puzzle(7,10, true);
+				moves = p.getInitMoves();
+				//System.out.println(moves);
+			}
 			System.out.println(p.getInitMoves());
 			p.printBoard();
-			int[] arr = p.getBestMove();
-			p.MakeMove(arr[0], arr[1], arr[2], arr[3]);
-			arr = p.getBestMove();
-			p.printBoard();
 
-			p.MakeMove(arr[0], arr[1], arr[2], arr[3]);
-			arr = p.getBestMove();
-			p.printBoard();
-
-			p.MakeMove(arr[0], arr[1], arr[2], arr[3]);
-			p.printBoard();
-
-			
 	        
 	        /*queue = queueList.get(NumDifficulties-1);
 	        Puzzle node = queue.remove();

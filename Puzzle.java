@@ -27,14 +27,14 @@ public class Puzzle {
 	private static final int  VCAR =1; //Horizontal sliding
 	private static final int  VTRUCK =2; //Horizontal sliding
 
-	public Puzzle(int n, int minMoves) {
+	public Puzzle(int n, int minMoves, boolean gen) {
 		//arr= new ArrayList<Integer>(n*n);
 		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
 		this.Size=n;
 		GoalC = Size-1;
 		Random rand = new Random(System.currentTimeMillis());
 		GoalR = rand.nextInt(Size-1);
-		int maxCars=20;
+		int maxCars=30; //13 for 6x6 
 		int CarP = 80;
 		int VerP = 60;
 		GameBoard newBoard=null;
@@ -44,15 +44,20 @@ public class Puzzle {
 			maxCars -= 	rand.nextInt(7);
 			CarP = 60;
 		}
-		board = GenSolution(maxCars,CarP,VerP);
-		newBoard = search.GenBoard(board);
-		minInitMoves=newBoard.getMoves();
-			//System.out.println(moves);
-
-		initial = newBoard.copyGameBoard(); //For reset
-		board = newBoard;
-		//board.printBoard();
-		//GenCarList();
+		if(gen==true) {
+			board = GenSolution(maxCars,CarP,VerP);
+			//board.printBoard();
+	
+			newBoard = search.GenBoard(board);
+			minInitMoves=newBoard.getMoves();
+				//System.out.println(moves);
+	
+			initial = newBoard.copyGameBoard(); //For reset
+			board = newBoard;
+		}
+		else {
+			
+		}
 	}
 	
 	
@@ -141,7 +146,7 @@ public class Puzzle {
 		default:
 			break;
 		}
-		board.printBoard();
+		//board.printBoard();
 		numMoves++;
 		
 		return isGoalState();

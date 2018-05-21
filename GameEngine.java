@@ -75,7 +75,7 @@ public class GameEngine  {
 			Puzzle p=null;
 			int moves=0;
 			while(moves<2) {
-				p = new Puzzle(size,2);
+				p = new Puzzle(size,2,true);
 				moves = p.getInitMoves();
 			}
 			currPuzzle = p;
@@ -162,7 +162,7 @@ public class GameEngine  {
 	
 	//Only use for other testing
 	public ArrayList<Car> UIGetPuzzle(){
-		currPuzzle = new Puzzle(6,6);
+		currPuzzle = new Puzzle(6,6,true);
 		return currPuzzle.GenCarList();
 	}
 	
