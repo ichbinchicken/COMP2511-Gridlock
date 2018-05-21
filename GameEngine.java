@@ -213,6 +213,7 @@ public class GameEngine  {
 			size=4;
 			break;
 		case FREEPLAY: case TIMED:
+			size=6;
 			break;
 		}
 		System.out.println("GAME MODE" +gameMode);

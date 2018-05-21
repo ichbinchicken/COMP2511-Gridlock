@@ -243,13 +243,19 @@ public class SearchTest {
 		public void SizeTest() {
 			Puzzle p=null;
 			int moves=0;
-			while(moves<20) {
-				p = new Puzzle(7,10, true);
-				moves = p.getInitMoves();
-				//System.out.println(moves);
+			int i=0;
+			while(i<30) {
+				while(moves<20) {
+					p = new Puzzle(7,10, true);
+					moves = p.getInitMoves();
+					System.out.println(moves);
+				}
+				System.out.println(p.getInitMoves());
+				System.out.println(p.GetBoard());
+				p.printBoard();
+				i++;
+				moves = 0;
 			}
-			System.out.println(p.getInitMoves());
-			p.printBoard();
 
 	        
 	        /*queue = queueList.get(NumDifficulties-1);
