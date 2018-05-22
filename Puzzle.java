@@ -8,7 +8,7 @@ import java.util.*;
 //34 is red car
 
 public class Puzzle {
-	private GameBoard board; //Current State of Board
+	private GameBoard board=null; //Current State of Board
 	private GameBoard initial=null; //Initial State of Board (Reset)
 	private int minInitMoves=0;
 	private int numHints=0;
@@ -46,15 +46,21 @@ public class Puzzle {
 			CarP = 60;
 		}
 		if(gen==true) {
-			board = GenSolution(maxCars,CarP,VerP);
-			//board.printBoard();
-	
-			newBoard = search.GenBoard(board);
-			minInitMoves=newBoard.getMoves();
-				//System.out.println(moves);
-	
-			initial = newBoard.copyGameBoard(); //For reset
-			board = newBoard;
+			int moves=0;
+			while(initial==null) {
+				board = GenSolution(maxCars,CarP,VerP);
+				//board.printBoard();
+		
+				newBoard = search.GenBoard(board, minMoves);
+				if(newBoard==null) {
+					continue;
+				}
+				minInitMoves=newBoard.getMoves();
+					//System.out.println(moves);
+		
+				initial = newBoard.copyGameBoard(); //For reset
+				board = newBoard;
+			}
 		}
 		else {
 			Random random = new Random();

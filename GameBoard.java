@@ -15,6 +15,11 @@ public class GameBoard { //Representation of the board
 			this.Size = Size;
 		}
 		
+		/**
+		 * Get index from array
+		 * @param i
+		 * @return
+		 */
 		public int get(int i) {
 			if(i<arr.size()) {
 				return arr.get(i);
@@ -23,6 +28,14 @@ public class GameBoard { //Representation of the board
 			return -1;
 		}
 		
+		public void setMoves(int i) {
+			moves=i;
+		}
+		
+		/**
+		 * @param i Set index
+		 * @param j Value
+		 */
 		public void set(int i, int j) {
 			if(i<arr.size()) {
 				arr.set(i,j);
@@ -35,12 +48,24 @@ public class GameBoard { //Representation of the board
 		}
 		
 		
+		/**
+		 * Set row column to value
+		 * @param r
+		 * @param c
+		 * @param value
+		 */
 		public void setRC(int r, int c, int value) {
 			int i = RCtoI(r,c);
 			set(i,value);
 			//arr.set(RCtoI(r,c), value);
 		}
 		
+		/**
+		 * Get value at row column
+		 * @param r
+		 * @param c
+		 * @return
+		 */
 		public int getRC(int r, int c) {
 			int i = RCtoI(r,c);
 			return get(i);
@@ -68,6 +93,9 @@ public class GameBoard { //Representation of the board
 			return arr;
 		}
 
+		/**
+		 * Print current board
+		 */
 		public void printBoard() {
 			
 			for(int i =0; i<Size*Size;i++) {
@@ -80,8 +108,14 @@ public class GameBoard { //Representation of the board
 		    System.out.print('\n');
 
 		}
-		//Old board is previous move
-		//This is latest board
+
+		
+		/**
+		 * Compare this board with another board
+		 * @pre oldB and this board must be different by 1 move
+		 * @param oldB
+		 * @return Difference
+		 */
 		public int[] compareBoard(GameBoard oldB) {
 			boolean first=false;
 			boolean upleft=false;
@@ -257,6 +291,9 @@ public class GameBoard { //Representation of the board
 		private static final int  VCAR =1; //Horizontal sliding
 		private static final int  VTRUCK =2; //Horizontal sliding
 
+		/**
+		 * @return row of goal car
+		 */
 		public int findGoalCarR() {
 			for(int i=0; i<arr.size();i++) {
 				if(arr.get(i)==GOALCAR) {
