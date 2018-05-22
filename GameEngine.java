@@ -1,16 +1,11 @@
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 
 
 public class GameEngine  {
 	private static final int NumDifficulties=5;
-	//private static final int NumDiffSizes = 3;
-	private static final int NumThreads = 5;
 	private ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(NumDifficulties);
 	private BoundedQueue<Puzzle> queue=null;
-	private ExecutorService executor;
 	private boolean GameWin = false;
 	private int currDifficulty=0;
 	private int size=6;
@@ -18,6 +13,7 @@ public class GameEngine  {
 	private int StoryLevel=0;
 	private ArrayList<GradeLvl> gradeList;  
 	private boolean StoryModeEnd = false;
+	
 
 
 	Puzzle currPuzzle;
@@ -25,24 +21,42 @@ public class GameEngine  {
 	
     public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
-			queue = new BoundedQueue<Puzzle>(5);
-			queue.setDebug(true);
+			queue = new BoundedQueue<Puzzle>(20);
+			//queue.setDebug(true);
 			queueList.add(queue);
 		}
 		//queue.setDebug(true);
 		//Start up 5 background threads to quickly generate a few puzzles
 		//One thread will be running until all puzzles are full
-		executor = Executors.newFixedThreadPool(NumThreads);
-        Runnable run = new GenThread(queueList,100000, size, 2);
+		//executor = Executors.newFixedThreadPool(NumThreads);
+        Runnable run1 = new GenThread(queueList,-1, size, 2);
+        Runnable run2 = new GenThread(queueList,-1, size, 2);
+        Runnable run3 = new GenThread(queueList,10, size, 2);
+        Runnable run4 = new GenThread(queueList,10, size, 2);
+
+        Thread t1 = new Thread(run1);
+        Thread t2 = new Thread(run2);
+        Thread t3 = new Thread(run3);
+        Thread t4 = new Thread(run4);
+
+        t1.setPriority(Thread.MIN_PRIORITY);
+        t2.setPriority(Thread.MIN_PRIORITY);
+        t3.setPriority(Thread.MIN_PRIORITY);
+        t4.setPriority(Thread.MIN_PRIORITY);
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
         
-        executor.execute(run);
+        //executor.execute(run);
         
-		for(int i=0;i<NumThreads-1;i++) {
+		/*for(int i=0;i<NumThreads-1;i++) {
 			
 			run = new GenThread(queueList,100000, size, 2);
 			
 			executor.execute(run);
-		}
+		}*/
 		//Thread t = new Thread(run);
 		//t.start();
 
@@ -171,7 +185,7 @@ public class GameEngine  {
 			}
 			
 		}
-		System.out.println(gdlvl.getString());
+		//System.out.println(gdlvl.getString());
 		return gdlvl;
 
 	}
@@ -183,7 +197,7 @@ public class GameEngine  {
 		}
 		mark=mark/gradeList.size();
 		int Fmark=(int)Math.round(mark);
-		System.out.println("FINAL GRADE" + Fmark);
+		//System.out.println("FINAL GRADE" + Fmark);
 		switch(Fmark) {
 		case 0:
 			return GradeLvl.F;
@@ -230,16 +244,20 @@ public class GameEngine  {
 	}
 	
 	public GradeLvl CalculateGrade(int timeLeft) {
+		int gradeMoves = getMoves() + currPuzzle.getHintsUsed();
+		//System.out.println("MIN MOVES" + getMinMoves());
+		//System.out.println("GRADE MOVES" + gradeMoves);
+		//System.out.println("HINTS " + currPuzzle.getHintsUsed());
 		if(timeLeft<=0) {
 			return GradeLvl.F;
 		}
-		else if( getMoves()<getMinMoves()) {
+		else if( gradeMoves<=getMinMoves()) {
 			return GradeLvl.HD;
 		}
-		else if( getMoves()<=getMinMoves()*1.5) {
+		else if( gradeMoves<=(getMinMoves()*1.5)) {
 			return GradeLvl.D;
 		}
-		else if( getMoves()<=getMinMoves()*2) {
+		else if( gradeMoves<(getMinMoves()*2)) {
 			return GradeLvl.C;
 		}
 		else if(timeLeft>0) {
@@ -253,7 +271,7 @@ public class GameEngine  {
 		if(gameMode==Mode.STORY) {
 			StoryModeEnd=true;
 			GradeLvl gdlvl = CalculateGrade(0);
-			System.out.println("LOSS WITH" + gdlvl.getString());
+			//System.out.println("LOSS WITH" + gdlvl.getString());
 
 			gradeList.add(gdlvl);
 			gdlvl = GetFinalGrade();
@@ -292,7 +310,7 @@ public class GameEngine  {
 
 	
 	public int getMinMoves() {
-		return currPuzzle.getInitMoves();
+		return currPuzzle.getInitMoves()-1;
 	}
 
 	public int[] FindMoves(int r, int c) {

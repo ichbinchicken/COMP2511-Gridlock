@@ -265,7 +265,7 @@ public class GameBoard { //Representation of the board
 					return r;
 				}
 			}
-			System.out.println("COULDN'T FIND GOAL");
+			//System.out.println("COULDN'T FIND GOAL");
 			return -1;
 		}
 		

@@ -11,6 +11,7 @@ public class Puzzle {
 	private GameBoard board; //Current State of Board
 	private GameBoard initial=null; //Initial State of Board (Reset)
 	private int minInitMoves=0;
+	private int numHints=0;
 	private int numMoves=0;
 	//private ArrayList<Car> carList=null; //List of frontend cars
 	//private int difficulty;
@@ -73,11 +74,12 @@ public class Puzzle {
 		
 		GameBoard sb = board.copyGameBoard();
 		LinkedList<GameBoard> list = search.SearchBoard(sb);
-		sb = list.removeFirst();
+		sb = list.removeFirst(); //Remove start board - current location
 		sb = list.removeFirst();
 		
 		int[] arr = sb.compareBoard(board);
 		//System.out.println("ARRAY" + arr[0] + " " + arr[1] + " " + arr[2] + " "+ arr[3]);
+		numHints++;
 		return arr;
 	}
 	
@@ -88,7 +90,12 @@ public class Puzzle {
 	public void RestartPuzzle() {
 		board = initial.copyGameBoard();
 		numMoves=0;
+		numHints=0;
 		
+	}
+	
+	public int getHintsUsed() {
+		return numHints;
 	}
 	
 	public int getSize() {

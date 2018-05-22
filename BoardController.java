@@ -153,15 +153,16 @@ public class BoardController extends Controller {
         buttonHint.setOnMouseClicked(new EventHandler <MouseEvent>() {
         	@Override
         	public void handle (MouseEvent event) {
-        		int[] arr =engine.getNextMove();
-        		//System.out.println(arr);
-        		Car car =findCar(arr[0], arr[1]);
-        		if(car!=null) {
-        			animating=true;
-        			car.CarMakeAnimatingMove(arr[2], arr[3], 2000);
-        		}
-        		else {
-        			//System.out.println("R"+ arr[0] + " " + "C"+arr[1]);
+        		if(animating==false) {
+	        		int[] arr =engine.getNextMove();
+	        		//System.out.println(arr);
+	        		Car car =findCar(arr[0], arr[1]);
+	        		if(car!=null) {
+	        			animating=true;
+	        			car.CarMakeAnimatingMove(arr[2], arr[3], 2000);
+	        		}
+	        		else {
+	        		}
         		}
         	}
         });
@@ -317,7 +318,7 @@ public class BoardController extends Controller {
             details[0].setLayoutY(boardHeight*5/12);
             details[1] = new Label(GAME_WON_MSGS[2]+engine.getMoves());
             details[1].setLayoutY(boardHeight/2);
-            int minMoves = engine.getMinMoves()-1;
+            int minMoves = engine.getMinMoves();
             details[2] = new Label(GAME_WON_MSGS[3]+minMoves);
             details[2].setLayoutY(boardHeight*7/12);
             details[3] = new Label(GAME_WON_MSGS[4]+engine.CalculateGrade(currSeconds).getString());  // needs to be replaced by actual grade
@@ -346,7 +347,7 @@ public class BoardController extends Controller {
             prompt.setLayoutY(boardHeight*16/24);
             details[0] = new Label(GAME_OVER_MSGS[2]+engine.getMoves());
             details[0].setLayoutY(boardHeight/2);
-            int minMoves = engine.getMinMoves()-1;
+            int minMoves = engine.getMinMoves();
             details[1] = new Label(GAME_OVER_MSGS[3]+minMoves);
             details[1].setLayoutY(boardHeight*14/24);
             boardPane.getChildren().addAll(details);

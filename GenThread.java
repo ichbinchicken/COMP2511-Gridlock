@@ -70,52 +70,42 @@ public class GenThread implements Runnable
 			if(diff!=null) {
 				minMoves=diff.getMoves();
 			}
-			while(1!=2) {
+			while(i<count || count==-1) {
 				if(!queueListFull()){ 
-					if(minMoves==0) {
-						return; //All queues full
-					}
 					Puzzle puzzle = new Puzzle(size,minMoves, true);
 					int moves = puzzle.getInitMoves();
-					if(size>6) {
-						if(moves>=Difficulty.PHD.getMoves()) {
-							System.out.println("ADD 7QUEUE" +moves);
-	
-							queue = queueList.get(5);
-						}
+					if(moves>=Difficulty.PHD.getMoves()) {
+						queue = queueList.get(4);
+					}
+					else if(moves>=Difficulty.MASTERS.getMoves()) {
+						queue = queueList.get(3);
+					}				
+					else if(moves>=Difficulty.BACH.getMoves()) {
+						queue = queueList.get(2);
+					}
+					else if(moves>=Difficulty.HSC.getMoves()) {
+						queue = queueList.get(1);
+					}
+					else if(moves>=Difficulty.SC.getMoves()) {
+						queue = queueList.get(0);
 					}
 					else {
-						if(moves>=Difficulty.PHD.getMoves()) {
-							queue = queueList.get(4);
-						}
-						else if(moves>=Difficulty.MASTERS.getMoves()) {
-							queue = queueList.get(3);
-						}				
-						else if(moves>=Difficulty.BACH.getMoves()) {
-							queue = queueList.get(2);
-						}
-						else if(moves>=Difficulty.HSC.getMoves()) {
-							queue = queueList.get(1);
-						}
-						else if(moves>=Difficulty.SC.getMoves()) {
-							queue = queueList.get(0);
-						}
-						else {
-							continue;
-						}
+						continue;
 					}
 					if(!queue.isFull()) {
 						queue.add(puzzle);
-						System.out.println(moves);
+						//System.out.println(moves);
 						i++;
 						//System.out.println("Thread i "+i +"Count"+count);
 					}
-			        Thread.sleep((int) (Math.random() * DELAY));
+					Thread.sleep((int) (Math.random() * DELAY));
 				}
 				else{
-					Thread.sleep(1000);
+					Thread.sleep((int) (1000 * Math.random()));
+
 				}
 			}
+			System.out.println("End Thread");
 		}
 	catch (InterruptedException exception){	
 	}
