@@ -29,6 +29,7 @@ public class BoundedQueue<E>
    */ 
    public E remove() throws InterruptedException
    { 
+	  
 	  lock.lock();
 	  try {
 		  while(size==0) {
@@ -93,6 +94,7 @@ public class BoundedQueue<E>
 		         System.out.println("head=" + head + ",tail=" + tail 
 		            + ",size=" + size);
 		      notEmpty.signal();
+		      
 		  }
 	  } finally {
 		  lock.unlock();

@@ -25,7 +25,8 @@ public class GameEngine  {
 	
     public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
-			queue = new BoundedQueue<Puzzle>(50);
+			queue = new BoundedQueue<Puzzle>(5);
+			queue.setDebug(true);
 			queueList.add(queue);
 		}
 		//queue.setDebug(true);
@@ -33,10 +34,13 @@ public class GameEngine  {
 		//One thread will be running until all puzzles are full
 		executor = Executors.newFixedThreadPool(NumThreads);
         Runnable run = new GenThread(queueList,100000, size, 2);
+        
         executor.execute(run);
-
+        
 		for(int i=0;i<NumThreads-1;i++) {
+			
 			run = new GenThread(queueList,100000, size, 2);
+			
 			executor.execute(run);
 		}
 		//Thread t = new Thread(run);
@@ -304,7 +308,7 @@ public class GameEngine  {
 		if(currDifficulty>=NumDifficulties) {
 			currDifficulty=NumDifficulties-1;
 		}
-		System.out.println("Diff"+ currDifficulty);
+		//System.out.println("Diff"+ currDifficulty);
 	}
 	
 	public void DecrementDifficulty() {
@@ -330,15 +334,15 @@ public class GameEngine  {
 			size=6;
 			break;
 		}
-		System.out.println("GAME MODE" +gameMode);
+		//System.out.println("GAME MODE" +gameMode);
 	}
 
 	public int getTime() {
 		switch(gameMode) {
 			case TIMED:
-				return currPuzzle.getInitMoves()+10;
+				return (int)(currPuzzle.getInitMoves()*1.5) +5;
 			case STORY:
-				return currPuzzle.getInitMoves();//+10; //For testing - dec to 10 for real
+				return (int)(currPuzzle.getInitMoves()*1.5) +5;//+10; //For testing - dec to 10 for real
 			case FREEPLAY:
 				return 3600*60;
 			default:

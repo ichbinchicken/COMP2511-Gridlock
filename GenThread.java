@@ -60,6 +60,8 @@ public class GenThread implements Runnable
 	}
 	
 	public void run() {
+		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+
 		int i=1;
 
 		try {
@@ -68,55 +70,52 @@ public class GenThread implements Runnable
 			if(diff!=null) {
 				minMoves=diff.getMoves();
 			}
-			while(!queueListFull() || count > 1000) {
-				if(minMoves==0) {
-					return; //All queues full
-				}
-				Puzzle puzzle = new Puzzle(size,minMoves, true);
-				int moves = puzzle.getInitMoves();
-				if(size>6) {
-					if(moves>=Difficulty.PHD.getMoves()) {
-						System.out.println("ADD 7QUEUE" +moves);
-
-						queue = queueList.get(5);
+			while(1!=2) {
+				if(!queueListFull()){ 
+					if(minMoves==0) {
+						return; //All queues full
 					}
-				}
-				else {
-					if(moves>=Difficulty.PHD.getMoves()) {
-						queue = queueList.get(4);
-					}
-					else if(moves>=Difficulty.MASTERS.getMoves()) {
-						queue = queueList.get(3);
-					}				
-					else if(moves>=Difficulty.BACH.getMoves()) {
-						queue = queueList.get(2);
-					}
-					else if(moves>=Difficulty.HSC.getMoves()) {
-						queue = queueList.get(1);
-					}
-					else if(moves>=Difficulty.SC.getMoves()) {
-						queue = queueList.get(0);
+					Puzzle puzzle = new Puzzle(size,minMoves, true);
+					int moves = puzzle.getInitMoves();
+					if(size>6) {
+						if(moves>=Difficulty.PHD.getMoves()) {
+							System.out.println("ADD 7QUEUE" +moves);
+	
+							queue = queueList.get(5);
+						}
 					}
 					else {
-						continue;
+						if(moves>=Difficulty.PHD.getMoves()) {
+							queue = queueList.get(4);
+						}
+						else if(moves>=Difficulty.MASTERS.getMoves()) {
+							queue = queueList.get(3);
+						}				
+						else if(moves>=Difficulty.BACH.getMoves()) {
+							queue = queueList.get(2);
+						}
+						else if(moves>=Difficulty.HSC.getMoves()) {
+							queue = queueList.get(1);
+						}
+						else if(moves>=Difficulty.SC.getMoves()) {
+							queue = queueList.get(0);
+						}
+						else {
+							continue;
+						}
 					}
+					if(!queue.isFull()) {
+						queue.add(puzzle);
+						System.out.println(moves);
+						i++;
+						//System.out.println("Thread i "+i +"Count"+count);
+					}
+			        Thread.sleep((int) (Math.random() * DELAY));
 				}
-				if(!queue.isFull()) {
-					queue.add(puzzle);
-					//System.out.println(moves);
-					i++;
-					//System.out.println("Thread i "+i +"Count"+count);
+				else{
+					Thread.sleep(1000);
 				}
-				if(i>count) {
-					System.out.println("End Thread");
-
-					return;
-				}
-		        Thread.sleep((int) (Math.random() * DELAY));
 			}
-			System.out.println("End Thread");
-
-			return;
 		}
 	catch (InterruptedException exception){	
 	}
