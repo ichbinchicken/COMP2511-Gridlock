@@ -181,14 +181,12 @@ public class BoardController extends Controller {
                 currSeconds--;
                 totalTime.setText(convertTime(currSeconds));
                 if (currSeconds <= 0) {
-				stopGame(GAME_OVER_MSGS[0]);
-
-				engine.GameLoss();
+    				engine.GameLoss();
                 	if(engine.getMode()==Mode.STORY) {
                         buttonNewGame.setDisable(true);
-
-                		
                 	}
+                	stopGame(GAME_OVER_MSGS[0]);
+				
 
                 }
             }
@@ -301,15 +299,17 @@ public class BoardController extends Controller {
         double boardHeight = boardPane.getPrefHeight();
         //double boardWidth = boardPane.getWidth();
 
-        countDown.stop();
+        countDown.pause();
         buttonPause.setDisable(true);
         buttonHint.setDisable(true);
         buttonNewGame.setDisable(false);
         curtain.setVisible(true);
         curtain.toFront();
         message.setText(msg);
-
-        if (GameWon) {
+        if (engine.StoryModeEnd()==true) {
+        	StoryModeEndScreen();
+        }
+        else if (GameWon) {
             message.setLayoutY(boardHeight/4);
             String timeElapsed = convertTime(totalSeconds - currSeconds);
             Label[] details = new Label[4];
@@ -331,6 +331,9 @@ public class BoardController extends Controller {
                 details[i].setTextAlignment(TextAlignment.CENTER);
                 details[i].toFront();
             }
+            message.setVisible(true);
+            message.toFront();
+
 
         } else {
             message.setLayoutY(boardHeight*3/8);
@@ -358,10 +361,77 @@ public class BoardController extends Controller {
             setCenterX(prompt);
             boardPane.getChildren().add(prompt);
             prompt.toFront();
+            message.setVisible(true);
+            message.toFront();
+
 
         }
-        message.setVisible(true);
-        message.toFront();
+    }
+    
+    
+    private void StoryModeEndScreen() {
+        buttonNewGame.setDisable(true);
+        double boardHeight = boardPane.getPrefHeight();
+        double boardWidth = boardPane.getPrefWidth();
+
+    	ArrayList<GradeLvl> gradeList = engine.StoryGetAllGrades();
+    	String gradLevel = engine.StoryGetGradLevel();
+    	GradeLvl finalGrade = engine.GetFinalGrade();
+        Label[] gradeLabel = new Label[gradeList.size()];
+        Label[] GradLabel = new Label[3];
+        Label[] levelLabel = new Label[gradeList.size()];
+        if(gradLevel!="FAILED") {
+        	GradLabel[0] = new Label("Congratulations!");
+        	GradLabel[1] = new Label("You Graduated from: "+ gradLevel);
+        	GradLabel[2] = new Label ("With an Overall Grade of: " + finalGrade.getString());
+        	
+        }
+        else {
+        	GradLabel[0] = new Label("You Failed to Graduate");
+        	GradLabel[1] = new Label("Maybe he should try again");
+        	GradLabel[2] = new Label("");
+        }
+
+        for(int i=0;i<3;i++) {
+        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 25));
+        	GradLabel[i].setTextFill(Color.WHITESMOKE);
+        	GradLabel[i].setTextAlignment(TextAlignment.CENTER);
+        	setCenterX(GradLabel[i]);
+        	GradLabel[i].setLayoutY(boardHeight*(2*i)/24);
+
+        }
+        for(int i=0;i<gradeList.size();i++) {
+        	levelLabel[i] = new Label("Level: "+(i+1));
+        	gradeLabel[i] = new Label("Grade: "+gradeList.get(i).getString());
+        	//levelLabel[i].setLayoutX(value);
+        	gradeLabel[i].setLayoutY((boardHeight*(i+6))/24);
+        	levelLabel[i].setLayoutY((boardHeight*(i+6))/24);
+
+        	levelLabel[i].setLayoutX(boardWidth/4);
+        	gradeLabel[i].setLayoutX(boardWidth/2);
+
+            //setCenterX(gradeLabel[i]);
+            gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+            gradeLabel[i].setTextFill(Color.WHITESMOKE);
+            gradeLabel[i].setTextAlignment(TextAlignment.LEFT);
+            gradeLabel[i].toFront();
+            levelLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+            levelLabel[i].setTextFill(Color.WHITESMOKE);
+            levelLabel[i].setTextAlignment(TextAlignment.LEFT);
+            levelLabel[i].toFront();
+
+
+        }
+        boardPane.getChildren().addAll(gradeLabel);
+        boardPane.getChildren().addAll(GradLabel);
+        boardPane.getChildren().addAll(levelLabel);
+        message.setVisible(false);
+        //message.toFront();
+
+
+        //details[0] = new Label(GAME_WON_MSGS[1]+timeElapsed);
+
+
     }
     
     
@@ -411,9 +481,15 @@ public class BoardController extends Controller {
     public void MakeMove(int oldR, int oldC, int r, int c) {
     	if(!GameWon) {
 			if(engine.MakeMove(oldR, oldC, r,c)) {
+				countDown.stop();
 				//Game has finished
 	    		animating=true;
-				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, animTime);
+	    		int aTime=animTime;
+	    		if(engine.getMode()==Mode.FREEPLAY) {
+	    			aTime=animTime/2;
+	    		}
+	    		
+				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, aTime);
                 GameWon=true;
                 engine.GameWon(currSeconds);
 				//return true;

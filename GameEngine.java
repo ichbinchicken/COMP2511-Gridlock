@@ -17,6 +17,7 @@ public class GameEngine  {
 	private Mode gameMode = Mode.TIMED;
 	private int StoryLevel=0;
 	private ArrayList<GradeLvl> gradeList;  
+	private boolean StoryModeEnd = false;
 
 
 	Puzzle currPuzzle;
@@ -152,6 +153,7 @@ public class GameEngine  {
 			StoryLevel++;
 			if(StoryLevel==10) {
 				//BEATEN STORY MODE - GIVE GRADE
+				StoryModeEnd=true;
 				GetFinalGrade();
 			}
 			if(StoryLevel<=2) {
@@ -197,29 +199,64 @@ public class GameEngine  {
 
 	}
 	
+	public ArrayList<GradeLvl> StoryGetAllGrades(){
+		return gradeList;
+	}
+	
+	public String StoryGetGradLevel() {
+		if(StoryLevel>=10) {
+			return "PHD";
+		}
+		else if(StoryLevel>=8) {
+			return "Masters";
+		}
+		else if(StoryLevel>=6) {
+			return "Bachelors";
+		}
+		else if(StoryLevel>=4) {
+			return "High School Certificate";
+		}
+		else if(StoryLevel>=2) {
+			return "School Certificate";
+		}
+		else {
+			return "FAILED";
+		}
+		
+	}
+	
 	public GradeLvl CalculateGrade(int timeLeft) {
-		if( getMoves()<getMinMoves()) {
+		if(timeLeft<=0) {
+			return GradeLvl.F;
+		}
+		else if( getMoves()<getMinMoves()) {
 			return GradeLvl.HD;
 		}
-		if( getMoves()<=getMinMoves()*1.5) {
+		else if( getMoves()<=getMinMoves()*1.5) {
 			return GradeLvl.D;
 		}
-		if( getMoves()<=getMinMoves()*2) {
+		else if( getMoves()<=getMinMoves()*2) {
 			return GradeLvl.C;
 		}
-		if(timeLeft>0) {
+		else if(timeLeft>0) {
 			return GradeLvl.P;
 		}
 		return GradeLvl.F;
 		
 	}
 	public void GameLoss() {
+		
 		if(gameMode==Mode.STORY) {
-			StoryLevel=0;
+			StoryModeEnd=true;
 			GradeLvl gdlvl = CalculateGrade(0);
+			System.out.println("LOSS WITH" + gdlvl.getString());
+
 			gradeList.add(gdlvl);
 			gdlvl = GetFinalGrade();
-			System.out.println("LOSS WITH" + gdlvl.getString());
+
+
+			//StoryLevel=0;
+			System.out.println("GRAD WITH" + gdlvl.getString());
 		}
 	}
 	
@@ -301,7 +338,7 @@ public class GameEngine  {
 			case TIMED:
 				return currPuzzle.getInitMoves()+10;
 			case STORY:
-				return currPuzzle.getInitMoves()+10; //For testing - dec to 10 for real
+				return currPuzzle.getInitMoves();//+10; //For testing - dec to 10 for real
 			case FREEPLAY:
 				return 3600*60;
 			default:
@@ -310,6 +347,15 @@ public class GameEngine  {
 	}
 	public Mode getMode() {
 		return gameMode;
+	}
+
+	public boolean StoryModeEnd() {
+		if(	StoryModeEnd==true) {
+			StoryModeEnd=false;
+			return true;
+		}
+			
+		return false;
 	}
 	
 	
