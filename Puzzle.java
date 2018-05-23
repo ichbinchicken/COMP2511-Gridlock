@@ -28,51 +28,70 @@ public class Puzzle {
 	private static final int  VCAR =1; //Horizontal sliding
 	private static final int  VTRUCK =2; //Horizontal sliding
 
-	public Puzzle(int n, int minMoves, boolean gen) {
+	public Puzzle(int n) {
 		//arr= new ArrayList<Integer>(n*n);
 		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
 		this.Size=n;
-		GoalC = Size-1;
-		Random rand = new Random(System.currentTimeMillis());
-		GoalR = rand.nextInt(Size-1);
-		int maxCars=30; //13 for 6x6 
+		GoalC = Size-1;		
+	}
+	
+	
+	
+	public int GeneratePuzzle(int MinMoves) {
+		int maxCars=13; //13 for 6x6 
 		int CarP = 80;
 		int VerP = 60;
-		GameBoard newBoard=null;
-		search=new Search(GoalR,n);
+		Random rand = new Random(System.nanoTime());
+		GoalR = rand.nextInt(Size-1);
+		search=new Search(GoalR,Size);
 		//while(moves < minMoves) {
-		if(minMoves<7) {
+		if(MinMoves<7) {
 			maxCars -= 	rand.nextInt(7);
 			CarP = 60;
 		}
-		if(gen==true) {
-			int moves=0;
-			//while(initial==null) {
-				board = GenSolution(maxCars,CarP,VerP);
-				//board.printBoard();
+		GameBoard newBoard=null;
+		int moves = 0;
+		do  {
+			board = GenSolution(maxCars,CarP,VerP); //Generate initial board
+			newBoard = search.GenBoard(board, MinMoves);
+			if(newBoard!=null) {
+				 moves=newBoard.getMoves();
+			 }
+		} while(moves<MinMoves);
 		
-				newBoard = search.GenBoard(board, minMoves);
-				if(newBoard==null) {
-					minInitMoves=0;
-					return;
-					
-				}
-				minInitMoves=newBoard.getMoves();
-					//System.out.println(moves);
-		
-				initial = newBoard.copyGameBoard(); //For reset
-				board = newBoard;
-			//}
-		}
-		else {
-			Random random = new Random();
-			GameBoard nB = StoredBoard.values()[random.nextInt(StoredBoard.values().length)].getBoard();
-			board = nB.copyGameBoard();
-			initial = nB.copyGameBoard();
-			minInitMoves=board.getMoves();
-			GoalR = board.findGoalCarR();
-		}
+		minInitMoves=newBoard.getMoves();
+		initial = newBoard.copyGameBoard(); //For reset
+		board = newBoard;
+
+		return minInitMoves;
 	}
+	
+	public int GetStoredPuzzle() {
+		Random rand = new Random(System.currentTimeMillis());
+		GameBoard nB = StoredBoard.values()[rand.nextInt(StoredBoard.values().length)].getBoard();
+		board = nB.copyGameBoard();
+		initial = nB.copyGameBoard();
+		minInitMoves=board.getMoves();
+		GoalR = board.findGoalCarR();
+		return minInitMoves;
+	}
+	
+	public Puzzle DuplicatePuzzle() {
+		Puzzle p = new Puzzle(Size );
+		p.SetNewPuzzleVars(board, initial, GoalC, GoalR, minInitMoves);
+		return p;
+	}
+	
+	public void SetNewPuzzleVars(GameBoard board, GameBoard init, int GoalC, int GoalR, int minInit) {
+		this.board= board.copyGameBoard();
+		this.initial = init.copyGameBoard();
+		this.GoalC = GoalC;
+		this.GoalR = GoalR;
+		numHints=0;
+		numMoves=0;
+		minInitMoves=minInit;
+	}
+	
 	
 	
 	/**
@@ -319,7 +338,7 @@ public class Puzzle {
 		}
 		
 		if(type == HCAR) {
-			if(c+1<Size-1) {
+			if(c+1<=Size-1) {
 				if(board.getRC(r,c) ==0 && 0==board.getRC(r,c+1)){
 					board.setRC(r,c, HCAR);
 					board.setRC(r,c+1, HCAR);
@@ -328,7 +347,7 @@ public class Puzzle {
 			}
 		}
 		if(type == HTRUCK) {
-			if(c+2<Size-1) {
+			if(c+2<=Size-1) {
 				if(board.getRC(r,c) ==0 && board.getRC(r,c+2)==0 && board.getRC(r,c+1)==0){
 					board.setRC(r,c, HTRUCK);
 					board.setRC(r,c+1, HTRUCK);
@@ -338,7 +357,7 @@ public class Puzzle {
 			}
 		}
 		if(type == VTRUCK) {
-			if(r+2<Size-1) {
+			if(r+2<=Size-1) {
 				if(board.getRC(r,c) ==0 && board.getRC(r+1,c)==0 && board.getRC(r+2,c)==0){
 					board.setRC(r,c, VTRUCK);
 					board.setRC(r+1,c, VTRUCK);
@@ -349,7 +368,7 @@ public class Puzzle {
 		}
 		
 		if(type == VCAR) {
-			if(r+1<Size-1) {
+			if(r+1<=Size-1) {
 				if(board.getRC(r,c)==0 && board.getRC(r+1,c)==0) {
 					board.setRC(r,c, VCAR);
 					board.setRC(r+1,c, VCAR);
@@ -389,5 +408,8 @@ public class Puzzle {
 	public GameBoard getInitial(){
 		return initial;
 	}
+	
+	
+
 
 }

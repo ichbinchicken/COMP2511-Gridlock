@@ -55,45 +55,7 @@ public class Search {
 	}
 
 	
-	public GameBoard GenBoardImpr(GameBoard board){
-		queue = new LinkedList<GameBoard>();
-		closedMap = new HashMap<ArrayList<Integer>, GameBoard>();
-		Queue<GameBoard> leafNode  = new LinkedList<GameBoard>();
-		ArrayList<Integer> arr = board.getArr();
-		GameBoard curr = new GameBoard(arr,-1, Size);
-		//ArrayList<GameBoard> boardList = new ArrayList<GameBoard>();
-		addQueue(curr,null);
-		while(!queue.isEmpty()) {
-			curr = queue.remove();
-			curr.incMoves();
-			if(isGoal(curr)) {
-				curr.resetMoves();
-				
-			}
-			if(FindNeighbour(curr)) {
-				leafNode.add(curr);
-				//curr.printBoard();
-			}
-		}
-		GameBoard max = UpdateMoves(leafNode.remove());
-		while(!leafNode.isEmpty()) {
-			GameBoard temp = UpdateMoves(leafNode.remove());
-			//System.out.println("Moves" + temp.getMoves());
-			//temp.printBoard();
-			if(temp.getMoves()>max.getMoves()) {
-				
-				max=temp;
-			}
-		}
-		Clear();
-		System.out.println("Max Moves" + max.getMoves());
-		max.printBoard();
-		return max;
-		//return boardList;
-		//closedMap.
-	}
-	
-	
+
 	
 	/**
 	 * @param state Finished state
@@ -125,7 +87,7 @@ public class Search {
 		}
 		int maxMoves = curr.getMoves();
 		if(maxMoves<minMoves) {
-			System.out.println("Cant Do Max Gen" + maxMoves + "Req:" + minMoves);
+		//System.out.println("Cant Do Max Gen" + maxMoves + "Req:" + minMoves);
 			return null; //Cant generate hard board with this config
 		}
 		//System.out.println(maxMoves);
@@ -143,11 +105,7 @@ public class Search {
 			curr.incMoves();
 			FindNeighbour(curr);
 		}
-		//System.out.println("REAL MAX MOVES"+curr.getMoves());
-
-		
 		Clear();
-		//System.out.println("NUM MOVES" +curr.getMoves());
 		return curr;
 	}
 	

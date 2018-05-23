@@ -74,8 +74,8 @@ public class GenThread implements Runnable
 				}
 				
 				if(!queueListFull()){ 
-					Puzzle puzzle = new Puzzle(size,minMoves, true);
-					int moves = puzzle.getInitMoves();
+					Puzzle puzzle = new Puzzle(size);
+					int moves= puzzle.GeneratePuzzle(minMoves);
 					if(moves>=Difficulty.PHD.getMoves()) {
 						queue = queueList.get(4);
 					}
@@ -103,9 +103,9 @@ public class GenThread implements Runnable
 					Thread.sleep((int) (Math.random() * DELAY));
 				}
 				else{
-					System.out.println("Thread Sleeping");
-					Thread.sleep((int) (1000 * Math.random()));
-					System.out.println("Thread Wakeup");
+					//System.out.println("Thread Sleeping");
+					Thread.sleep((int) (10000 * Math.random()));
+					//System.out.println("Thread Wakeup");
 				}
 			}
 			System.out.println("End Thread");

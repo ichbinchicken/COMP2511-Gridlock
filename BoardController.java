@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -5,13 +7,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
@@ -19,62 +19,73 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-import java.util.ArrayList;
-
-
-public class BoardController extends Controller {
+public class BoardController extends gameController {
 	// public static final int  VERT=0;
 	// public static final int HORIZ=1;
-	private static final int  GOALCAR =5;
-    private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
-    private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
-    private static final int animTime = 500;
+	protected static final int  GOALCAR =5;
+    protected static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
+    protected static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
+    protected static final int animTime = 500;
 
-    private GameEngine engine;
+    protected GameEngine engine;
 
 	@FXML
-    private Pane boardPane;
+	protected Pane boardPane;
     @FXML
-    private Label totalTime;
+    protected Label totalTime;
     @FXML
-    private Label movesMade;
+    protected Label movesMade;
     @FXML
-    private Button buttonPause;
+    protected Button buttonPause;
     @FXML
-    private Button buttonRestart;
+    protected Button buttonRestart;
     
     @FXML
-    private Button buttonNewGame;
+    protected Button buttonNewGame;
     @FXML
-    private Button buttonHint;
+    protected Button buttonHint;
     @FXML
-    private Button buttonMenu;
+    protected Button buttonMenu;
 
-    private Rectangle curtain;
-    private Label message;
-    private double squareWidth;
-    private int nSquares;
-    private Timeline countDown;
-    private Timeline winCountDown;
-    private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
-    private int currSeconds;
-    private boolean running;
-    private ArrayList<Car> workload;
-    private boolean GameWon = false;
-    private boolean animating = false;
-    private Car goalCar;
-    private Main main;
+    protected Rectangle curtain;
+    protected Label message;
+    protected double squareWidth;
+    protected int nSquares;
+    protected Timeline countDown;
+    protected Timeline winCountDown;
+    protected int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
+    protected int currSeconds;
+    protected boolean running;
+    protected ArrayList<Car> workload;
+    protected boolean GameWon = false;
+    protected boolean animating = false;
+    protected Car goalCar;
+    protected Main main;
 
-    private final Color boardColor = Color.ORANGE;
+    protected final Color boardColor = Color.ORANGE;
 
     public BoardController(Stage s, GameEngine engine, Main main) {
+    	super(s,engine,main);
         this.engine = engine;
         this.main = main;
         totalSeconds = currSeconds = engine.getTime();
         workload = new ArrayList<>();
+
         running = true; // this is to check whether the game is paused. Initially, it's running.
     }
 
+	@FXML
+	void NewGame() {
+    	if(animating==false) {
+    		GetNewBoard();
+    	}
+	}
+	
+	@FXML
+	void MainMenu() {
+		main.ShowMenuScreen();
+	}
+    
     @FXML
     public void initialize() {
     	engine.getNewPuzzle();
@@ -101,7 +112,7 @@ public class BoardController extends Controller {
         //GenNewPuzzle();
 
         // must call drawBoard after curtain and message are init'd, and after GenNewPuzzle
-        drawBoard();
+        drawBoard(boardPane);
 
         // init buttons
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -109,11 +120,14 @@ public class BoardController extends Controller {
             public void handle(MouseEvent event) {
                 if (running) {
                     countDown.pause();
+                    buttonHint.setDisable(true);
                     running = false;
                     buttonPause.setText("Resume");
                     curtain.setVisible(true);
                     curtain.toFront();
                 } else {
+                	if(engine.getMode()!=Mode.STORY)
+                			buttonHint.setDisable(false);
                     countDown.play();
                     running = true;
                     buttonPause.setText("Pause");
@@ -123,28 +137,22 @@ public class BoardController extends Controller {
             }
         });
         
-        buttonNewGame.setOnMouseClicked(new EventHandler<MouseEvent>(){
-            @Override
-            public void handle(MouseEvent event) {
-            	//workload = engine.GetCarList();
-            	GetNewBoard();
-            }
 
-        });
 
         buttonRestart.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
             	//workload = engine.GetCarList();
-            	
-            	engine.RestartPuzzle();
-                boardPane.getChildren().clear();
-                currSeconds = totalSeconds;
-                GameWon=false;
-                animating=false;
-                drawBoard();
-                countDown.playFromStart();
-                movesMade.setText("0");
+            	if(animating==false) {
+	            	engine.RestartPuzzle();
+	                boardPane.getChildren().clear();
+	                currSeconds = totalSeconds;
+	                GameWon=false;
+	                animating=false;
+	                drawBoard(boardPane);
+	                countDown.playFromStart();
+	                movesMade.setText("0");
+            	}
 
             }
         });
@@ -153,7 +161,7 @@ public class BoardController extends Controller {
         buttonHint.setOnMouseClicked(new EventHandler <MouseEvent>() {
         	@Override
         	public void handle (MouseEvent event) {
-        		if(animating==false) {
+        		if(animating==false && GameWon == false) {
 	        		int[] arr =engine.getNextMove();
 	        		//System.out.println(arr);
 	        		Car car =findCar(arr[0], arr[1]);
@@ -167,11 +175,7 @@ public class BoardController extends Controller {
         	}
         });
         
-        buttonMenu.setOnAction(new EventHandler<ActionEvent>() {
-        	@Override public void handle(ActionEvent e) {
-        		main.ShowMenuScreen();
-        	}
-        });
+
 
 
 
@@ -205,80 +209,10 @@ public class BoardController extends Controller {
 
     }
 
-    private void drawBoard() {
-    	Mode mode = engine.getMode();
-        running = true;
-        buttonPause.setDisable(false);
-        buttonPause.setText("Pause");
-        buttonNewGame.setDisable(false);
-        totalTime.setText(convertTime(totalSeconds));
-        curtain.setVisible(false);
-        message.setVisible(false);
-        if(mode==Mode.STORY) {
-            buttonHint.setDisable(true);
-            buttonRestart.setDisable(true);
-            buttonNewGame.setDisable(true);
-        }
-        else {
-            buttonHint.setDisable(false);
-            buttonRestart.setDisable(false);
-            buttonNewGame.setDisable(false);
-        }
-        Rectangle[][] rec = new Rectangle[nSquares][nSquares];
-
-        for (int i = 0; i < nSquares; i ++) {
-            for (int j = 0; j < nSquares; j ++) {
-                rec[i][j] = new Rectangle();
-                rec[i][j].setX(i * squareWidth);
-                rec[i][j].setY(j * squareWidth);
-                rec[i][j].setWidth(squareWidth);
-                rec[i][j].setHeight(squareWidth);
-                rec[i][j].setFill(boardColor);
-                rec[i][j].setStroke(Color.BLUE);
-                boardPane.getChildren().add(rec[i][j]);
-            }
-        }
-        drawBorder();
-        drawCars();
-        boardPane.getChildren().add(curtain);
-        boardPane.getChildren().add(message);
-    }
 
 
     // draw border for the board
-    private void drawBorder() {
-        Line l= new Line();
-        l.setEndY(nSquares*squareWidth);
-        boardPane.getChildren().add(l);
-        l=new Line();
-        l.setEndX(nSquares*squareWidth);
-        boardPane.getChildren().add(l);
-        l=new Line();
-        l.setStartY(nSquares*squareWidth);
-        l.setEndY(nSquares*squareWidth);
-        l.setEndX(nSquares*squareWidth);
-        boardPane.getChildren().add(l);
-        l=new Line();
-        l.setStartX(nSquares*squareWidth);
-        l.setEndX(nSquares*squareWidth);
-        l.setEndY(nSquares*squareWidth);
-        boardPane.getChildren().add(l);
-    }
 
-    private void drawCars() {
-        workload.clear();
-    	workload = engine.GetCarList();
-        for(Car c: workload) {
-            c.frontEndCarConstructor(squareWidth, boardPane.getBoundsInLocal(),this);
-            Node car = c.getCar();
-            boardPane.getChildren().add(car);
-            car.toFront();
-            if (c.getCarType() == GOALCAR) {
-                goalCar = c;
-            }
-        }
-
-    }
 
     public boolean checkIntersection(Car car) {
         Bounds bounds = car.getCar().getBoundsInParent();
@@ -296,7 +230,7 @@ public class BoardController extends Controller {
         return false;
     }
 
-    private void stopGame(String msg) {
+    protected void stopGame(String msg) {
         double boardHeight = boardPane.getPrefHeight();
         //double boardWidth = boardPane.getWidth();
 
@@ -370,7 +304,7 @@ public class BoardController extends Controller {
     }
     
     
-    private void StoryModeEndScreen() {
+    protected void StoryModeEndScreen() {
         buttonNewGame.setDisable(true);
         double boardHeight = boardPane.getPrefHeight();
         double boardWidth = boardPane.getPrefWidth();
@@ -460,7 +394,7 @@ public class BoardController extends Controller {
     }
     */
 
-    private String convertTime(long secondDelta) {
+    protected String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
         long seconds = 1;
         long minutes = seconds * 60;
@@ -479,44 +413,12 @@ public class BoardController extends Controller {
     }
 
     
-    public void MakeMove(int oldR, int oldC, int r, int c) {
-    	if(!GameWon) {
-			if(engine.MakeMove(oldR, oldC, r,c)) {
-				countDown.stop();
-				//Game has finished
-	    		animating=true;
-	    		int aTime=animTime;
-	    		if(engine.getMode()==Mode.FREEPLAY) {
-	    			aTime=animTime/2;
-	    		}
-	    		
-				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, aTime);
-                GameWon=true;
-                engine.GameWon(currSeconds);
-				//return true;
-			}
-			//return false;
-    	}
-    	movesMade.setText(Integer.toString(engine.getMoves()));
-
-    }
     
 
     
-    public boolean GetAnimating() {
-    	return animating;
-    }
-    
-    public void AnimatingFin() {
-    	animating=false;
-    	if (GameWon) {
-    		
-            winCountDown.playFromStart();
-        }
-    }
 
     /*
-    private Car findGoalCar() {
+    protected Car findGoalCar() {
     	for(Car car:workload) {
     		if(car.getCarType()==GOALCAR) {
     			return car;
@@ -525,46 +427,12 @@ public class BoardController extends Controller {
     	return null;
     }
     */
-
-    private Car findCar(int r,int c) {
-    	for(Car car: workload) {
-    		if(r==car.getR() && c==car.getC()) {
-    			return car;
-    		}
-    	}
-    	return null;
-    }
     
-    public void AddCartoPane(Node c) {
-    	boardPane.getChildren().remove(c);
-        boardPane.getChildren().add(c);
-        c.toFront();
-    }
-    
-    
-	public int[] FindMoves(int r, int c) {
-		return engine.FindMoves(r, c);
-	}
 
-    public void GetNewBoard() {
-    	engine.getNewPuzzle();
-        nSquares = engine.getBoardSize(); //this will be replaced dynamically.
-        this.squareWidth = boardPane.getPrefWidth()/nSquares;
-
-        boardPane.getChildren().clear();
-        totalSeconds = engine.getTime();
-        currSeconds = totalSeconds;
-        drawBoard();
-        GameWon=false;
-        animating=false;
-        countDown.playFromStart();
-        movesMade.setText("0");
-
-    }
 	
 	
     
-    private void setCenterX(Label label) {
+    protected void setCenterX(Label label) {
         label.layoutXProperty().bind(boardPane.widthProperty().subtract(label.widthProperty()).divide(2));
     }
 

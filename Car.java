@@ -37,7 +37,7 @@ public class Car {
 	private double mousex;
 	private double mousey;
 	//private BoardController boardController;
-	private WeakReference<BoardController> boardReference;
+	private WeakReference<gameController> boardReference;
 	//private Bounds bounds;
 	private int initR;
 	private int initC;
@@ -58,7 +58,7 @@ public class Car {
 	}
 
 	//
-	public void frontEndCarConstructor(double squareLength, Bounds b, BoardController bcontroller) {
+	public void frontEndCarConstructor(double squareLength, Bounds b, gameController bcontroller) {
 		//this.engine = engine;
 		this.squareLength = squareLength;
 		//this.boardController = bcontroller;
@@ -118,7 +118,7 @@ public class Car {
         carNode.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                BoardController boardController = boardReference.get();
+                gameController boardController = boardReference.get();
                 if (boardController != null && !boardController.GetAnimating()) {
                     mousex = event.getSceneX();
                     mousey = event.getSceneY();
@@ -148,7 +148,7 @@ public class Car {
             @Override
             public void handle(MouseEvent event) {
 
-                BoardController boardController = boardReference.get();
+            	gameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating() && moveBounds!=null) {
 
                     dragging = true;
@@ -185,7 +185,7 @@ public class Car {
         carNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                BoardController boardController = boardReference.get();
+            	gameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating()) {
                     dragging = false;
                 }
@@ -195,7 +195,7 @@ public class Car {
         carNode.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                BoardController boardController = boardReference.get();
+            	gameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating() && dragging == true) {
                     x = carNode.getLayoutX();
                     y = carNode.getLayoutY();
@@ -254,7 +254,7 @@ public class Car {
 		pt.setOnFinished(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
-                BoardController boardController = boardReference.get();
+				gameController boardController = boardReference.get();
 				if (boardController != null) {
 					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
 					carNode.setTranslateY(0);

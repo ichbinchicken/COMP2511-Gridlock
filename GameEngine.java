@@ -14,6 +14,11 @@ public class GameEngine  {
 	private ArrayList<GradeLvl> gradeList;  
 	private boolean StoryModeEnd = false;
 	
+	
+	private boolean NetworkMode = false;
+	private boolean NetworkWaiting = false;
+	private Puzzle networkPuzzle = null;
+	//private Network network;
 
 
 	Puzzle currPuzzle;
@@ -22,7 +27,7 @@ public class GameEngine  {
     public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
 			queue = new BoundedQueue<Puzzle>(10);
-			queue.setDebug(true);
+			//queue.setDebug(true);
 			queueList.add(queue);
 		}
 		//queue.setDebug(true);
@@ -49,20 +54,6 @@ public class GameEngine  {
         t3.start();
         t4.start();
         
-        //executor.execute(run);
-        
-		/*for(int i=0;i<NumThreads-1;i++) {
-			
-			run = new GenThread(queueList,100000, size, 2);
-			
-			executor.execute(run);
-		}*/
-		//Thread t = new Thread(run);
-		//t.start();
-
-
-        //queue = queueList.get(NumDifficulties-1);
-
         getAnyPuzzle();
 
     }
@@ -94,14 +85,16 @@ public class GameEngine  {
 			Puzzle p=null;
 			int moves=0;
 			while(moves<2) {
-				p = new Puzzle(size,2,true);
+				p = new Puzzle(size);
+				p.GeneratePuzzle(2);
 				moves = p.getInitMoves();
 			}
 			currPuzzle = p;
 
 		}
 		else if(size>6) {
-			currPuzzle = new Puzzle(size,2,false);
+			currPuzzle = new Puzzle(size);
+			currPuzzle.GetStoredPuzzle();
 		}
 		else{
 			if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
@@ -158,7 +151,8 @@ public class GameEngine  {
 	
 	public boolean MakeMove(int r,int c,int newR,int newC) {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
-		if(ret==true) {
+		if(NetworkMode=true) {
+			NetworkSendMove( r,  c,  newR,  newC);
 		}
 		return ret;
 	}
@@ -278,7 +272,7 @@ public class GameEngine  {
 
 
 			//StoryLevel=0;
-			System.out.println("GRAD WITH" + gdlvl.getString());
+			//System.out.println("GRAD WITH" + gdlvl.getString());
 		}
 	}
 	
@@ -293,7 +287,8 @@ public class GameEngine  {
 	
 	//Only use for other testing
 	public ArrayList<Car> UIGetPuzzle(){
-		currPuzzle = new Puzzle(6,6,true);
+		currPuzzle = new Puzzle(6);
+		currPuzzle.GeneratePuzzle(2);
 		return currPuzzle.GenCarList();
 	}
 	
@@ -380,6 +375,25 @@ public class GameEngine  {
 		return false;
 	}
 	
+	
+	public void NetworkSendMove(int r, int c, int NewR, int NewC){
+		
+		
+	}
+	 
+	public void NetworkGetMove(int r, int c, int NewR, int NewC){
+		
+		
+	}
+	
+	public boolean NetworkMoveWaiting() {
+		return NetworkWaiting;
+	}
+	
+	
+	public void NetworkSetMode(boolean net) {
+		NetworkMode = net;
+	}
 	
 
 	

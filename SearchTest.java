@@ -82,12 +82,16 @@ public class SearchTest {
 			//search.GenBoard(gb);
 		
 		
-			Puzzle p = new Puzzle(6,18,true);
+			Puzzle p = new Puzzle(6);
+			p.GeneratePuzzle(18);
+			System.out.println(i);
 			if(p.getInitMoves()>=18) {
+				System.out.println("J = " + j);
 				j++;
+
+
 			}
 		}
-		System.out.println(j);
 		
 		//gb.printBoard();
 		//System.out.println("ENDGEN\\");
