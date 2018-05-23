@@ -83,6 +83,7 @@ public class Car {
 	    	//carNode.setHeight(squareLength*length);
 		    carNode.setFitHeight((squareLength)*length-2);
 		    carNode.setFitWidth(squareLength-2);
+
 	    }
 	    else {
  	

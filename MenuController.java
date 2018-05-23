@@ -1,6 +1,7 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -9,17 +10,28 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Popup;
+import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 
 
 public class MenuController extends Controller{
 	private Main main;
 	private GameEngine engine;
+	private Stage stage;
+	private boolean showHelp;
 
-
-	public MenuController(Main main, GameEngine engine) {
+	public MenuController(Main main, GameEngine engine, Stage s) {
 		this.main = main;
 		this.engine = engine;
+		this.stage = s;
+		showHelp = false;
 	}
 	@FXML
     public void initialize() {
@@ -73,8 +85,7 @@ public class MenuController extends Controller{
         buttonExit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Stage s = (Stage) buttonExit.getScene().getWindow();
-                s.close();
+                stage.close();
             }
         });
 
@@ -89,11 +100,59 @@ public class MenuController extends Controller{
         		engine.SetDifficulty((int)difficulty);
         	}
         });
-        
+
+        initHelp();
+
+        buttonHelp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (showHelp) {
+					helpMsg[0].setVisible(false);
+					helpMsg[1].setVisible(false);
+					showHelp = false;
+
+				} else {
+					helpMsg[0].setVisible(true);
+					helpMsg[1].setVisible(true);
+					showHelp = true;
+				}
+			}
+		});
+
         //buttonExit.setOnAction(actionEvent -> Platform.exit());
 	}
 
-        private String getDiffString(double difficulty) {
+	private void initHelp() {
+		//helpMsg = new Popup();
+		//helpMsg.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_TOP_RIGHT);
+		Rectangle rect = new Rectangle();
+		int helpWidth = 300;
+		int helpHeight = 300;
+		rect.setWidth(helpWidth);
+		rect.setHeight(helpHeight);
+		rect.setFill(Color.MINTCREAM);
+		rect.setX(menuPane.getPrefWidth()-helpWidth-50);
+		rect.yProperty().bind(buttonHelp.layoutYProperty());
+		rect.setVisible(false);
+		//helpMsg.setX(menuPane.getPrefWidth()+50);
+		//helpMsg.setY(-30);
+		Text helpMsgText = new Text("ahahahahaha this is empty hahahahhahaha\n this\n is very looooooong hahahahaha");
+		helpMsgText.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
+		helpMsgText.setWrappingWidth(helpWidth-30);
+		helpMsgText.setFill(Color.SEAGREEN);
+		helpMsgText.xProperty().bind(rect.xProperty().add(20));
+		helpMsgText.yProperty().bind(rect.yProperty().add(30));
+		helpMsgText.setVisible(false);
+		helpMsg = new Node[2];
+		helpMsg[0] = rect;
+		helpMsg[1] = helpMsgText;
+
+
+		menuPane.getChildren().add(rect);
+		menuPane.getChildren().add(helpMsgText);
+	}
+
+	private String getDiffString(double difficulty) {
     		int diff = (int) Math.round(difficulty);
     		String text;
     		switch(diff) {
@@ -128,8 +187,6 @@ public class MenuController extends Controller{
         @FXML
         private ToggleButton toggleTimed;
         @FXML
-        private ToggleButton toggleSpeaker;
-        @FXML
         private Button buttonMultiplayer;
         @FXML
         private Button buttonExit;
@@ -140,8 +197,10 @@ public class MenuController extends Controller{
         @FXML
         private ToggleButton toggleStory;
         @FXML
-        private Button buttonSize;
-        @FXML
         private Label labelDifficulty;
+        @FXML
+		private Pane menuPane;
+        //private Popup helpMsg;
+		private Node[] helpMsg;
 
 }
