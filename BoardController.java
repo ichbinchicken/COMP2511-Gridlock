@@ -349,8 +349,5 @@ public class BoardController extends gameController {
     }
 
 
-    protected void setCenterX(Label label) {
-        label.layoutXProperty().bind(boardPane.widthProperty().subtract(label.widthProperty()).divide(2));
-    }
 
 }

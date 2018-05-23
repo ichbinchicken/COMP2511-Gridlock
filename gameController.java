@@ -20,7 +20,7 @@ public class gameController extends Controller {
     protected Main main;
     protected double squareWidth;
     protected int nSquares;
-    private final Color boardColor = Color.ORANGE;
+    protected static final Color boardColor = Color.ORANGE;
     protected ArrayList<Car> workload;
     private Car goalCar;
     protected boolean running;
@@ -213,6 +213,11 @@ public class gameController extends Controller {
 
     }
     
+    
+    protected void setCenterX(Label label) {
+        label.layoutXProperty().bind(boardPane.widthProperty().subtract(label.widthProperty()).divide(2));
+    }
+
     
 
 }
