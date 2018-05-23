@@ -47,20 +47,22 @@ public class Puzzle {
 		}
 		if(gen==true) {
 			int moves=0;
-			while(initial==null) {
+			//while(initial==null) {
 				board = GenSolution(maxCars,CarP,VerP);
 				//board.printBoard();
 		
 				newBoard = search.GenBoard(board, minMoves);
 				if(newBoard==null) {
-					continue;
+					minInitMoves=0;
+					return;
+					
 				}
 				minInitMoves=newBoard.getMoves();
 					//System.out.println(moves);
 		
 				initial = newBoard.copyGameBoard(); //For reset
 				board = newBoard;
-			}
+			//}
 		}
 		else {
 			Random random = new Random();

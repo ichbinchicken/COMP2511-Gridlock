@@ -68,25 +68,31 @@ public class SearchTest {
 	
 	@Test
 	public void GenComp() {
+		int j=0;
 		//System.out.println("//GEN");
-		Search search = new Search(1,6);
+		/*Search search = new Search(1,6);
 		Integer[] gen1 = { 	1,1,3,3,3,0,
 							1,1,4,4,0,0,
 							0,0,0,0,5,5,
 							4,4,1,1,2,2,
 							4,4,1,1,2,2,
-							4,4,4,4,2,2};
-		ArrayList<Integer> arrL = new ArrayList<Integer>(Arrays.asList(gen1));
+							4,4,4,4,2,2};*/
+		//ArrayList<Integer> arrL = new ArrayList<Integer>(Arrays.asList(gen1));
 		for(int i=0;i<1000;i++) {
 			//search.GenBoard(gb);
+		
+		
 			Puzzle p = new Puzzle(6,18,true);
-
+			if(p.getInitMoves()>=18) {
+				j++;
+			}
 		}
+		System.out.println(j);
+		
 		//gb.printBoard();
 		//System.out.println("ENDGEN\\");
 	}
-	/*
-	
+	/*	
 	@Test
 	public void GenCompSimpler() {
 		System.out.println("//GEN");

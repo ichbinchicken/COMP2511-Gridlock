@@ -125,6 +125,7 @@ public class Search {
 		}
 		int maxMoves = curr.getMoves();
 		if(maxMoves<minMoves) {
+			System.out.println("Cant Do Max Gen" + maxMoves + "Req:" + minMoves);
 			return null; //Cant generate hard board with this config
 		}
 		//System.out.println(maxMoves);

@@ -21,8 +21,8 @@ public class GameEngine  {
 	
     public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
-			queue = new BoundedQueue<Puzzle>(20);
-			//queue.setDebug(true);
+			queue = new BoundedQueue<Puzzle>(10);
+			queue.setDebug(true);
 			queueList.add(queue);
 		}
 		//queue.setDebug(true);
