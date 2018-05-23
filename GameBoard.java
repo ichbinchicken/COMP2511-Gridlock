@@ -2,19 +2,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameBoard { //Representation of the board
-		 private ArrayList<Integer> arr; //Current 
+		 private ArrayList<Integer> arr; //Current
 		 private int moves=-1;
 		 private int Size;
 
-		 //int GoalRow;
-		 
-		 
 		public GameBoard(ArrayList<Integer> arr, int moves, int Size) {
 			this.arr = arr;
 			this.moves = moves;
 			this.Size = Size;
 		}
-		
+
 		public int get(int i) {
 			if(i<arr.size()) {
 				return arr.get(i);
@@ -22,35 +19,31 @@ public class GameBoard { //Representation of the board
 			System.out.println("FATAL TRY GET WRONG SIZE");
 			return -1;
 		}
-		
+
 		public void set(int i, int j) {
 			if(i<arr.size()) {
 				arr.set(i,j);
 				return;
 			}
-			System.out.println("FATAL SET GET WRONG SIZE");
-			//return -1;
+			System.out.println("FATAL SET GET WRONG SIZE")
 
-			
 		}
-		
-		
+
+
 		public void setRC(int r, int c, int value) {
 			int i = RCtoI(r,c);
 			set(i,value);
-			//arr.set(RCtoI(r,c), value);
 		}
-		
+
 		public int getRC(int r, int c) {
 			int i = RCtoI(r,c);
 			return get(i);
-			//return arr.get(RCtoI( r,  c));
 		}
-		
+
 		private int RCtoI(int r, int c) {
 			return r * Size + c;
 		}
-		
+
 		public int size() {
 			return arr.size();
 		}
@@ -63,13 +56,13 @@ public class GameBoard { //Representation of the board
 		public void resetMoves() {
 			moves=0;
 		}
-		
+
 		public ArrayList<Integer> getArr(){
 			return arr;
 		}
 
 		public void printBoard() {
-			
+
 			for(int i =0; i<Size*Size;i++) {
 				if(i%Size==0) {
 				    System.out.print('\n');
@@ -80,8 +73,7 @@ public class GameBoard { //Representation of the board
 		    System.out.print('\n');
 
 		}
-		//Old board is previous move
-		//This is latest board
+
 		public int[] compareBoard(GameBoard oldB) {
 			boolean first=false;
 			boolean upleft=false;
@@ -97,18 +89,14 @@ public class GameBoard { //Representation of the board
 				type1 = get(i);
 				type2 = oldB.get(i);
 				if(type1!=type2) {
-					
+
 					int tc=i%(Size);
 					int tr=(int)Math.floor(i/(Size));
 					if(type1==0) {
-						//Move up or left
-						
+
 					}
 					else {
-						//Move down or right
 					}
-					
-					//System.out.println("tC" +tc + "tR" + tr);
 					trarr.add( tr);
 					tcarr.add(tc);
 					if(first==false) {
@@ -124,9 +112,8 @@ public class GameBoard { //Representation of the board
 				}
 				i++;
 			}
-			
-			int size = trarr.size(); //How far move +1
-			//if(direc == VCAR || direc== VTRUCK ) {
+
+			int size = trarr.size();
 				if(upleft==true) {
 					newR=trarr.get(0);
 					newC=tcarr.get(0);
@@ -137,7 +124,7 @@ public class GameBoard { //Representation of the board
 					case VTRUCK: r=r-2; break;
 					case HCAR: case GOALCAR: c=c-1;  break;
 					case HTRUCK: c=c-2; break;
-					
+
 					}
 				}
 				else {
@@ -155,10 +142,10 @@ public class GameBoard { //Representation of the board
 				int[] array = {newR,newC,r,c};
 				return array;
 		}
-				
 
-		
-		
+
+
+
 		/**
 		 * @param r Top Left Row
 		 * @param c Top Left Column
@@ -205,8 +192,8 @@ public class GameBoard { //Representation of the board
 						flags[3]=true;
 					}
 					break;
-				
-				
+
+
 				}
 				j++;
 			}
@@ -216,8 +203,8 @@ public class GameBoard { //Representation of the board
 		public int hashCode() {
 			return arr.hashCode();
 		}
-		
-		
+
+
 		@Override
 		public boolean equals(Object obj) {
 			if(obj==null) {
@@ -229,7 +216,7 @@ public class GameBoard { //Representation of the board
 			}
 			return false;
 		}
-		
+
 		private int getSize(int id) { //Check this for scaling
 			if(id==EMPTY) {
 				return 0;
@@ -243,7 +230,7 @@ public class GameBoard { //Representation of the board
 			return -1;
 		}
 
-		
+
 		public GameBoard copyGameBoard() {
 			ArrayList<Integer> newarr = new ArrayList<Integer>(arr);
 			GameBoard n= new GameBoard(newarr,moves, Size);
@@ -261,12 +248,10 @@ public class GameBoard { //Representation of the board
 			for(int i=0; i<arr.size();i++) {
 				if(arr.get(i)==GOALCAR) {
 					int r = (int)Math.floor(i/Size);
-					//System.out.println(i +"|Row ="+r);
 					return r;
 				}
 			}
-			//System.out.println("COULDN'T FIND GOAL");
 			return -1;
 		}
-		
+
 	}

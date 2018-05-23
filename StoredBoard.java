@@ -27,10 +27,10 @@ public enum StoredBoard {
 	B7W(24,7,new Integer[] {4, 4, 0, 0, 2, 2, 0, 0, 1, 4, 4, 2, 2, 0, 0, 1, 4, 4, 2, 2, 0, 5, 5, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0}),
 	B7X(23,7,new Integer[] {1, 4, 4, 1, 0, 0, 0, 1, 1, 0, 1, 3, 3, 3, 1, 1, 3, 3, 3, 4, 4, 1, 4, 4, 0, 1, 1, 0, 5, 5, 1, 0, 1, 1, 0, 4, 4, 1, 4, 4, 1, 0, 0, 0, 0, 0, 0, 1, 0});
 
-	
 
-	
-	
+
+
+
 	ArrayList<Integer> arrL;
 	int moves;
 	int size;
@@ -39,7 +39,7 @@ public enum StoredBoard {
 		this.moves = moves;
 		this.size = size;
 	}
-	
+
 	public  GameBoard getBoard() {
 		GameBoard b = new GameBoard(arrL,moves,size);
 		return b;

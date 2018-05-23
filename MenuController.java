@@ -45,14 +45,14 @@ public class MenuController extends Controller{
         			mode = Mode.STORY;
         		}
 
-        		
-        			
+
+
         		engine.setMode(mode);
         		engine.getNewPuzzle();
         		main.ShowGameScreen();
         	}
         });
-        
+
         ModeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
         	public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle newToggle) {
         		if(newToggle!=toggleStory ) {
@@ -60,7 +60,7 @@ public class MenuController extends Controller{
                 		double difficulty = sliderDifficulty.getValue();
                 		String text = getDiffString(difficulty);
                 		labelDifficulty.setText(text);
-        				
+
         			}
         		if(newToggle==toggleStory) {
         			if(newToggle.isSelected())
@@ -69,7 +69,7 @@ public class MenuController extends Controller{
         		}
         	}
         });
-        
+
         buttonExit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -89,8 +89,6 @@ public class MenuController extends Controller{
         		engine.SetDifficulty((int)difficulty);
         	}
         });
-        
-        //buttonExit.setOnAction(actionEvent -> Platform.exit());
 	}
 
         private String getDiffString(double difficulty) {
@@ -116,9 +114,8 @@ public class MenuController extends Controller{
 				text="SC";
 			}
     		return text;
+    }
 
-        }
-        
         @FXML
         private Button buttonStartGame;
         @FXML

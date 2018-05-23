@@ -11,18 +11,17 @@ public class GameEngine  {
 	private int size=6;
 	private Mode gameMode = Mode.TIMED;
 	private int StoryLevel=0;
-	private ArrayList<GradeLvl> gradeList;  
+	private ArrayList<GradeLvl> gradeList;
 	private boolean StoryModeEnd = false;
-	
+
 
 
 	Puzzle currPuzzle;
 	BoardController bCont;
-	
+
     public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
 			queue = new BoundedQueue<Puzzle>(20);
-			//queue.setDebug(true);
 			queueList.add(queue);
 		}
 		//queue.setDebug(true);
@@ -48,25 +47,10 @@ public class GameEngine  {
         t2.start();
         t3.start();
         t4.start();
-        
-        //executor.execute(run);
-        
-		/*for(int i=0;i<NumThreads-1;i++) {
-			
-			run = new GenThread(queueList,100000, size, 2);
-			
-			executor.execute(run);
-		}*/
-		//Thread t = new Thread(run);
-		//t.start();
-
-
-        //queue = queueList.get(NumDifficulties-1);
-
         getAnyPuzzle();
 
     }
-	
+
     public Puzzle getAnyPuzzle() {
     	int tempDiff=0;
         while(1!=2) {
@@ -86,9 +70,9 @@ public class GameEngine  {
 			e.printStackTrace();
 		}
         return currPuzzle;
-        
+
     }
-    
+
 	public Puzzle getNewPuzzle(){
 		if(size<6) {
 			Puzzle p=null;
@@ -107,7 +91,7 @@ public class GameEngine  {
 			if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
 			currPuzzle.RestartPuzzle();
 			try {
-				
+
 				if(!queue.isFull() ) {
 					queue.Forceadd(currPuzzle);
 				}
@@ -135,34 +119,34 @@ public class GameEngine  {
 		        		inc=-1;
 		        		tempDiff = NumDifficulties-1;
 		        	}
-		        	
+
 		        }
-		        
+
 	        }
-	        
+
 	        try {
 				currPuzzle = queue.remove();
-	
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	        size = currPuzzle.getSize();
 			return currPuzzle;
-		
+
 	}
-	
+
 	public ArrayList<Car> GetCarList(){
 		return currPuzzle.GenCarList();
 	}
-	
+
 	public boolean MakeMove(int r,int c,int newR,int newC) {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
 		if(ret==true) {
 		}
 		return ret;
 	}
-	
+
 	public GradeLvl GameWon(int time) {
 		GameWin=true;
 		GradeLvl gdlvl = CalculateGrade(time);
@@ -183,13 +167,12 @@ public class GameEngine  {
 			else if(StoryLevel>2) {
 				IncrementDifficulty();
 			}
-			
+
 		}
-		//System.out.println(gdlvl.getString());
 		return gdlvl;
 
 	}
-	
+
 	public GradeLvl GetFinalGrade() {
 		float mark=0;
 		for(GradeLvl glv: gradeList) {
@@ -197,7 +180,6 @@ public class GameEngine  {
 		}
 		mark=mark/gradeList.size();
 		int Fmark=(int)Math.round(mark);
-		//System.out.println("FINAL GRADE" + Fmark);
 		switch(Fmark) {
 		case 0:
 			return GradeLvl.F;
@@ -216,11 +198,11 @@ public class GameEngine  {
 		}
 
 	}
-	
+
 	public ArrayList<GradeLvl> StoryGetAllGrades(){
 		return gradeList;
 	}
-	
+
 	public String StoryGetGradLevel() {
 		if(StoryLevel>=10) {
 			return "PHD";
@@ -240,14 +222,11 @@ public class GameEngine  {
 		else {
 			return "FAILED";
 		}
-		
+
 	}
-	
+
 	public GradeLvl CalculateGrade(int timeLeft) {
 		int gradeMoves = getMoves() + currPuzzle.getHintsUsed();
-		//System.out.println("MIN MOVES" + getMinMoves());
-		//System.out.println("GRADE MOVES" + gradeMoves);
-		//System.out.println("HINTS " + currPuzzle.getHintsUsed());
 		if(timeLeft<=0) {
 			return GradeLvl.F;
 		}
@@ -264,51 +243,48 @@ public class GameEngine  {
 			return GradeLvl.P;
 		}
 		return GradeLvl.F;
-		
+
 	}
 	public void GameLoss() {
-		
+
 		if(gameMode==Mode.STORY) {
 			StoryModeEnd=true;
 			GradeLvl gdlvl = CalculateGrade(0);
-			//System.out.println("LOSS WITH" + gdlvl.getString());
 
 			gradeList.add(gdlvl);
 			gdlvl = GetFinalGrade();
 
 
-			//StoryLevel=0;
+
 			System.out.println("GRAD WITH" + gdlvl.getString());
 		}
 	}
-	
+
 	public int[] getNextMove() {
 		return currPuzzle.getBestMove();
 	}
-	
+
 	public int getBoardSize() {
 		return currPuzzle.getSize();
 	}
-	
-	
-	//Only use for other testing
+
+
 	public ArrayList<Car> UIGetPuzzle(){
 		currPuzzle = new Puzzle(6,6,true);
 		return currPuzzle.GenCarList();
 	}
-	
+
 	public void RestartPuzzle(){
 		currPuzzle.RestartPuzzle();
-		//return currPuzzle.GenCarList();
 	}
-	
+
 	//Get number of moves made on this puzzle
 	public int getMoves() {
 		return currPuzzle.getMoves();
 	}
 
 
-	
+
 	public int getMinMoves() {
 		return currPuzzle.getInitMoves()-1;
 	}
@@ -320,24 +296,22 @@ public class GameEngine  {
 	public void SetDifficulty(int difficulty) {
 		currDifficulty=difficulty;
 	}
-	
+
 	public void IncrementDifficulty() {
 		currDifficulty++;
 		if(currDifficulty>=NumDifficulties) {
 			currDifficulty=NumDifficulties-1;
 		}
-		//System.out.println("Diff"+ currDifficulty);
 	}
-	
+
 	public void DecrementDifficulty() {
 		currDifficulty--;
 		if(currDifficulty<0) {
 			currDifficulty=0;
 		}
 	}
-	
 
-	//May be other settings required
+
 	public void setMode(Mode mode) {
 		gameMode = mode;
 		switch(gameMode) {
@@ -348,11 +322,10 @@ public class GameEngine  {
 			gradeList = new ArrayList<GradeLvl>(10);
 			break;
 		case FREEPLAY: case TIMED:
-			
+
 			size=6;
 			break;
 		}
-		//System.out.println("GAME MODE" +gameMode);
 	}
 
 	public int getTime() {
@@ -376,15 +349,7 @@ public class GameEngine  {
 			StoryModeEnd=false;
 			return true;
 		}
-			
+
 		return false;
 	}
-	
-	
-
-	
-	
-
-
-
 }

@@ -18,16 +18,12 @@ public class Car {
     private Image IMAGE;
     private ImageView carNode;
 	private static final int  GOALCAR=5;
-	//private static final int  HORCAR=4;
-	//private static final int  HORTRUCK=3;
 	private static final int  VERCAR=1;
 	private static final int  VERTRUCK=2;
-	//private static final int X = 0;
-    //private static final int Y = 0;
 
 	private int r;
     private int c;
-	
+
 	private double x;
 	private double y;
 	private int length;
@@ -36,17 +32,12 @@ public class Car {
 	private boolean dragging;
 	private double mousex;
 	private double mousey;
-	//private BoardController boardController;
 	private WeakReference<BoardController> boardReference;
-	//private Bounds bounds;
 	private int initR;
 	private int initC;
 	private int[] moveSpace = {0,0,0,0};
 	private Bounds moveBounds;
 	double initX,initY;
-	//private GameEngine engine;
-	//private double max;
-
 
 	public Car(int r, int c, int type, int length) {
 		this.r=r; // backend coordinate
@@ -71,21 +62,16 @@ public class Car {
 		IMAGE = new Image("goalcar.png");
 		}
 		carNode = new ImageView(IMAGE);
-	    //max=squareLength*6;
         initX = c*squareLength+1;
         initY = r*squareLength+1;
 	    carNode.setX(initX);
 	    carNode.setY(initY);
-	    //bounds = new BoundingBox(b.getMinX()-initX, b.getMinY()-initY, b.getWidth(), b.getHeight());
-	    
 	    if(type==VERCAR || type == VERTRUCK) {
-	    	//carNode.setWidth(squareLength);
-	    	//carNode.setHeight(squareLength*length);
 		    carNode.setFitHeight((squareLength)*length-2);
 		    carNode.setFitWidth(squareLength-2);
 	    }
 	    else {
- 	
+
 		    carNode.setFitHeight(squareLength-2);
 		    carNode.setFitWidth(squareLength*length-2);
 
@@ -93,23 +79,17 @@ public class Car {
 	    addMouseEvent();
 
 	}
-	
-	
+
+
 	public Node getCar() {
 		return carNode;
 	}
 
 
-	/*private double mRound(double value, double factor) {
-		return Math.round(value/factor) * factor;
-	}*/
-	
-
 	private int CoordtoN(double coord) {
-		//System.out.println(coord + "|");
 		return (int) Math.round(coord/squareLength);
 	}
-	
+
 	private double NtoCoord(int n) {
 		return n*squareLength;
 	}
@@ -125,18 +105,14 @@ public class Car {
 
                     x = carNode.getLayoutX();
                     y = carNode.getLayoutY();
-                    //x = getCoordInParent(X);
-                    //y = getCoordInParent(Y);
-                    //System.out.println("Car X: "+x+" Y: "+y);
-
                     carNode.toFront();
-                    
+
                     moveSpace = boardController.FindMoves(r, c);
                     int left = moveSpace[0];
                     int up = moveSpace[1];
                     int down = moveSpace[3];
                     int right = moveSpace[2];
-                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY, 
+                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY,
                     		squareLength*(length+right+left), squareLength*(length+up+down));
 
                 }
@@ -159,7 +135,6 @@ public class Car {
 
                             double newY = y + offsetY;
                             y = setCoord(newY, moveBounds.getMinY(), moveBounds.getMaxY() - length * squareLength);
-                            //carNode.relocate(x, y);
 
                             carNode.setLayoutY(y);
                         //}
@@ -168,7 +143,6 @@ public class Car {
                             double offsetX = event.getSceneX() - mousex;
 
                             double newX = x + offsetX;
-                            //x = setCoord(newX, bounds.getMinX(), bounds.getMaxX() - length * squareLength);
                             x = setCoord(newX, moveBounds.getMinX(), moveBounds.getMaxX() - length * squareLength);
 
                             carNode.setLayoutX(x);
@@ -199,14 +173,8 @@ public class Car {
                 if (boardController!= null && !boardController.GetAnimating() && dragging == true) {
                     x = carNode.getLayoutX();
                     y = carNode.getLayoutY();
-                    //x = getCoordInParent(X);
-                    //y = getCoordInParent(Y);
-
                     double scaledY = Math.round(y / squareLength) * squareLength;
                     double scaledX = Math.round(x / squareLength) * squareLength;
-
-                    //carNode.relocate(scaledX, scaledY);
-
                     carNode.setLayoutX(scaledX);
                     carNode.setLayoutY(scaledY);
                     event.consume();
@@ -219,14 +187,12 @@ public class Car {
                         boardController.MakeMove(oldR, oldC, r, c);
 
                     }
-                    //c=CoordtoN(carNode.getY()+ carNode.getLayoutY());
-                    //System.out.println("Coords r,c" + r+ ","+ c );
                 }
             }
         });
 
     }
-	
+
 	public int getCarType() {
 		return type;
 	}
@@ -235,9 +201,8 @@ public class Car {
 		double xshift = NtoCoord(newC-c);
 		double yshift = NtoCoord(newR-r);
 		Bounds cBnd = carNode.getBoundsInLocal();
-		double xstart = NtoCoord(initC)+cBnd.getWidth()/2+1; //I dont know why NtoCoord(c) shouldnt be added
+		double xstart = NtoCoord(initC)+cBnd.getWidth()/2+1;
 		double ystart = NtoCoord(initR)+cBnd.getHeight()/2+1;
-		//carNode.relocate(NtoCoord(c), NtoCoord(r));
 		Path p = new Path();
 		p.getElements().add(new MoveTo(xstart,ystart));
 		p.getElements().add(new LineTo(xstart+xshift, ystart+yshift));
@@ -245,7 +210,7 @@ public class Car {
 		pt.setNode(carNode);
 		pt.setPath(p);
 		pt.setCycleCount(1);
-		
+
 		pt.play();
 		int oldR=r;
 		int oldC=c;
@@ -267,16 +232,16 @@ public class Car {
 		});
 
 	}
-	
+
 	public int getR() {
 		return r;
 	}
 	public int getC() {
 		return c;
 	}
-	
-	
-	
+
+
+
 	private double setCoord(double newCoord, double minCoord, double maxCoord) {
         if (newCoord > maxCoord) {
             return maxCoord;
@@ -286,18 +251,4 @@ public class Car {
         }
         return newCoord;
     }
-
-    /*
-    private double getCoordInParent(int flag) {
-        double localX = carNode.getLayoutX();
-        double localY = carNode.getLayoutY();
-        Point2D XYInParent = carNode.localToParent(localX, localY);
-        if (flag == X) {
-            return XYInParent.getX();
-        } else {
-            return XYInParent.getY();
-        }
-
-    }
-    */
 }
