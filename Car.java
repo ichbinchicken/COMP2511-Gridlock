@@ -44,6 +44,7 @@ public class Car {
 	private int[] moveSpace = {0,0,0,0};
 	private Bounds moveBounds;
 	double initX,initY;
+	boolean moveable;
 	//private GameEngine engine;
 	//private double max;
 
@@ -58,8 +59,9 @@ public class Car {
 	}
 
 	//
-	public void frontEndCarConstructor(double squareLength, Bounds b, gameController bcontroller) {
+	public void frontEndCarConstructor(double squareLength, Bounds b, gameController bcontroller, boolean Moveable) {
 		//this.engine = engine;
+		this.moveable=Moveable;
 		this.squareLength = squareLength;
 		//this.boardController = bcontroller;
 		this.boardReference = new WeakReference<>(bcontroller);
@@ -118,27 +120,28 @@ public class Car {
         carNode.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                gameController boardController = boardReference.get();
-                if (boardController != null && !boardController.GetAnimating()) {
-                    mousex = event.getSceneX();
-                    mousey = event.getSceneY();
-
-                    x = carNode.getLayoutX();
-                    y = carNode.getLayoutY();
-                    //x = getCoordInParent(X);
-                    //y = getCoordInParent(Y);
-                    //System.out.println("Car X: "+x+" Y: "+y);
-
-                    carNode.toFront();
-                    
-                    moveSpace = boardController.FindMoves(r, c);
-                    int left = moveSpace[0];
-                    int up = moveSpace[1];
-                    int down = moveSpace[3];
-                    int right = moveSpace[2];
-                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY, 
-                    		squareLength*(length+right+left), squareLength*(length+up+down));
-
+            	if(moveable) {
+	                gameController boardController = boardReference.get();
+	                if (boardController != null && !boardController.GetAnimating()) {
+	                    mousex = event.getSceneX();
+	                    mousey = event.getSceneY();
+	
+	                    x = carNode.getLayoutX();
+	                    y = carNode.getLayoutY();
+	                    //x = getCoordInParent(X);
+	                    //y = getCoordInParent(Y);
+	                    //System.out.println("Car X: "+x+" Y: "+y);
+	
+	                    carNode.toFront();
+	                    
+	                    moveSpace = boardController.FindMoves(r, c);
+	                    int left = moveSpace[0];
+	                    int up = moveSpace[1];
+	                    int down = moveSpace[3];
+	                    int right = moveSpace[2];
+	                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY, 
+	                    		squareLength*(length+right+left), squareLength*(length+up+down));
+	                }
                 }
 
             }
@@ -259,8 +262,8 @@ public class Car {
 					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
 					carNode.setTranslateY(0);
 					carNode.relocate(NtoCoord(c)+1, NtoCoord(r)+1); //Must set coordinates again to cancel translate
-                    boardController.MakeMove(oldR, oldC, r, c);
                     boardController.AnimatingFin();
+					boardController.MakeMove(oldR, oldC, r, c);
                 }
 			}
 
@@ -268,6 +271,43 @@ public class Car {
 
 	}
 	
+	
+	public void makeSetAnimateMove(int newR, int newC, int animTime) {
+		double xshift = NtoCoord(newC-c);
+		double yshift = NtoCoord(newR-r);
+		Bounds cBnd = carNode.getBoundsInLocal();
+		double xstart = NtoCoord(initC)+cBnd.getWidth()/2+1; //I dont know why NtoCoord(c) shouldnt be added
+		double ystart = NtoCoord(initR)+cBnd.getHeight()/2+1;
+		//carNode.relocate(NtoCoord(c), NtoCoord(r));
+		Path p = new Path();
+		p.getElements().add(new MoveTo(xstart,ystart));
+		p.getElements().add(new LineTo(xstart+xshift, ystart+yshift));
+		PathTransition pt = new PathTransition(Duration.millis(animTime),p);
+		pt.setNode(carNode);
+		pt.setPath(p);
+		pt.setCycleCount(1);
+		
+		pt.play();
+		int oldR=r;
+		int oldC=c;
+		r=newR;
+		c=newC;
+		pt.setOnFinished(new EventHandler<ActionEvent>(){
+			@Override
+			public void handle(ActionEvent event) {
+				gameController boardController = boardReference.get();
+				if (boardController != null) {
+					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
+					carNode.setTranslateY(0);
+					carNode.relocate(NtoCoord(c)+1, NtoCoord(r)+1); //Must set coordinates again to cancel translate
+                    boardController.AnimatingFin();
+					//boardController.MakeMove(oldR, oldC, r, c);
+                }
+			}
+
+		});
+
+	}	
 	public int getR() {
 		return r;
 	}

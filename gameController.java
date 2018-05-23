@@ -12,24 +12,28 @@ import javafx.stage.Stage;
 
 public class gameController extends Controller {
 	
-	private static final int  GOALCAR =5;
-	private static final int animTime = 0;
-	private boolean isGameWon = false;
+	protected static final int  GOALCAR =5;
+    protected static final int animTime = 500;
+
+	protected boolean isGameWon = false;
     protected GameEngine engine;
-    private Main main;
-    //protected double squareWidth;
+    protected Main main;
+    protected double squareWidth;
     protected int nSquares;
     private final Color boardColor = Color.ORANGE;
-    private ArrayList<Car> workload;
-    private boolean animating=false;
-    private boolean running;
+    protected ArrayList<Car> workload;
     private Car goalCar;
+    protected boolean running;
+    protected boolean animating = false;
+    protected Rectangle curtain;
 
 
 	@FXML
 	protected Pane boardPane;
     @FXML
     protected Label movesMade;
+    @FXML
+    protected Button buttonNewGame;
 
 	public gameController(Stage s, GameEngine engine, Main main) {
         this.engine = engine;
@@ -38,12 +42,42 @@ public class gameController extends Controller {
 	}
 	
 
+	@FXML
+	public void initialize() {
+    	curtain = new Rectangle(boardPane.getPrefWidth(), boardPane.getPrefHeight(), boardColor);
+        curtain.setX(0);
+        curtain.setY(0);
+        boardPane.getChildren().add(curtain);
+
+	}
 	
+	protected void curtainShow() {
+		curtain.setVisible(true);
+		curtain.toFront();
+	}
 	
+	protected void curtainHide() {
+		curtain.setVisible(false);
+		curtain.toBack();
+	}
+
+	@FXML
+	void MainMenuAction() {
+		main.ShowMenuScreen();
+	}
 	
-    protected void drawBoard(Pane p) {
-    	Mode mode = engine.getMode();
-        running = true;
+	@FXML
+	void NewGameAction() {
+	    GetNewBoard();
+	}
+	
+    protected ArrayList<Car> drawBoard(Pane p, ArrayList<Car>  wkload, boolean move) {
+        //running = true;
+        p.getChildren().clear();
+
+        wkload.clear();
+        running=true;
+        
         Rectangle[][] rec = new Rectangle[nSquares][nSquares];
         double squareWidth = p.getPrefWidth()/nSquares;
 
@@ -59,27 +93,10 @@ public class gameController extends Controller {
                 p.getChildren().add(rec[i][j]);
             }
         }
-        drawBorder(boardPane);
-        drawCars(boardPane);
-        //boardPane.getChildren().add(curtain);
-        //boardPane.getChildren().add(message);
 
-        ///buttonNewGame.setDisable(false);
-        //buttonPause.setDisable(false);
-        //buttonPause.setText("Pause");
-        //totalTime.setText(convertTime(totalSeconds));
-        //curtain.setVisible(false);
-        //message.setVisible(false);
-        /*if(mode==Mode.STORY) {
-            buttonHint.setDisable(true);
-            buttonRestart.setDisable(true);
-            buttonNewGame.setDisable(true);
-        }
-        else {
-            buttonHint.setDisable(false);
-            buttonRestart.setDisable(false);
-            buttonNewGame.setDisable(false);
-        }*/
+        drawBorder(p);
+
+        return drawCars(p, wkload, move);
     }
 
     public void MakeMove(int oldR, int oldC, int r, int c) {
@@ -87,17 +104,17 @@ public class gameController extends Controller {
 			if(engine.MakeMove(oldR, oldC, r,c)) {
 	    		animating=true;	    		
 				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, animTime);
-                isGameWon=true;
+	            isGameWon=true;
 				GameWon();
-				//return true;
+
+
 			}
-			//return false;
     	}
     	movesMade.setText(Integer.toString(engine.getMoves()));
-
     }
     
-    private void GameWon() {
+    
+    protected void GameWon() {
         engine.GameWon(1);
     }
     
@@ -108,10 +125,15 @@ public class gameController extends Controller {
     
     public void AnimatingFin() {
     	animating=false;
-    	/*if (isGameWon) {
-    		
-           // winCountDown.playFromStart();
-        }*/
+    	if (isGameWon) {
+    		DisplayWinScreen();
+
+            //winCountDown.playFromStart();
+        }
+    }
+    
+    public void DisplayWinScreen() {
+
     }
 
 
@@ -136,13 +158,15 @@ public class gameController extends Controller {
         nSquares = engine.getBoardSize(); //this will be replaced dynamically.
         //this.squareWidth = boardPane.getPrefWidth()/nSquares;
 
-        boardPane.getChildren().clear();
-        //totalSeconds = engine.getTime();
-        //currSeconds = totalSeconds;
-        drawBoard(boardPane);
-        //GameWon=false;
+        
+        workload = drawBoard(boardPane, workload,true);
+        if(!boardPane.getChildren().contains(curtain)) {
+        	boardPane.getChildren().add(curtain);
+        	curtainHide();
+        }
+        isGameWon=false;
         animating=false;
-        //countDown.playFromStart();
+        running=true;
         movesMade.setText("0");
     }
 
@@ -171,20 +195,21 @@ public class gameController extends Controller {
         p.getChildren().add(l);
     }
 
-    protected void drawCars(Pane p) {
-        double squareWidth = p.getPrefWidth()/nSquares;
-
-        workload.clear();
-    	workload = engine.GetCarList();
-        for(Car c: workload) {
-            c.frontEndCarConstructor(squareWidth, p.getBoundsInLocal(),this);
+    protected ArrayList<Car> drawCars(Pane p, ArrayList<Car> wkload, boolean move) {
+        
+    	double squareWidth = p.getPrefWidth()/nSquares;
+        wkload.clear();
+        wkload = engine.GetCarList();
+        for(Car c: wkload) {
+            c.frontEndCarConstructor(squareWidth, p.getBoundsInLocal(),this,move);
             Node car = c.getCar();
             p.getChildren().add(car);
             car.toFront();
-            if (c.getCarType() == GOALCAR) {
+            if (c.getCarType() == GOALCAR && p==boardPane) {
                 goalCar = c;
             }
         }
+        return wkload;
 
     }
     

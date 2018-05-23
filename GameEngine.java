@@ -16,8 +16,10 @@ public class GameEngine  {
 	
 	
 	private boolean NetworkMode = false;
-	private boolean NetworkWaiting = false;
+	private boolean NetworkWaiting = true;
 	private Puzzle networkPuzzle = null;
+	private boolean NetworkOpponentWon=true;
+
 	//private Network network;
 
 
@@ -141,6 +143,8 @@ public class GameEngine  {
 			}
 		}
 	        size = currPuzzle.getSize();
+	        networkPuzzle = currPuzzle.DuplicatePuzzle();
+	        NetworkOpponentWon= false;
 			return currPuzzle;
 		
 	}
@@ -301,6 +305,10 @@ public class GameEngine  {
 	public int getMoves() {
 		return currPuzzle.getMoves();
 	}
+	
+	public int getOppMoves() {
+		return networkPuzzle.getMoves();
+	}
 
 
 	
@@ -381,9 +389,14 @@ public class GameEngine  {
 		
 	}
 	 
-	public void NetworkGetMove(int r, int c, int NewR, int NewC){
+	public int[] NetworkGetMove(){
 		
-		
+		int[] arr = networkPuzzle.getBestMove();
+		if(networkPuzzle.MakeMove(arr[0],arr[1],arr[2],arr[3])){
+			NetworkOpponentWon=true;
+		}
+		return arr;
+
 	}
 	
 	public boolean NetworkMoveWaiting() {
@@ -392,7 +405,10 @@ public class GameEngine  {
 	
 	
 	public void NetworkSetMode(boolean net) {
-		NetworkMode = net;
+	}
+	
+	public boolean NetworkOpponentWon() {
+		return NetworkOpponentWon;
 	}
 	
 

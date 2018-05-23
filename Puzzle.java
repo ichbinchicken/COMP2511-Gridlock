@@ -79,6 +79,7 @@ public class Puzzle {
 	public Puzzle DuplicatePuzzle() {
 		Puzzle p = new Puzzle(Size );
 		p.SetNewPuzzleVars(board, initial, GoalC, GoalR, minInitMoves);
+		
 		return p;
 	}
 	
@@ -90,6 +91,7 @@ public class Puzzle {
 		numHints=0;
 		numMoves=0;
 		minInitMoves=minInit;
+		this.search = new Search(GoalR, Size);
 	}
 	
 	

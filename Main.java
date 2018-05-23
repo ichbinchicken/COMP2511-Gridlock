@@ -21,7 +21,7 @@ public class Main extends Application {
     	//primaryStage.setScene(new Scene(root, 400, 500));
     	//primaryStage.show();
     	
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         engine = new GameEngine();
         gameScreen = new BoardScreen(primaryStage,engine, this);
         menuScreen = new MenuScreen(primaryStage,engine, this);
