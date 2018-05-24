@@ -10,17 +10,20 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-public class gameController extends Controller {
+public class GameController extends Controller {
 	
 	protected static final int  GOALCAR =5;
     protected static final int animTime = 500;
+    protected static final Color boardColor = Color.rgb(244, 244, 244);
+    protected static final Color lineColor = Color.rgb(154, 154, 154);
+    protected static final Color primaryTextColor = Color.rgb(229, 105, 96);
+    protected static final Color secondaryTextColor = Color.rgb(77, 77, 77);
 
 	protected boolean isGameWon = false;
     protected GameEngine engine;
     protected Main main;
     protected double squareWidth;
     protected int nSquares;
-    protected static final Color boardColor = Color.ORANGE;
     protected ArrayList<Car> workload;
     private Car goalCar;
     protected boolean running;
@@ -35,7 +38,7 @@ public class gameController extends Controller {
     @FXML
     protected Button buttonNewGame;
 
-	public gameController(Stage s, GameEngine engine, Main main) {
+	public GameController(Stage s, GameEngine engine, Main main) {
         this.engine = engine;
         this.main = main;
         workload = new ArrayList<Car>();
@@ -91,7 +94,7 @@ public class gameController extends Controller {
                 rec[i][j].setWidth(squareWidth);
                 rec[i][j].setHeight(squareWidth);
                 rec[i][j].setFill(boardColor);
-                rec[i][j].setStroke(Color.BLUE);
+                rec[i][j].setStroke(lineColor);
                 p.getChildren().add(rec[i][j]);
             }
         }
@@ -181,19 +184,23 @@ public class gameController extends Controller {
         double squareWidth = p.getPrefWidth()/nSquares;
         Line l= new Line();
         l.setEndY(nSquares*squareWidth);
+        l.setStroke(secondaryTextColor);
         p.getChildren().add(l);
         l=new Line();
         l.setEndX(nSquares*squareWidth);
+        l.setStroke(secondaryTextColor);
         p.getChildren().add(l);
         l=new Line();
         l.setStartY(nSquares*squareWidth);
         l.setEndY(nSquares*squareWidth);
         l.setEndX(nSquares*squareWidth);
+        l.setStroke(secondaryTextColor);
         p.getChildren().add(l);
         l=new Line();
         l.setStartX(nSquares*squareWidth);
         l.setEndX(nSquares*squareWidth);
         l.setEndY(nSquares*squareWidth);
+        l.setStroke(secondaryTextColor);
         p.getChildren().add(l);
     }
 

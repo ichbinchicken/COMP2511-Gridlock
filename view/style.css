@@ -1,0 +1,13 @@
+#menu{
+    -fx-background-image: url("../images/Backgrounds-01.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 800 600;
+    -fx-background-position: center center;
+}
+
+#board{
+    -fx-background-image: url("../images/Backgrounds-04.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 800 600;
+    -fx-background-position: center center;
+}

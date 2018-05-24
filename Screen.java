@@ -43,6 +43,7 @@ public abstract class Screen {
         try {
             Parent root = fxmlLoader.load();
             scene = new Scene(root, 800, 600);
+            //scene.getStylesheets().addAll(getClass().getResource("view/style.css").toExternalForm());
             //stage.setScene(scene);
         } catch (IOException e) {
             e.printStackTrace();

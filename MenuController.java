@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
-public class MenuController extends Controller{
+public class MenuController extends Controller {
 	private Main main;
 	private GameEngine engine;
 	private Stage stage;
@@ -107,12 +107,12 @@ public class MenuController extends Controller{
 		//helpMsg = new Popup();
 		//helpMsg.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_TOP_RIGHT);
 		Rectangle rect = new Rectangle();
-		int helpWidth = 300;
-		int helpHeight = 300;
+		int helpWidth = 600;
+		int helpHeight = 100;
 		rect.setWidth(helpWidth);
 		rect.setHeight(helpHeight);
 		rect.setFill(Color.MINTCREAM);
-		rect.setX(menuPane.getPrefWidth()-helpWidth-50);
+		rect.setX(menuPane.getPrefWidth()-helpWidth-buttonHelp.getPrefWidth()-30);
 		rect.yProperty().bind(buttonHelp.layoutYProperty());
 		rect.setVisible(false);
 		//helpMsg.setX(menuPane.getPrefWidth()+50);

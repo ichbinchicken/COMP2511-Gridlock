@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class NetworkController extends gameController {
+public class NetworkController extends GameController {
     protected static final int networkUpdateTime = 2000;
     protected static final int oppAnimTime = 100;
 

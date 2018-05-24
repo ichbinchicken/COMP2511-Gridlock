@@ -37,7 +37,7 @@ public class Car {
 	private double mousex;
 	private double mousey;
 	//private BoardController boardController;
-	private WeakReference<gameController> boardReference;
+	private WeakReference<GameController> boardReference;
 	//private Bounds bounds;
 	private int initR;
 	private int initC;
@@ -59,18 +59,18 @@ public class Car {
 	}
 
 	//
-	public void frontEndCarConstructor(double squareLength, Bounds b, gameController bcontroller, boolean Moveable) {
+	public void frontEndCarConstructor(double squareLength, Bounds b, GameController bcontroller, boolean Moveable) {
 		//this.engine = engine;
 		this.moveable=Moveable;
 		this.squareLength = squareLength;
 		//this.boardController = bcontroller;
-		this.boardReference = new WeakReference<gameController>(bcontroller);
+		this.boardReference = new WeakReference<GameController>(bcontroller);
         //Generate the Image
 		if(type!=GOALCAR) {
-		IMAGE = new Image("car.jpg");
+		IMAGE = new Image("images/car.jpg");
 		}
 		if(type==GOALCAR) {
-		IMAGE = new Image("goalcar.png");
+		IMAGE = new Image("images/goalcar.png");
 		}
 		carNode = new ImageView(IMAGE);
 	    //max=squareLength*6;
@@ -124,7 +124,7 @@ public class Car {
             	if(!moveable) {
             		return;
             	}
-                gameController boardController = boardReference.get();
+                GameController boardController = boardReference.get();
                 if (boardController != null && !boardController.GetAnimating()) {
                     mousex = event.getSceneX();
                     mousey = event.getSceneY();
@@ -156,7 +156,7 @@ public class Car {
             	if(!moveable) {
             		return;
             	}
-            	gameController boardController = boardReference.get();
+            	GameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating() && moveBounds!=null) {
 
                     dragging = true;
@@ -196,7 +196,7 @@ public class Car {
             	if(!moveable) {
             		return;
             	}
-            	gameController boardController = boardReference.get();
+            	GameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating()) {
                     dragging = false;
                 }
@@ -210,7 +210,7 @@ public class Car {
             		return;
             	}
 
-            	gameController boardController = boardReference.get();
+            	GameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating() && dragging == true) {
                     x = carNode.getLayoutX();
                     y = carNode.getLayoutY();
@@ -275,7 +275,7 @@ public class Car {
 		pt.setOnFinished(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
-				gameController boardController = boardReference.get();
+				GameController boardController = boardReference.get();
 				if (boardController != null) {
 					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
 					carNode.setTranslateY(0);
@@ -320,7 +320,7 @@ public class Car {
 		pt.setOnFinished(new EventHandler<ActionEvent>(){
 			@Override
 			public void handle(ActionEvent event) {
-				gameController boardController = boardReference.get();
+				GameController boardController = boardReference.get();
 				if (boardController != null) {
 					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
 					carNode.setTranslateY(0);

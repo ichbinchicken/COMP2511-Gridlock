@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 
-public class BoardController extends gameController {
+public class BoardController extends GameController {
 	private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
     private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
 
@@ -108,7 +108,7 @@ public class BoardController extends gameController {
     	super.initialize();
         message = new Label("");
         message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
-        message.setTextFill(Color.WHITESMOKE);
+        message.setTextFill(primaryTextColor);
         message.setTextAlignment(TextAlignment.CENTER);
         setCenterX(message);
         
@@ -224,7 +224,7 @@ public class BoardController extends gameController {
             for(int i = 0; i < GAME_WON_MSGS.length-1; i++) {
                 setCenterX(details[i]);
                 details[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
-                details[i].setTextFill(Color.WHITESMOKE);
+                details[i].setTextFill(secondaryTextColor);
                 details[i].setTextAlignment(TextAlignment.CENTER);
                 details[i].toFront();
             }
@@ -240,7 +240,7 @@ public class BoardController extends gameController {
                 storyLevel.setLayoutY(boardHeight*3/4);
                 setCenterX(storyLevel);
                 storyLevel.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
-                storyLevel.setTextFill(Color.WHITESMOKE);
+                storyLevel.setTextFill(secondaryTextColor);
                 storyLevel.setTextAlignment(TextAlignment.CENTER);
                 storyLevel.toFront();
                 boardPane.getChildren().add(storyLevel);
@@ -249,11 +249,10 @@ public class BoardController extends gameController {
 
         } else {
             message.setLayoutY(boardHeight*3/8);
-            Label prompt = new Label("TRY AGAIN");
+            Label prompt = new Label(GAME_OVER_MSGS[1]);
             Label[] details = new Label[2];
-
             prompt.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 30));
-            prompt.setTextFill(Color.WHITESMOKE);
+            prompt.setTextFill(secondaryTextColor);
             prompt.setTextAlignment(TextAlignment.CENTER);
             prompt.setLayoutY(boardHeight*16/24);
             details[0] = new Label(GAME_OVER_MSGS[2]+engine.getMoves());
@@ -266,7 +265,7 @@ public class BoardController extends gameController {
             for(int i = 0; i < 2; i++) {
                 setCenterX(details[i]);
                 details[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
-                details[i].setTextFill(Color.WHITESMOKE);
+                details[i].setTextFill(secondaryTextColor);
                 details[i].setTextAlignment(TextAlignment.CENTER);
                 details[i].toFront();
             }
@@ -313,7 +312,7 @@ public class BoardController extends gameController {
 
         for(int i=0;i<3;i++) {
         	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
-        	GradLabel[i].setTextFill(Color.WHITESMOKE);
+        	GradLabel[i].setTextFill(primaryTextColor);
         	GradLabel[i].setTextAlignment(TextAlignment.CENTER);
         	setCenterX(GradLabel[i]);
         	GradLabel[i].setLayoutY(boardHeight*(2*i+4)/24);
@@ -333,11 +332,11 @@ public class BoardController extends gameController {
             levelLabel[i].layoutXProperty().bind(boardPane.widthProperty().divide(6));
             gradeLabel[i].layoutXProperty().bind(boardPane.widthProperty().multiply(5).divide(12));
             gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
-            gradeLabel[i].setTextFill(Color.WHITESMOKE);
+            gradeLabel[i].setTextFill(secondaryTextColor);
             gradeLabel[i].setTextAlignment(TextAlignment.LEFT);
             gradeLabel[i].toFront();
             levelLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
-            levelLabel[i].setTextFill(Color.WHITESMOKE);
+            levelLabel[i].setTextFill(secondaryTextColor);
             levelLabel[i].setTextAlignment(TextAlignment.LEFT);
             levelLabel[i].toFront();
 
