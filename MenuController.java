@@ -118,13 +118,9 @@ public class MenuController extends Controller{
 				}
 			}
 		});
-
-        //buttonExit.setOnAction(actionEvent -> Platform.exit());
 	}
 
 	private void initHelp() {
-		//helpMsg = new Popup();
-		//helpMsg.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_TOP_RIGHT);
 		Rectangle rect = new Rectangle();
 		int helpWidth = 300;
 		int helpHeight = 300;
@@ -134,8 +130,6 @@ public class MenuController extends Controller{
 		rect.setX(menuPane.getPrefWidth()-helpWidth-50);
 		rect.yProperty().bind(buttonHelp.layoutYProperty());
 		rect.setVisible(false);
-		//helpMsg.setX(menuPane.getPrefWidth()+50);
-		//helpMsg.setY(-30);
 		Text helpMsgText = new Text("ahahahahaha this is empty hahahahhahaha\n this\n is very looooooong hahahahaha");
 		helpMsgText.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
 		helpMsgText.setWrappingWidth(helpWidth-30);
@@ -200,7 +194,6 @@ public class MenuController extends Controller{
         private Label labelDifficulty;
         @FXML
 		private Pane menuPane;
-        //private Popup helpMsg;
 		private Node[] helpMsg;
 
 }

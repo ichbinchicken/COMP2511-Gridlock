@@ -12,11 +12,6 @@ public class Search {
 	private static final int  VERCAR=1;
 	private static final int  VERTRUCK=2;
 
-	//private static final int  VERT =;
-	//private static final int  HORI =; //Horizontal sliding
-
-	
-	
 	Map<ArrayList<Integer>,GameBoard> closedMap;
 	Queue<GameBoard> queue;
 	int Cmax = 6;
@@ -24,7 +19,6 @@ public class Search {
 	int Size = 6;
 	int GoalC = Cmax-1;
 	int GoalR = 2;
-	//int GoalCar = (Cmax+Rmax-1)*numCarPer+1;
 	int GenC = 1;
 	int GenR = 2;
 	boolean gen=false;
@@ -53,7 +47,6 @@ public class Search {
 	 * Returns a board with number of moves to solve as close to upper bound movesMax 
 	 * If moves < movesMin - no solution with required difficulty
 	 */
-	//public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
 	public GameBoard GenBoard(GameBoard board) {
 		
 		queue =  new LinkedList<GameBoard>();
@@ -88,12 +81,8 @@ public class Search {
 
 
 		}
-
-		//System.out.println("NUM MOVES" +curr.getMoves());
 		return curr;
 	}
-	
-	
 
 	
 	public LinkedList<GameBoard> SearchBoard(GameBoard board) {
@@ -101,10 +90,7 @@ public class Search {
 		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
 
 		int j=0;
-		//ArrayList<Integer> arr = state.GetBoard();
-		//GameBoard nullArr = new GameBoard();
 		GameBoard curr = board;
-		//GameBoard curr = new GameBoard(arr,-1);
 		addQueue(curr, null);
 		boolean solved = false;
 		
@@ -176,26 +162,6 @@ public class Search {
 		}
 		return false;
 	}
-	
-/*	private int isGen(GameBoard state, int moves) {
-		if(state.getMoves()>=moves) {
-			if(state.get(RCtoI(GenR,GenC))==GoalCar) {
-				//return 1;
-				BoardState bs = new BoardState(6);
-				Integer[] search2= new Integer[state.arr.size()];
-				search2 = state.arr.toArray(search2);
-				bs.GivenBoard(search2);
-				Search search = new Search();
-				int realnum = search.SearchBoard(bs);
-				return realnum;
-				//if(realnum==moves) {
-				//	return moves;
-				//}
-			}
-		}
-		return -1;
-	}*/
-	
 	private void FindNeighbour(GameBoard curr) {
 		for( int r=0; r < Rmax; r++) {
 			for (int c = 0; c<Cmax; c++) {

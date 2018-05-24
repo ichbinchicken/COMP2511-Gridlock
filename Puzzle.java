@@ -1,24 +1,15 @@
 import java.util.*;
 
-
-//1 is for vert car
-//3 vert truck
-//19 horiz car
-//21 horiz truck
-//34 is red car
-
 public class Puzzle {
 	private GameBoard board; //Current State of Board
 	private GameBoard initial=null; //Initial State of Board (Reset)
 	private int minInitMoves=0;
 	private int numHints=0;
 	private int numMoves=0;
-	//private ArrayList<Car> carList=null; //List of frontend cars
-	//private int difficulty;
 	private Search search; //Add parameters here for size etc
 	private int Size=6;
 	private int GoalC = Size-1;
-	private int GoalR =2 ; //Shifted randomly
+	private int GoalR =2 ;
 
 	
 	private static final int  EMPTY=0;
@@ -29,8 +20,6 @@ public class Puzzle {
 	private static final int  VTRUCK =2; //Horizontal sliding
 
 	public Puzzle(int n, int minMoves, boolean gen) {
-		//arr= new ArrayList<Integer>(n*n);
-		//ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(n*n, 0));
 		this.Size=n;
 		GoalC = Size-1;
 		Random rand = new Random(System.currentTimeMillis());
@@ -40,19 +29,14 @@ public class Puzzle {
 		int VerP = 60;
 		GameBoard newBoard=null;
 		search=new Search(GoalR,n);
-		//while(moves < minMoves) {
 		if(minMoves<7) {
 			maxCars -= 	rand.nextInt(7);
 			CarP = 60;
 		}
 		if(gen==true) {
 			board = GenSolution(maxCars,CarP,VerP);
-			//board.printBoard();
-	
 			newBoard = search.GenBoard(board);
 			minInitMoves=newBoard.getMoves();
-				//System.out.println(moves);
-	
 			initial = newBoard.copyGameBoard(); //For reset
 			board = newBoard;
 		}
@@ -74,18 +58,14 @@ public class Puzzle {
 		
 		GameBoard sb = board.copyGameBoard();
 		LinkedList<GameBoard> list = search.SearchBoard(sb);
-		sb = list.removeFirst(); //Remove start board - current location
+		sb = list.removeFirst();
 		sb = list.removeFirst();
 		
 		int[] arr = sb.compareBoard(board);
-		//System.out.println("ARRAY" + arr[0] + " " + arr[1] + " " + arr[2] + " "+ arr[3]);
 		numHints++;
 		return arr;
 	}
-	
-	/*public void GivenBoard(Integer[] array) {
-		arr = new ArrayList<Integer>(Arrays.asList(array));
-	}*/
+
 
 	public void RestartPuzzle() {
 		board = initial.copyGameBoard();
@@ -108,8 +88,6 @@ public class Puzzle {
 	public ArrayList<Integer> GetBoard(){
 		return board.getArr();
 	}
-	
-	//Return isGoal if only move left is red to end
 	private boolean isGoalState() {
 		int i=GoalC;
 		int id = board.getRC(GoalR, i );
@@ -118,7 +96,6 @@ public class Puzzle {
 			id = board.getRC(GoalR,i);
 		}
 		if(id==GOALCAR) {
-			//System.out.println("GOAL STATE");
 			return true;
 		}
 		return false;
@@ -239,14 +216,7 @@ public class Puzzle {
 		
 		return list;
 	}
-		
-		
-	
-	
-	
-	
-	
-	//In general - hardest solutions roughly ~13, 80, 60
+
 	public GameBoard GenSolution(int maxCars, int carProb, int verProb) {
 		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(Size*Size, 0));
 		GameBoard board = new GameBoard(arr,-1, Size);

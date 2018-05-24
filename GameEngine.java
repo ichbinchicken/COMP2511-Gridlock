@@ -19,17 +19,17 @@ public class GameEngine  {
 
 	Puzzle currPuzzle;
 	BoardController bCont;
-	
-    public GameEngine() {
+	/**
+	 Start up 5 background threads to quickly generate a few puzzles
+	 One thread will be running until all puzzles are full
+	 */
+
+	public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
 			queue = new BoundedQueue<Puzzle>(20);
 			//queue.setDebug(true);
 			queueList.add(queue);
 		}
-		//queue.setDebug(true);
-		//Start up 5 background threads to quickly generate a few puzzles
-		//One thread will be running until all puzzles are full
-		//executor = Executors.newFixedThreadPool(NumThreads);
         Runnable run1 = new GenThread(queueList,-1, size, 2);
         Runnable run2 = new GenThread(queueList,-1, size, 2);
         Runnable run3 = new GenThread(queueList,10, size, 2);
@@ -49,21 +49,6 @@ public class GameEngine  {
         t2.start();
         t3.start();
         t4.start();
-        
-        //executor.execute(run);
-        
-		/*for(int i=0;i<NumThreads-1;i++) {
-			
-			run = new GenThread(queueList,100000, size, 2);
-			
-			executor.execute(run);
-		}*/
-		//Thread t = new Thread(run);
-		//t.start();
-
-
-        //queue = queueList.get(NumDifficulties-1);
-
         getAnyPuzzle();
 
     }
@@ -105,7 +90,7 @@ public class GameEngine  {
 			currPuzzle = new Puzzle(size,2,false);
 		}
 		else{
-			if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
+			if(GameWin==false && currPuzzle!=null) {
 			currPuzzle.RestartPuzzle();
 			try {
 				
@@ -171,7 +156,6 @@ public class GameEngine  {
 			gradeList.add(gdlvl);
 			StoryLevel++;
 			if(StoryLevel==10) {
-				//BEATEN STORY MODE - GIVE GRADE
 				StoryModeEnd=true;
 				GetFinalGrade();
 			}
@@ -186,7 +170,6 @@ public class GameEngine  {
 			}
 			
 		}
-		//System.out.println(gdlvl.getString());
 		return gdlvl;
 
 	}
@@ -198,7 +181,6 @@ public class GameEngine  {
 		}
 		mark=mark/gradeList.size();
 		int Fmark=(int)Math.round(mark);
-		//System.out.println("FINAL GRADE" + Fmark);
 		switch(Fmark) {
 		case 0:
 			return GradeLvl.F;
@@ -246,9 +228,6 @@ public class GameEngine  {
 	
 	public GradeLvl CalculateGrade(int timeLeft) {
 		int gradeMoves = getMoves() + currPuzzle.getHintsUsed();
-		//System.out.println("MIN MOVES" + getMinMoves());
-		//System.out.println("GRADE MOVES" + gradeMoves);
-		//System.out.println("HINTS " + currPuzzle.getHintsUsed());
 		if(timeLeft<=0) {
 			return GradeLvl.F;
 		}
@@ -272,13 +251,9 @@ public class GameEngine  {
 		if(gameMode==Mode.STORY) {
 			StoryModeEnd=true;
 			GradeLvl gdlvl = CalculateGrade(0);
-			//System.out.println("LOSS WITH" + gdlvl.getString());
 
 			gradeList.add(gdlvl);
 			gdlvl = GetFinalGrade();
-
-
-			//StoryLevel=0;
 			System.out.println("GRAD WITH" + gdlvl.getString());
 		}
 	}
@@ -291,8 +266,7 @@ public class GameEngine  {
 		return currPuzzle.getSize();
 	}
 	
-	
-	//Only use for other testing
+
 	public ArrayList<Car> UIGetPuzzle(){
 		currPuzzle = new Puzzle(6,6,true);
 		return currPuzzle.GenCarList();
@@ -300,10 +274,12 @@ public class GameEngine  {
 	
 	public void RestartPuzzle(){
 		currPuzzle.RestartPuzzle();
-		//return currPuzzle.GenCarList();
 	}
-	
-	//Get number of moves made on this puzzle
+	/***
+	 *
+	 * Get number of moves made on this puzzle
+	 */
+
 	public int getMoves() {
 		return currPuzzle.getMoves();
 	}
@@ -326,8 +302,7 @@ public class GameEngine  {
 		currDifficulty++;
 		if(currDifficulty>=NumDifficulties) {
 			currDifficulty=NumDifficulties-1;
-		}
-		//System.out.println("Diff"+ currDifficulty);
+		};
 	}
 	
 	public void DecrementDifficulty() {
@@ -336,9 +311,7 @@ public class GameEngine  {
 			currDifficulty=0;
 		}
 	}
-	
 
-	//May be other settings required
 	public void setMode(Mode mode) {
 		gameMode = mode;
 		switch(gameMode) {
@@ -353,7 +326,6 @@ public class GameEngine  {
 			size=6;
 			break;
 		}
-		//System.out.println("GAME MODE" +gameMode);
 	}
 
 	public int getTime() {
@@ -381,15 +353,8 @@ public class GameEngine  {
 		return false;
 	}
 
-
 	public int getStoryLevel() {
 		return StoryLevel;
 	}
-
-
-	
-	
-
-
 
 }

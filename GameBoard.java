@@ -1,13 +1,13 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GameBoard { //Representation of the board
-		 private ArrayList<Integer> arr; //Current 
+/**
+ Representation of the board
+ */
+public class GameBoard { //
+		 private ArrayList<Integer> arr;
 		 private int moves=-1;
 		 private int Size;
-
-		 //int GoalRow;
-		 
 		 
 		public GameBoard(ArrayList<Integer> arr, int moves, int Size) {
 			this.arr = arr;
@@ -29,22 +29,19 @@ public class GameBoard { //Representation of the board
 				return;
 			}
 			System.out.println("FATAL SET GET WRONG SIZE");
-			//return -1;
+
 
 			
 		}
-		
-		
+
 		public void setRC(int r, int c, int value) {
 			int i = RCtoI(r,c);
 			set(i,value);
-			//arr.set(RCtoI(r,c), value);
 		}
 		
 		public int getRC(int r, int c) {
 			int i = RCtoI(r,c);
 			return get(i);
-			//return arr.get(RCtoI( r,  c));
 		}
 		
 		private int RCtoI(int r, int c) {
@@ -80,8 +77,7 @@ public class GameBoard { //Representation of the board
 		    System.out.print('\n');
 
 		}
-		//Old board is previous move
-		//This is latest board
+
 		public int[] compareBoard(GameBoard oldB) {
 			boolean first=false;
 			boolean upleft=false;
@@ -101,14 +97,12 @@ public class GameBoard { //Representation of the board
 					int tc=i%(Size);
 					int tr=(int)Math.floor(i/(Size));
 					if(type1==0) {
-						//Move up or left
 						
 					}
 					else {
-						//Move down or right
+
 					}
-					
-					//System.out.println("tC" +tc + "tR" + tr);
+
 					trarr.add( tr);
 					tcarr.add(tc);
 					if(first==false) {
@@ -125,7 +119,7 @@ public class GameBoard { //Representation of the board
 				i++;
 			}
 			
-			int size = trarr.size(); //How far move +1
+			int size = trarr.size();
 			//if(direc == VCAR || direc== VTRUCK ) {
 				if(upleft==true) {
 					newR=trarr.get(0);
@@ -155,10 +149,7 @@ public class GameBoard { //Representation of the board
 				int[] array = {newR,newC,r,c};
 				return array;
 		}
-				
 
-		
-		
 		/**
 		 * @param r Top Left Row
 		 * @param c Top Left Column
@@ -261,11 +252,9 @@ public class GameBoard { //Representation of the board
 			for(int i=0; i<arr.size();i++) {
 				if(arr.get(i)==GOALCAR) {
 					int r = (int)Math.floor(i/Size);
-					//System.out.println(i +"|Row ="+r);
 					return r;
 				}
 			}
-			//System.out.println("COULDN'T FIND GOAL");
 			return -1;
 		}
 		

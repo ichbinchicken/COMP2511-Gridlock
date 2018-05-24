@@ -7,6 +7,7 @@ public enum GradeLvl {
 	PC ("Pass Conceded", 1),
 	F ("Fail", 0);
 	
+	
 	private final int mark;
 	private final String s;
 	GradeLvl(String s, int mark){

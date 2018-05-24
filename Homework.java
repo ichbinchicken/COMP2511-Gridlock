@@ -23,7 +23,6 @@ public class Homework {
     private double mousey;
     private double x;
     private double y;
-   // private boolean dragging;
     private boolean moveToFront;
 
     public Homework(double initX, double initY, double width, double height, Color fillColor, Pane pane, double squareWidth) {

@@ -8,20 +8,12 @@ public class GenThread implements Runnable
 	ArrayList<BoundedQueue<Puzzle>> queueList;
 	private BoundedQueue<Puzzle> queue=null;
 	private int count;
-	/*private static final int  ULTRAPHD =18;
-	private static final int  PHD =18;
-	private static final int  MASTERS =14;
-	private static final int  BACH =9;
-	private static final int  HSC =5;
-	private static final int  SC =2;*/
 	int size;
 	int minMoves=Difficulty.SC.getMoves();
-
-
    /**
       Constructs the producer object.
-      @param aGreeting the greeting to insert into a queue
-      @param aQueue the queue into which to insert greetings
+      @param queueList the greeting to insert into a queue
+      @param minMoves the queue into which to insert greetings
       @param count the number of greetings to produce
    */
 	public GenThread(ArrayList<BoundedQueue<Puzzle>> queueList, int count, int size, int minMoves) {
@@ -51,8 +43,6 @@ public class GenThread implements Runnable
 				case 2: return Difficulty.BACH;
 				case 3: return Difficulty.MASTERS;
 				case 4: return Difficulty.PHD;
-				//case 5: return Difficulty.ULTRAPHD;
-				
 				}
 			}
 		}
@@ -94,9 +84,7 @@ public class GenThread implements Runnable
 					}
 					if(!queue.isFull()) {
 						queue.add(puzzle);
-						//System.out.println(moves);
 						i++;
-						//System.out.println("Thread i "+i +"Count"+count);
 					}
 					Thread.sleep((int) (Math.random() * DELAY));
 				}
@@ -111,58 +99,4 @@ public class GenThread implements Runnable
 	}
 	};
 	   private static final int DELAY = 10;
-
-	/*public void run(){
-		Puzzle state = new Puzzle(size);
-		//ArrayList<Integer> arr=null;
-		Search search = new Search();
-		GameBoard node=null;
-		int moves=0;
-		if(minMoves<SC) {
-			minMoves=SC;
-		}
-
-		try{
-			int i=1;
-			while(i<=count) {
-				//arr=null;
-				moves=0;
-				while(moves<minMoves) {
-					state.GenSolution(13,80,60);
-					node = search.GenBoard(state,minMoves);
-					if(node!=null) {
-						moves=node.getMoves();
-					}
-				}
-				if(moves>=PHD) {
-					queue = queueList.get(4);
-				}
-				else if(moves>=MASTERS) {
-					queue = queueList.get(3);
-				}				
-				else if(moves>=BACH) {
-					queue = queueList.get(2);
-				}
-				else if(moves>=HSC) {
-					queue = queueList.get(1);
-				}
-				else {
-					queue = queueList.get(0);
-				}
-				if(!queue.isFull()) {
-					queue.add(node);
-					System.out.println(moves);
-					i++;
-				}
-				if(queueListFull()){
-					return;
-				}
-	            Thread.sleep((int) (Math.random() * DELAY));         
-
-			}
-		}
-		catch (InterruptedException exception){
-	      }
-	}*/
-
 }

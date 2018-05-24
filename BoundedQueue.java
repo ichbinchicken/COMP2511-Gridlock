@@ -5,10 +5,8 @@ import java.util.concurrent.locks.*;
     A first-in, first-out bounded collection of objects. 
 */ 
 
-
 public class BoundedQueue<E>
 { 
-	//Monitor monitor = new Monitor();
    /** 
        Constructs an empty queue. 
        @param capacity the maximum capacity of the queue 
@@ -21,7 +19,6 @@ public class BoundedQueue<E>
       size = 0;
       this.capacity = capacity;
    } 
-
    /** 
        Removes the object at the head. 
        @return the object that has been removed from the queue
