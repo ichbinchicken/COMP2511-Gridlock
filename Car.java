@@ -62,7 +62,7 @@ public class Car {
 		//this.engine = engine;
 		this.squareLength = squareLength;
 		//this.boardController = bcontroller;
-		this.boardReference = new WeakReference<>(bcontroller);
+		this.boardReference = new WeakReference<BoardController>(bcontroller);
         //Generate the Image
 		if(type!=GOALCAR) {
 		IMAGE = new Image("car.jpg");
@@ -248,8 +248,8 @@ public class Car {
 		pt.setCycleCount(1);
 		
 		pt.play();
-		int oldR=r;
-		int oldC=c;
+		final int oldR=r;
+		final int oldC=c;
 		r=newR;
 		c=newC;
 		pt.setOnFinished(new EventHandler<ActionEvent>(){
@@ -269,10 +269,10 @@ public class Car {
 
 	}
 	
-	public int getR() {
+	 public int getR() {
 		return r;
 	}
-	public int getC() {
+	 public int getC() {
 		return c;
 	}
 	

@@ -17,19 +17,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-
 import java.util.ArrayList;
 
-
 public class BoardController extends Controller {
-	// public static final int  VERT=0;
-	// public static final int HORIZ=1;
 	private static final int  GOALCAR =5;
     private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
     private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
     private static final int animTime = 500;
-
     private GameEngine engine;
 
 	@FXML
@@ -42,14 +36,13 @@ public class BoardController extends Controller {
     private Button buttonPause;
     @FXML
     private Button buttonRestart;
-    
+
     @FXML
     private Button buttonNewGame;
     @FXML
     private Button buttonHint;
     @FXML
     private Button buttonMenu;
-
     private Rectangle curtain;
     private Label message;
     private double squareWidth;
@@ -72,7 +65,7 @@ public class BoardController extends Controller {
         this.engine = engine;
         this.main = main;
         totalSeconds = currSeconds = engine.getTime();
-        workload = new ArrayList<>();
+        workload = new ArrayList<Car>();
         running = true; // this is to check whether the game is paused. Initially, it's running.
     }
 
@@ -123,7 +116,7 @@ public class BoardController extends Controller {
                 }
             }
         });
-        
+
         buttonNewGame.setOnMouseClicked(new EventHandler<MouseEvent>(){
             @Override
             public void handle(MouseEvent event) {
@@ -137,7 +130,7 @@ public class BoardController extends Controller {
             @Override
             public void handle(MouseEvent event) {
             	//workload = engine.GetCarList();
-            	
+
             	engine.RestartPuzzle();
                 boardPane.getChildren().clear();
                 currSeconds = totalSeconds;
@@ -149,7 +142,7 @@ public class BoardController extends Controller {
 
             }
         });
-        
+
 
         buttonHint.setOnMouseClicked(new EventHandler <MouseEvent>() {
         	@Override
@@ -167,7 +160,7 @@ public class BoardController extends Controller {
         		}
         	}
         });
-        
+
         buttonMenu.setOnAction(new EventHandler<ActionEvent>() {
         	@Override public void handle(ActionEvent e) {
         		main.ShowMenuScreen();
@@ -188,7 +181,7 @@ public class BoardController extends Controller {
                         buttonNewGame.setDisable(true);
                 	}
                 	stopGame(GAME_OVER_MSGS[0]);
-				
+
 
                 }
             }
@@ -386,8 +379,8 @@ public class BoardController extends Controller {
 
         }
     }
-    
-    
+
+
     private void StoryModeEndScreen() {
         buttonNewGame.setDisable(true);
         double boardHeight = boardPane.getPrefHeight();
@@ -403,7 +396,7 @@ public class BoardController extends Controller {
         	GradLabel[0] = new Label("Congratulations!");
         	GradLabel[1] = new Label("You Graduated from: "+ gradLevel);
         	GradLabel[2] = new Label ("With an Overall Grade of: " + finalGrade.getString());
-        	
+
         }
         else {
         	GradLabel[0] = new Label("You Failed to Graduate");
@@ -447,38 +440,8 @@ public class BoardController extends Controller {
         boardPane.getChildren().addAll(GradLabel);
         boardPane.getChildren().addAll(levelLabel);
         message.setVisible(false);
-        //message.toFront();
-
-
-        //details[0] = new Label(GAME_WON_MSGS[1]+timeElapsed);
-
 
     }
-    
-    
-
-    /*
-    public Bounds getFreeZone(Car car) {
-        Bounds bounds = car.getCar().getBoundsInParent();
-        double minX = bounds.getMinX();
-        double minY = bounds.getMinY();
-        double maxX = bounds.getMaxX();
-        double maxY = bounds.getMaxY();
-        for (Car c: workload) {
-            if (c == car) {
-                continue;
-            }
-            Bounds cbounds = c.getCar().getBoundsInParent();
-            if (cbounds.getMaxX() >= minX &&) {
-                minX = cbounds.getMaxX();
-            }
-
-            if(cbounds.intersects(bounds)) {
-            }
-        }
-
-    }
-    */
 
     private String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
@@ -498,7 +461,7 @@ public class BoardController extends Controller {
                 String.format("%02d", elapsedSeconds);
     }
 
-    
+
     public void MakeMove(int oldR, int oldC, int r, int c) {
     	if(!GameWon) {
 			if(engine.MakeMove(oldR, oldC, r,c)) {
@@ -509,7 +472,7 @@ public class BoardController extends Controller {
 	    		if(engine.getMode()==Mode.FREEPLAY) {
 	    			aTime=animTime/2;
 	    		}
-	    		
+
 				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, aTime);
                 GameWon=true;
                 engine.GameWon(currSeconds);
@@ -520,17 +483,17 @@ public class BoardController extends Controller {
     	movesMade.setText(Integer.toString(engine.getMoves()));
 
     }
-    
 
-    
+
+
     public boolean GetAnimating() {
     	return animating;
     }
-    
+
     public void AnimatingFin() {
     	animating=false;
     	if (GameWon) {
-    		
+
             winCountDown.playFromStart();
         }
     }
@@ -554,14 +517,14 @@ public class BoardController extends Controller {
     	}
     	return null;
     }
-    
+
     public void AddCartoPane(Node c) {
     	boardPane.getChildren().remove(c);
         boardPane.getChildren().add(c);
         c.toFront();
     }
-    
-    
+
+
 	public int[] FindMoves(int r, int c) {
 		return engine.FindMoves(r, c);
 	}
@@ -581,14 +544,14 @@ public class BoardController extends Controller {
         movesMade.setText("0");
 
     }
-	
-	
-    
+
+
+
     private void setCenterX(Label label) {
         label.layoutXProperty().bind(boardPane.widthProperty().subtract(label.widthProperty()).divide(2));
     }
 
-    
+
    /* private void GenNewPuzzle(){
     	//puzzle = engine.getNewPuzzle();
         //puzzle = new Puzzle(6,6);
