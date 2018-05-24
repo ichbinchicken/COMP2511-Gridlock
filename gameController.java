@@ -63,6 +63,8 @@ public class gameController extends Controller {
 
 	@FXML
 	void MainMenuAction() {
+		workload.clear();
+		boardPane.getChildren().clear();
 		main.ShowMenuScreen();
 	}
 	

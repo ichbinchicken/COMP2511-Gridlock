@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -13,7 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 

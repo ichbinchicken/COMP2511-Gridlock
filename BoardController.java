@@ -109,7 +109,7 @@ public class BoardController extends gameController {
                 totalTime.setText(convertTime(currSeconds));
                 if (currSeconds <= 0 && !isGameWon) {
     				engine.GameLoss();
-                	if(engine.getMode()==Mode.STORY) {
+                	if(mode==Mode.STORY) {
                         buttonNewGame.setDisable(true);
                 	}
                 	stopGame(GAME_OVER_MSGS[0]);
@@ -157,7 +157,7 @@ public class BoardController extends gameController {
     }
     
     private void drawBoardAdit() {
-
+    	mode = engine.getMode();
     	totalSeconds = engine.getTime();
     	currSeconds = totalSeconds;
     	countDown.playFromStart();
@@ -166,7 +166,8 @@ public class BoardController extends gameController {
         totalTime.setText(convertTime(totalSeconds));
         message.setVisible(false);
 
-    	if(mode==Mode.STORY) {
+    	if(mode==Mode.STORY) {    		
+
             buttonHint.setDisable(true);
             buttonRestart.setDisable(true);
             buttonNewGame.setDisable(true);
@@ -183,15 +184,16 @@ public class BoardController extends gameController {
 
     }
     
-    protected void stopGame(String msg) {
+    private void stopGame(String msg) {
         double boardHeight = boardPane.getPrefHeight();
+        //double boardWidth = boardPane.getWidth();
 
-        curtainShow();
         countDown.pause();
         buttonPause.setDisable(true);
         buttonHint.setDisable(true);
         buttonNewGame.setDisable(false);
-        curtainShow();
+        curtain.setVisible(true);
+        curtain.toFront();
         message.setText(msg);
         if (engine.StoryModeEnd()==true) {
         	StoryModeEndScreen();
@@ -220,6 +222,21 @@ public class BoardController extends gameController {
             }
             message.setVisible(true);
             message.toFront();
+
+            if (mode == Mode.STORY) {
+                String gradLevel = engine.StoryGetGradLevel();
+                if (gradLevel.equals("FAILED")) {
+                    gradLevel = "Starting School";
+                }
+                Label storyLevel = new Label("Progress: "+engine.getStoryLevel()+"/10  "+gradLevel);
+                storyLevel.setLayoutY(boardHeight*3/4);
+                setCenterX(storyLevel);
+                storyLevel.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+                storyLevel.setTextFill(Color.WHITESMOKE);
+                storyLevel.setTextAlignment(TextAlignment.CENTER);
+                storyLevel.toFront();
+                boardPane.getChildren().add(storyLevel);
+            }
 
 
         } else {
@@ -274,7 +291,7 @@ public class BoardController extends gameController {
         Label[] gradeLabel = new Label[gradeList.size()];
         Label[] GradLabel = new Label[3];
         Label[] levelLabel = new Label[gradeList.size()];
-        if(gradLevel!="FAILED") {
+        if(!gradLevel.equals("FAILED")){
         	GradLabel[0] = new Label("Congratulations!");
         	GradLabel[1] = new Label("You Graduated from: "+ gradLevel);
         	GradLabel[2] = new Label ("With an Overall Grade of: " + finalGrade.getString());
@@ -282,34 +299,34 @@ public class BoardController extends gameController {
         }
         else {
         	GradLabel[0] = new Label("You Failed to Graduate");
-        	GradLabel[1] = new Label("Maybe he should try again");
+        	GradLabel[1] = new Label("Maybe try again");
         	GradLabel[2] = new Label("");
         }
 
         for(int i=0;i<3;i++) {
-        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 25));
+        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
         	GradLabel[i].setTextFill(Color.WHITESMOKE);
         	GradLabel[i].setTextAlignment(TextAlignment.CENTER);
         	setCenterX(GradLabel[i]);
-        	GradLabel[i].setLayoutY(boardHeight*(2*i)/24);
+        	GradLabel[i].setLayoutY(boardHeight*(2*i+4)/24);
 
         }
         for(int i=0;i<gradeList.size();i++) {
         	levelLabel[i] = new Label("Level: "+(i+1));
         	gradeLabel[i] = new Label("Grade: "+gradeList.get(i).getString());
         	//levelLabel[i].setLayoutX(value);
-        	gradeLabel[i].setLayoutY((boardHeight*(i+6))/24);
-        	levelLabel[i].setLayoutY((boardHeight*(i+6))/24);
+        	gradeLabel[i].setLayoutY((boardHeight*(i+10))/24);
+        	levelLabel[i].setLayoutY((boardHeight*(i+10))/24);
 
-        	levelLabel[i].setLayoutX(boardWidth/4);
-        	gradeLabel[i].setLayoutX(boardWidth/2);
-
-            //setCenterX(gradeLabel[i]);
+        	levelLabel[i].layoutXProperty().bind(boardPane.widthProperty().divide(6));
+        	gradeLabel[i].layoutXProperty().bind(boardPane.widthProperty().multiply(5).divide(12));            //setCenterX(gradeLabel[i]);
             gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+            
+            gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
             gradeLabel[i].setTextFill(Color.WHITESMOKE);
             gradeLabel[i].setTextAlignment(TextAlignment.LEFT);
             gradeLabel[i].toFront();
-            levelLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+            levelLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
             levelLabel[i].setTextFill(Color.WHITESMOKE);
             levelLabel[i].setTextAlignment(TextAlignment.LEFT);
             levelLabel[i].toFront();

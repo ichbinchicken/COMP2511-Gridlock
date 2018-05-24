@@ -7,7 +7,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="202.0" fitWidth="568.0" layoutX="107.0" layoutY="30.0" nodeOrientation="INHERIT" preserveRatio="true">
          <image>
@@ -47,7 +47,7 @@
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
-      <Button fx:id="buttonHelp" layoutX="758.0" layoutY="21.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="28.0" text="?" />
+      <Button fx:id="buttonHelp" layoutX="758.0" layoutY="21.0" mnemonicParsing="false" onAction="#helpButton" prefHeight="17.0" prefWidth="28.0" text="?" />
       <ToggleButton fx:id="toggleSpeaker" disable="true" layoutX="710.0" layoutY="21.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="35.0" text="🔊" />
       <Text layoutX="126.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty">
          <font>

@@ -17,7 +17,7 @@ public class MenuScreen extends Screen {
     	//this.engine = engine;
     	//this.main=main;
 
-        controller = new MenuController(main, engine);
+        controller = new MenuController(main, engine, s);
         super.setController(controller);
         //stage = s;
     }

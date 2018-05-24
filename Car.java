@@ -64,7 +64,7 @@ public class Car {
 		this.moveable=Moveable;
 		this.squareLength = squareLength;
 		//this.boardController = bcontroller;
-		this.boardReference = new WeakReference<>(bcontroller);
+		this.boardReference = new WeakReference<gameController>(bcontroller);
         //Generate the Image
 		if(type!=GOALCAR) {
 		IMAGE = new Image("car.jpg");
@@ -234,6 +234,12 @@ public class Car {
 		return type;
 	}
 	//Make move to newR and newC - animTime in ms
+	/**
+	 * Make Animating Move then perform new move
+	 * @param newR
+	 * @param newC
+	 * @param animTime
+	 */
 	public void CarMakeAnimatingMove(int newR, int newC, int animTime) {
 		double xshift = NtoCoord(newC-c);
 		double yshift = NtoCoord(newR-r);
@@ -272,6 +278,13 @@ public class Car {
 	}
 	
 	
+	/**
+	 * 
+	 * Make Animating Move for already performed move
+	 * @param newR
+	 * @param newC
+	 * @param animTime
+	 */
 	public void makeSetAnimateMove(int newR, int newC, int animTime) {
 		double xshift = NtoCoord(newC-c);
 		double yshift = NtoCoord(newR-r);
@@ -288,8 +301,8 @@ public class Car {
 		pt.setCycleCount(1);
 		
 		pt.play();
-		int oldR=r;
-		int oldC=c;
+		//int oldR=r;
+		//int oldC=c;
 		r=newR;
 		c=newC;
 		pt.setOnFinished(new EventHandler<ActionEvent>(){

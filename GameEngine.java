@@ -59,6 +59,11 @@ public class GameEngine  {
         getAnyPuzzle();
 
     }
+    
+    
+    public int getStoryLevel() {
+    	return StoryLevel;
+    }
 	
     public Puzzle getAnyPuzzle() {
     	int tempDiff=0;
