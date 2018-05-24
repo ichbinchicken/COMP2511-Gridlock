@@ -35,7 +35,9 @@ public class NetworkController extends GameController {
 	private boolean pregame =true;
 	private int Timecounter = 3;
 	private Label message;
+	private Label Nmessage;
 	private boolean GameOver = false; //=True when someone wins
+
 	public NetworkController(Stage s, GameEngine engine, Main main) {
 		super(s,engine,main);
     }
@@ -45,11 +47,17 @@ public class NetworkController extends GameController {
     	super.initialize();
     	message = new Label("");
         message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
-        message.setTextFill(Color.WHITESMOKE);
-        setCenterX(message);
+        message.setTextFill(primaryTextColor);
+        setCenterX(boardPane, message);
+        setCenterY(boardPane, message);
     	Ncurtain = new Rectangle(NboardPane.getPrefWidth(), NboardPane.getPrefHeight(), boardColor);
         Ncurtain.setX(0);
         Ncurtain.setY(0);
+		Nmessage = new Label("");
+		Nmessage.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40*NboardPane.getPrefWidth()/boardPane.getPrefWidth()));
+		Nmessage.setTextFill(primaryTextColor);
+		setCenterX(NboardPane, Nmessage);
+		setCenterY(NboardPane, Nmessage);
 
         
     	timeline = new Timeline(new KeyFrame(Duration.millis(networkUpdateTime), new EventHandler<ActionEvent>() {
@@ -61,7 +69,7 @@ public class NetworkController extends GameController {
             		MakeOpponentMove(arr);
             		NmovesMade.setText(Integer.toString(engine.getOppMoves()));
 
-            		if(engine.NetworkOpponentWon()) {
+            		if(engine.NetworkOpponentWon()) {  // opponent won
             			theirgoalCar.makeSetAnimateMove(theirgoalCar.getR(), engine.getBoardSize()-2, animTime);
             			GameWon();
             			GameOver=true;
@@ -80,6 +88,7 @@ public class NetworkController extends GameController {
             		Timecounter--;
 
             		message.setText(Integer.toString(Timecounter));
+					Nmessage.setText(Integer.toString(Timecounter));
             		if(Timecounter<=0) {
             			NetgameStart();
             			scounter.stop();
@@ -99,6 +108,20 @@ public class NetworkController extends GameController {
     	for(Car c: workload) {
     		c.setMoveable(false);
     	}
+    	curtainShow();
+    	NcurtainShow();
+    	if (isGameWon) {
+    		message.setText("YOU WON");
+    		Nmessage.setText("AI LOST");
+		} else {
+    		message.setText("YOU LOST");
+    		Nmessage.setText("AI WON");
+		}
+		message.setVisible(true);
+		message.toFront();
+		Nmessage.setVisible(true);
+		Nmessage.toFront();
+
     }
     	
     protected void NetgameStart() {
@@ -107,7 +130,9 @@ public class NetworkController extends GameController {
     	NcurtainHide();
     	message.setVisible(false);
     	message.toBack();
-		
+		Nmessage.setVisible(false);
+		Nmessage.toBack();
+
 	}
 
 
@@ -123,6 +148,8 @@ public class NetworkController extends GameController {
     public void MakeMove(int oldR, int oldC, int r, int c) {
     	super.MakeMove(oldR, oldC, r, c);
     	if(isGameWon) {
+    		// you won
+
     		GameOver=true;
     		GameWon();
     	}
@@ -134,7 +161,6 @@ public class NetworkController extends GameController {
     	
         boardPane.getChildren().add(message);
 		message.setText(Integer.toString(Timecounter));
-    	NmovesMade.setText("0");
     	//workload = drawBoard(boardPane, workload, true);
         nworkload = drawBoard(NboardPane,nworkload,false);
         curtainShow();
@@ -146,9 +172,14 @@ public class NetworkController extends GameController {
         }
         message.setVisible(true);
         message.toFront();
-        NboardPane.getChildren().add(Ncurtain);
 
+		Nmessage.setText(Integer.toString(Timecounter));
+		NmovesMade.setText("0");
+        NboardPane.getChildren().add(Ncurtain);
+		NboardPane.getChildren().add(Nmessage);
         NcurtainShow();
+		Nmessage.setVisible(true);
+		Nmessage.toFront();
 
         scounter.playFromStart();
     }

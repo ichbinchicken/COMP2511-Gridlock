@@ -9,22 +9,27 @@
    <children>
       <Pane fx:id="boardPane" layoutX="14.0" layoutY="41.0" prefHeight="500.0" prefWidth="500.0" />
       <Pane fx:id="NboardPane" layoutX="537.0" layoutY="41.0" prefHeight="250.0" prefWidth="250.0" />
-      <Label fx:id="movesMade" layoutX="594.0" layoutY="321.0" text="0">
+      <Label fx:id="movesMade" layoutX="664.0" layoutY="321.0" text="0">
          <font>
             <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="536.0" layoutY="321.0" text="Move:">
+      <Label layoutX="536.0" layoutY="321.0" text="Your moves:">
          <font>
             <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="NmovesMade" layoutX="661.0" layoutY="321.0" text="0">
+      <Label layoutX="536.0" layoutY="361.0" text="AI's moves:">
          <font>
             <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
          </font>
       </Label>
-      <Button fx:id="buttonNewGame" layoutX="535.0" layoutY="394.0" mnemonicParsing="false" onAction="#RequestNewGame" prefHeight="27.0" prefWidth="100.0" text="New Game">
+      <Label fx:id="NmovesMade" layoutX="664.0" layoutY="361.0" text="0">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="buttonNewGame" layoutX="535.0" layoutY="410.0" mnemonicParsing="false" onAction="#RequestNewGame" prefHeight="27.0" prefWidth="100.0" text="New Game">
          <font>
             <Font name="DejaVu Sans Mono for Powerline Bold" size="16.0" />
          </font>
@@ -39,7 +44,7 @@
             <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
          </font>
       </Label>
-      <Label layoutX="639.0" layoutY="14.0" prefHeight="18.0" prefWidth="45.0" text="Them">
+      <Label layoutX="639.0" layoutY="14.0" prefHeight="18.0" prefWidth="45.0" text="AI">
          <font>
             <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
          </font>

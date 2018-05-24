@@ -223,10 +223,13 @@ public class GameController extends Controller {
     }
     
     
-    protected void setCenterX(Label label) {
-        label.layoutXProperty().bind(boardPane.widthProperty().subtract(label.widthProperty()).divide(2));
+    protected void setCenterX(Pane pane, Label label) {
+        label.layoutXProperty().bind(pane.widthProperty().subtract(label.widthProperty()).divide(2));
     }
 
-    
+    protected void setCenterY(Pane pane, Label label) {
+        label.layoutYProperty().bind(pane.heightProperty().subtract(label.heightProperty()).divide(2));
+    }
+
 
 }

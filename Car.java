@@ -13,6 +13,7 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Car {
     private Image IMAGE;
@@ -66,33 +67,36 @@ public class Car {
 		//this.boardController = bcontroller;
 		this.boardReference = new WeakReference<GameController>(bcontroller);
         //Generate the Image
-		if(type!=GOALCAR) {
-		IMAGE = new Image("images/car.jpg");
-		}
-		if(type==GOALCAR) {
-		IMAGE = new Image("images/goalcar.png");
-		}
-		carNode = new ImageView(IMAGE);
 	    //max=squareLength*6;
         initX = c*squareLength+1;
         initY = r*squareLength+1;
-	    carNode.setX(initX);
-	    carNode.setY(initY);
 	    //bounds = new BoundingBox(b.getMinX()-initX, b.getMinY()-initY, b.getWidth(), b.getHeight());
-	    
+
+		int randNum = ThreadLocalRandom.current().nextInt(1, 4+1);
+		//System.out.println("randnum is "+randNum);
+
 	    if(type==VERCAR || type == VERTRUCK) {
 	    	//carNode.setWidth(squareLength);
 	    	//carNode.setHeight(squareLength*length);
-		    carNode.setFitHeight((squareLength)*length-2);
+			IMAGE = new Image("images/"+length+" high-0"+randNum+".png");
+			carNode = new ImageView(IMAGE);
+			carNode.setFitHeight((squareLength)*length-2);
 		    carNode.setFitWidth(squareLength-2);
 
-	    }
-	    else {
- 	
+	    } else {
+			if(type==GOALCAR) {
+				IMAGE = new Image("images/2 Wide-you.png");
+			} else {
+				IMAGE = new Image("images/"+length+" Wide-0"+randNum+".png");
+				//IMAGE = new Image("images/"+length+" Wide-03.png");
+			}
+			carNode = new ImageView(IMAGE);
 		    carNode.setFitHeight(squareLength-2);
 		    carNode.setFitWidth(squareLength*length-2);
 
 	    }
+		carNode.setX(initX);
+		carNode.setY(initY);
 	    addMouseEvent();
 
 	}

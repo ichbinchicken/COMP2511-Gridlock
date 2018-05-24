@@ -30,7 +30,6 @@ public class BoardController extends GameController {
     @FXML
     private Button buttonHint;
 
-    private Label message;
     private Timeline countDown;
     private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
     private int currSeconds;
@@ -106,12 +105,7 @@ public class BoardController extends GameController {
     @FXML
     public void initialize() {
     	super.initialize();
-        message = new Label("");
-        message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
-        message.setTextFill(primaryTextColor);
-        message.setTextAlignment(TextAlignment.CENTER);
-        setCenterX(message);
-        
+
         countDown = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -193,6 +187,7 @@ public class BoardController extends GameController {
     }
     
     private void stopGame(String msg) {
+        //System.out.println("msg="+msg);
         double boardHeight = boardPane.getPrefHeight();
         //double boardWidth = boardPane.getWidth();
 
@@ -202,6 +197,12 @@ public class BoardController extends GameController {
         buttonNewGame.setDisable(false);
         curtain.setVisible(true);
         curtain.toFront();
+        Label message = new Label();
+        message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
+        message.setTextFill(primaryTextColor);
+        message.setTextAlignment(TextAlignment.CENTER);
+        setCenterX(boardPane, message);
+        boardPane.getChildren().add(message);
         message.setText(msg);
         if (engine.StoryModeEnd()==true) {
         	StoryModeEndScreen();
@@ -222,7 +223,7 @@ public class BoardController extends GameController {
 
             boardPane.getChildren().addAll(details);
             for(int i = 0; i < GAME_WON_MSGS.length-1; i++) {
-                setCenterX(details[i]);
+                setCenterX(boardPane, details[i]);
                 details[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
                 details[i].setTextFill(secondaryTextColor);
                 details[i].setTextAlignment(TextAlignment.CENTER);
@@ -238,8 +239,8 @@ public class BoardController extends GameController {
                 }
                 Label storyLevel = new Label("Progress: "+engine.getStoryLevel()+"/10  "+gradLevel);
                 storyLevel.setLayoutY(boardHeight*3/4);
-                setCenterX(storyLevel);
-                storyLevel.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+                setCenterX(boardPane, storyLevel);
+                storyLevel.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
                 storyLevel.setTextFill(secondaryTextColor);
                 storyLevel.setTextAlignment(TextAlignment.CENTER);
                 storyLevel.toFront();
@@ -263,13 +264,13 @@ public class BoardController extends GameController {
             boardPane.getChildren().addAll(details);
 
             for(int i = 0; i < 2; i++) {
-                setCenterX(details[i]);
+                setCenterX(boardPane, details[i]);
                 details[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
                 details[i].setTextFill(secondaryTextColor);
                 details[i].setTextAlignment(TextAlignment.CENTER);
                 details[i].toFront();
             }
-            setCenterX(prompt);
+            setCenterX(boardPane, prompt);
             boardPane.getChildren().add(prompt);
             prompt.toFront();
             message.setVisible(true);
@@ -301,7 +302,7 @@ public class BoardController extends GameController {
         if(!gradLevel.equals("FAILED")){
         	GradLabel[0] = new Label("Congratulations!");
         	GradLabel[1] = new Label("You Graduated from: "+ gradLevel);
-        	GradLabel[2] = new Label ("With an Overall Grade of: " + finalGrade.getString());
+        	GradLabel[2] = new Label ("Overall Grade: " + finalGrade.getString());
         	
         }
         else {
@@ -311,10 +312,10 @@ public class BoardController extends GameController {
         }
 
         for(int i=0;i<3;i++) {
-        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
         	GradLabel[i].setTextFill(primaryTextColor);
         	GradLabel[i].setTextAlignment(TextAlignment.CENTER);
-        	setCenterX(GradLabel[i]);
+        	setCenterX(boardPane, GradLabel[i]);
         	GradLabel[i].setLayoutY(boardHeight*(2*i+4)/24);
 
         }
@@ -345,7 +346,7 @@ public class BoardController extends GameController {
         boardPane.getChildren().addAll(gradeLabel);
         boardPane.getChildren().addAll(GradLabel);
         boardPane.getChildren().addAll(levelLabel);
-        message.setVisible(false);
+        //message.setVisible(false);
         //message.toFront();
 
 

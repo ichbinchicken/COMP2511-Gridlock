@@ -37,7 +37,7 @@
          </toggleGroup></ToggleButton>
       <ToggleButton fx:id="toggleFreePlay" layoutX="534.0" layoutY="437.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="76.0" text="Free Play" toggleGroup="$Group" />
       <ToggleButton fx:id="toggleStory" layoutX="447.0" layoutY="438.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="62.0" text="Story" toggleGroup="$Group" />
-      <Button fx:id="buttonMultiplayer" layoutX="53.0" layoutY="493.0" mnemonicParsing="false" onAction="#MultiplayerButtonAction" prefHeight="55.0" prefWidth="203.0" text="Multiplayer">
+      <Button fx:id="buttonMultiplayer" layoutX="53.0" layoutY="493.0" mnemonicParsing="false" onAction="#MultiplayerButtonAction" prefHeight="55.0" prefWidth="203.0" text="Beat AI!">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
