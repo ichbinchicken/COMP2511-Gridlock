@@ -32,6 +32,8 @@ public class MenuController extends Controller{
 	
     @FXML
     void StartButtonAction(ActionEvent event) {
+		engine.NetworkSetMode(false);
+
 		Toggle t = ModeGroup.getSelectedToggle();
 		Mode mode = Mode.TIMED;
 		if(t==toggleFreePlay) {
@@ -55,6 +57,7 @@ public class MenuController extends Controller{
     @FXML
     void MultiplayerButtonAction(ActionEvent event) {
     		engine.getNewPuzzle();
+    		engine.NetworkSetMode(true);
     		main.ShowNetworkScreen();
 
     }

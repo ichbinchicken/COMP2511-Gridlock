@@ -161,7 +161,7 @@ public class GameEngine  {
 	
 	public boolean MakeMove(int r,int c,int newR,int newC) {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
-		if(NetworkMode=true) {
+		if(NetworkMode==true) {
 			NetworkSendMove( r,  c,  newR,  newC);
 		}
 		return ret;

@@ -121,29 +121,31 @@ public class Car {
         carNode.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-            	if(moveable) {
-	                gameController boardController = boardReference.get();
-	                if (boardController != null && !boardController.GetAnimating()) {
-	                    mousex = event.getSceneX();
-	                    mousey = event.getSceneY();
-	
-	                    x = carNode.getLayoutX();
-	                    y = carNode.getLayoutY();
-	                    //x = getCoordInParent(X);
-	                    //y = getCoordInParent(Y);
-	                    //System.out.println("Car X: "+x+" Y: "+y);
-	
-	                    carNode.toFront();
-	                    
-	                    moveSpace = boardController.FindMoves(r, c);
-	                    int left = moveSpace[0];
-	                    int up = moveSpace[1];
-	                    int down = moveSpace[3];
-	                    int right = moveSpace[2];
-	                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY, 
-	                    		squareLength*(length+right+left), squareLength*(length+up+down));
-	                }
+            	if(!moveable) {
+            		return;
+            	}
+                gameController boardController = boardReference.get();
+                if (boardController != null && !boardController.GetAnimating()) {
+                    mousex = event.getSceneX();
+                    mousey = event.getSceneY();
+
+                    x = carNode.getLayoutX();
+                    y = carNode.getLayoutY();
+                    //x = getCoordInParent(X);
+                    //y = getCoordInParent(Y);
+                    //System.out.println("Car X: "+x+" Y: "+y);
+
+                    carNode.toFront();
+                    
+                    moveSpace = boardController.FindMoves(r, c);
+                    int left = moveSpace[0];
+                    int up = moveSpace[1];
+                    int down = moveSpace[3];
+                    int right = moveSpace[2];
+                    moveBounds = new BoundingBox(squareLength*(c-left)+1-initX,squareLength*(r-up)+1-initY, 
+                    		squareLength*(length+right+left), squareLength*(length+up+down));
                 }
+                
 
             }
         });
@@ -151,7 +153,9 @@ public class Car {
         carNode.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-
+            	if(!moveable) {
+            		return;
+            	}
             	gameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating() && moveBounds!=null) {
 
@@ -189,6 +193,9 @@ public class Car {
         carNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+            	if(!moveable) {
+            		return;
+            	}
             	gameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating()) {
                     dragging = false;
@@ -199,6 +206,10 @@ public class Car {
         carNode.setOnMouseReleased(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+            	if(!moveable) {
+            		return;
+            	}
+
             	gameController boardController = boardReference.get();
                 if (boardController!= null && !boardController.GetAnimating() && dragging == true) {
                     x = carNode.getLayoutX();
@@ -314,7 +325,7 @@ public class Car {
 					carNode.setTranslateX(0); //Must reset these to 0 (remove effect of animation)
 					carNode.setTranslateY(0);
 					carNode.relocate(NtoCoord(c)+1, NtoCoord(r)+1); //Must set coordinates again to cancel translate
-                    boardController.AnimatingFin();
+                    //boardController.AnimatingFin();
 					//boardController.MakeMove(oldR, oldC, r, c);
                 }
 			}
@@ -341,6 +352,10 @@ public class Car {
         return newCoord;
     }
 
+	
+	public void setMoveable(boolean move) {
+		moveable = move;
+	}
     /*
     private double getCoordInParent(int flag) {
         double localX = carNode.getLayoutX();

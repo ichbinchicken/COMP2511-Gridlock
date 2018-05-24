@@ -33,8 +33,9 @@ public class NetworkController extends gameController {
     private Rectangle Ncurtain;
 	private Timeline scounter;
 	private boolean pregame =true;
-	private int Timecounter = 4;
+	private int Timecounter = 3;
 	private Label message;
+	private boolean GameOver = false; //=True when someone wins
 	public NetworkController(Stage s, GameEngine engine, Main main) {
 		super(s,engine,main);
     }
@@ -61,8 +62,9 @@ public class NetworkController extends gameController {
             		NmovesMade.setText(Integer.toString(engine.getOppMoves()));
 
             		if(engine.NetworkOpponentWon()) {
-            			theirgoalCar.CarMakeAnimatingMove(theirgoalCar.getR(), engine.getBoardSize()-2, animTime);
+            			theirgoalCar.makeSetAnimateMove(theirgoalCar.getR(), engine.getBoardSize()-2, animTime);
             			GameWon();
+            			GameOver=true;
             		}
             	}
     	}}));
@@ -88,13 +90,15 @@ public class NetworkController extends gameController {
     	scounter.setCycleCount(Animation.INDEFINITE);
 
 
-    	//engine.getNewPuzzle();
-    	//nworkload = drawBoard(NboardPane, nworkload, false);
-    	
-        //nSquares = engine.getBoardSize(); //this will be replaced dynamically.
-
-        //this.squareWidth = boardPane.getPrefWidth()/nSquares;
-
+    }
+    
+    
+    @Override
+    protected void GameWon(){
+    	timeline.stop();
+    	for(Car c: workload) {
+    		c.setMoveable(false);
+    	}
     }
     	
     protected void NetgameStart() {
@@ -113,25 +117,25 @@ public class NetworkController extends gameController {
 
     }
     
-   /* AnimatingFin(){}
+    //AnimatingFin(){}
     
     @Override
     public void MakeMove(int oldR, int oldC, int r, int c) {
-    	if(!isGameWon) {
-			if(engine.MakeMove(oldR, oldC, r,c)) {
-	    		animating=true;	    		
-				goalCar.CarMakeAnimatingMove(goalCar.getR(), engine.getBoardSize()-2, animTime);
-	            isGameWon=true;
-				GameWon();
-			}
-
-	}*/
+    	super.MakeMove(oldR, oldC, r, c);
+    	if(isGameWon) {
+    		GameOver=true;
+    		GameWon();
+    	}
+	}
     @Override
     public void GetNewBoard() {
     	super.GetNewBoard();
+    	Timecounter = 3;
+    	
         boardPane.getChildren().add(message);
-        
+		message.setText(Integer.toString(Timecounter));
     	NmovesMade.setText("0");
+    	//workload = drawBoard(boardPane, workload, true);
         nworkload = drawBoard(NboardPane,nworkload,false);
         curtainShow();
 
@@ -163,7 +167,7 @@ public class NetworkController extends gameController {
     
     @FXML
     private void RequestNewGame() {
-    	
+    	GetNewBoard();
     }
     
     protected Car findOpponentCar(int r,int c){

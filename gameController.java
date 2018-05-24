@@ -38,7 +38,7 @@ public class gameController extends Controller {
 	public gameController(Stage s, GameEngine engine, Main main) {
         this.engine = engine;
         this.main = main;
-        workload = new ArrayList<>();
+        workload = new ArrayList<Car>();
 	}
 	
 
