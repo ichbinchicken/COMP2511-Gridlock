@@ -10,6 +10,7 @@ public class GameEngine  {
 	private int currDifficulty=0;
 	private int size=6;
 	private Mode gameMode = Mode.TIMED;
+
 	private int StoryLevel=0;
 	private ArrayList<GradeLvl> gradeList;  
 	private boolean StoryModeEnd = false;

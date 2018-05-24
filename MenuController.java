@@ -23,10 +23,11 @@ public class MenuController extends Controller{
 	private Stage stage;
 	private boolean showHelp;
 
-
 	public MenuController(Main main, GameEngine engine, Stage s) {
 		this.main = main;
 		this.engine = engine;
+		this.stage = s;
+		showHelp = false;
 	}
 	
     @FXML

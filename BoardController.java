@@ -34,8 +34,14 @@ public class BoardController extends gameController {
     private Timeline countDown;
     private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
     private int currSeconds;
-    //protected ArrayList<Car> workload;
+    private boolean running;
+    private ArrayList<Car> workload;
+    private boolean GameWon = false;
+    private boolean animating = false;
+    private Car goalCar;
+    private Main main;
     private Mode mode;
+
 
     public BoardController(Stage s, GameEngine engine, Main main) {
     	super(s,engine,main);
@@ -161,27 +167,6 @@ public class BoardController extends gameController {
     	totalSeconds = engine.getTime();
     	currSeconds = totalSeconds;
     	countDown.playFromStart();
-        buttonPause.setDisable(false);
-        buttonPause.setText("Pause");
-        totalTime.setText(convertTime(totalSeconds));
-        message.setVisible(false);
-
-    	if(mode==Mode.STORY) {    		
-
-            buttonHint.setDisable(true);
-            buttonRestart.setDisable(true);
-            buttonNewGame.setDisable(true);
-            buttonNewGame.setText("Next Level");
-
-        }
-        else {
-            buttonHint.setDisable(false);
-            buttonRestart.setDisable(false);
-            buttonNewGame.setDisable(false);
-            buttonNewGame.setText("New Game");
-
-        }
-
     }
     
     private void stopGame(String msg) {
@@ -322,6 +307,8 @@ public class BoardController extends gameController {
         	gradeLabel[i].layoutXProperty().bind(boardPane.widthProperty().multiply(5).divide(12));            //setCenterX(gradeLabel[i]);
             gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
             
+            levelLabel[i].layoutXProperty().bind(boardPane.widthProperty().divide(6));
+            gradeLabel[i].layoutXProperty().bind(boardPane.widthProperty().multiply(5).divide(12));
             gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
             gradeLabel[i].setTextFill(Color.WHITESMOKE);
             gradeLabel[i].setTextAlignment(TextAlignment.LEFT);
