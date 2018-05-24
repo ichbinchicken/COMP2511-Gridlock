@@ -167,6 +167,9 @@ public class BoardController extends gameController {
     }
     
     private void drawBoardAdit() {
+        totalSeconds = currSeconds = engine.getTime();
+        running=true;
+		countDown.play();
     	buttonPause.setDisable(false);
     	buttonPause.setText("Pause");
     	buttonNewGame.setDisable(false);
