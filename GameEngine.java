@@ -411,6 +411,7 @@ public class GameEngine  {
 	
 	
 	public void NetworkSetMode(boolean net) {
+		NetworkMode = net;
 	}
 	
 	public boolean NetworkOpponentWon() {
