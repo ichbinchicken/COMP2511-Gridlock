@@ -35,7 +35,6 @@ public class BoardController extends gameController {
     private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
     private int currSeconds;
     private boolean running;
-    private ArrayList<Car> workload;
     private boolean GameWon = false;
     private boolean animating = false;
     private Car goalCar;
@@ -92,9 +91,14 @@ public class BoardController extends gameController {
             animating=false;
             running = true;
             workload = drawBoard(boardPane, workload, true);
-            boardPane.getChildren().add(curtain);
-            curtainHide();
         	drawBoardAdit();
+
+            boardPane.getChildren().add(curtain);
+            isGameWon=false;
+            animating=false;
+            running=true;
+            movesMade.setText("0");
+            curtainHide();
     	}
     }
 	
@@ -163,10 +167,26 @@ public class BoardController extends gameController {
     }
     
     private void drawBoardAdit() {
+    	buttonPause.setDisable(false);
+    	buttonPause.setText("Pause");
+    	buttonNewGame.setDisable(false);
+    	totalTime.setText(convertTime(totalSeconds));
     	mode = engine.getMode();
     	totalSeconds = engine.getTime();
     	currSeconds = totalSeconds;
     	countDown.playFromStart();
+    	if(mode==Mode.STORY) {
+    		buttonHint.setDisable(true);
+            buttonRestart.setDisable(true);
+            buttonNewGame.setDisable(true);
+            buttonNewGame.setText("Next");
+    	}
+    	else {
+    		buttonHint.setDisable(false);
+            buttonRestart.setDisable(false);
+            buttonNewGame.setDisable(false);
+            buttonNewGame.setText("New Game");
+    	}
     }
     
     private void stopGame(String msg) {
