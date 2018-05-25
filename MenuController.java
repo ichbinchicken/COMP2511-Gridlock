@@ -247,6 +247,7 @@ public class MenuController extends Controller {
     		int port = Integer.parseInt(portStr);
     		engine.hostGame(port);
 	    	System.out.println("HOST" + port);
+	    	System.out.println("IP" + engine.getIP());
 	    	HostIPAddr.setText(engine.getIP());
 	    	HostIPAddr.setVisible(true);
 	    	HostIPAddr.toFront();
@@ -280,6 +281,7 @@ public class MenuController extends Controller {
     @FXML
     void IPEnter(ActionEvent event) {
     	String IP = HostIDTextInput.getText();
+    	System.out.println(IP);
 		engine.joinGame(IP, port);
 
 
