@@ -16,11 +16,12 @@ public class GameEngine  {
 	private Mode gameMode = Mode.TIMED;
 
 	private int StoryLevel=0;
-	private ArrayList<GradeLvl> gradeList;  
+	private ArrayList<GradeLvl> gradeList;
 	private boolean StoryModeEnd = false;
-	
-	
+
+
 	private boolean NetworkMode = false;
+	private boolean NetworkGameStarting = false;
 	private boolean NetworkMoveWaiting = false;
 	private int a;
 	private int b;
@@ -69,7 +70,7 @@ public class GameEngine  {
         t2.start();
         t3.start();
         t4.start();
-        
+
         getAnyPuzzle();
 
     }
@@ -109,7 +110,7 @@ public class GameEngine  {
 			e.printStackTrace();
 		}
         return currPuzzle;
-        
+
     }
 
 	/**
@@ -138,7 +139,7 @@ public class GameEngine  {
 			if(GameWin==false && currPuzzle!=null) { //Previous game was not completed - add to end of queue to limit generation
 			currPuzzle.RestartPuzzle();
 			try {
-				
+
 				if(!queue.isFull() ) {
 					queue.Forceadd(currPuzzle);
 				}
@@ -166,14 +167,14 @@ public class GameEngine  {
 		        		inc=-1;
 		        		tempDiff = NumDifficulties-1;
 		        	}
-		        	
+
 		        }
-		        
+
 	        }
-	        
+
 	        try {
 				currPuzzle = queue.remove();
-	
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -182,7 +183,7 @@ public class GameEngine  {
 	        networkPuzzle = currPuzzle.DuplicatePuzzle();
 	        NetworkOpponentWon= false;
 			return currPuzzle;
-		
+
 	}
 
 	/**
@@ -240,7 +241,7 @@ public class GameEngine  {
 			else if(StoryLevel>2) {
 				IncrementDifficulty();
 			}
-			
+
 		}
 		//System.out.println(gdlvl.getString());
 		return gdlvl;
@@ -315,7 +316,7 @@ public class GameEngine  {
 		else {
 			return "FAILED";
 		}
-		
+
 	}
 
 	/**
@@ -346,14 +347,14 @@ public class GameEngine  {
 			return GradeLvl.P;
 		}
 		return GradeLvl.F;
-		
+
 	}
 
 	/**
 	 * action of lose a game
 	 */
 	public void GameLoss() {
-		
+
 		if(gameMode==Mode.STORY) {
 			StoryModeEnd=true;
 			GradeLvl gdlvl = CalculateGrade(0);
@@ -383,8 +384,8 @@ public class GameEngine  {
 	public int getBoardSize() {
 		return currPuzzle.getSize();
 	}
-	
-	
+
+
 	//Only use for other testing
 	/*public ArrayList<Car> UIGetPuzzle(){
 		currPuzzle = new Puzzle(6);
@@ -431,7 +432,7 @@ public class GameEngine  {
 	public void SetDifficulty(int difficulty) {
 		currDifficulty=difficulty;
 	}
-	
+
 	public void IncrementDifficulty() {
 		currDifficulty++;
 		if(currDifficulty>=NumDifficulties) {
@@ -439,14 +440,14 @@ public class GameEngine  {
 		}
 		//System.out.println("Diff"+ currDifficulty);
 	}
-	
+
 	public void DecrementDifficulty() {
 		currDifficulty--;
 		if(currDifficulty<0) {
 			currDifficulty=0;
 		}
 	}
-	
+
 
 	//May be other settings required
 	public void setMode(Mode mode) {
@@ -459,7 +460,7 @@ public class GameEngine  {
 			gradeList = new ArrayList<GradeLvl>(10);
 			break;
 		case FREEPLAY: case TIMED:
-			
+
 			size=6;
 			break;
 		}
@@ -487,11 +488,11 @@ public class GameEngine  {
 			StoryModeEnd=false;
 			return true;
 		}
-			
+
 		return false;
 	}
-	
-	
+
+
 //	public void NetworkSendMove(int r, int c, int NewR, int NewC){
 //
 //
@@ -522,24 +523,39 @@ public class GameEngine  {
 
 
 	public void networkStartGame() {
-		if(netMod.amIHost) {
-			//Send puzzle
-			//Send
-			ArrayList<Integer> arr = currPuzzle.GetBoard();
-			int moves = currPuzzle.getInitMoves();
-			int GoalR = currPuzzle.getGoalR();
-			
-			//Send the initial
+		//Send puzzle
+		//Send
+		ArrayList<Integer> arr = currPuzzle.GetBoard();
+		int moves = currPuzzle.getInitMoves();
+		int GoalR = currPuzzle.getGoalR();
+
+		//Send the initial
+		String board = "";
+
+		for (Integer item : arr) {
+			board += item.toString();
+			board += " ";
 		}
-		else {
-			ArrayList<Integer>  arr = null;
+
+		this.netMod.startGame(board);
+	}
+
+	public void remoteStartGame(String board) {
+
+			ArrayList<Integer>  arr = new arrayList<Integer>;
+
+			Scanner sc = new Scanner(board);
+			while (sc.hasNextInt()) {
+				arr.add(sc.nextInt());
+			}
+
 			int moves = 0;
 			int GoalR = 0;
 			currPuzzle = new Puzzle(6);
 			currPuzzle.GeneratePuzzlefromArr(arr, moves, GoalR);
 			networkPuzzle = currPuzzle.DuplicatePuzzle();
-		}
 
+			NetworkGameStarting = true;
 	}
 
 	public void networkMakeMove(int a, int b, int c, int d) {
@@ -565,7 +581,6 @@ public class GameEngine  {
 	public void networkWinGame() {
 
 	}
-
 
 	 
 	public int[] NetworkGetMove(){
@@ -601,5 +616,13 @@ public class GameEngine  {
 	 */
 	public boolean NetworkOpponentWon() {
 		return NetworkOpponentWon;
+	}
+
+	/**
+	 * get network game starting boolean
+	 * @return network won boolean
+	 */
+	public boolean NetworkGameStarting() {
+		return NetworkGameStarting;
 	}
 }

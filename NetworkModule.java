@@ -54,6 +54,7 @@ public class NetworkModule implements Runnable {
 
            this.localAddr = this.socket.getLocalAddress();
            this.localPort = this.socket.getLocalPort();
+           this.amIHost = true;
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -105,6 +106,7 @@ public class NetworkModule implements Runnable {
          reader = new BufferedReader(new InputStreamReader(input));
          output = socket.getOutputStream();
          writer = new PrintWriter(output, true);
+         this.amIHost = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,8 +119,8 @@ public class NetworkModule implements Runnable {
      * Sends a start Game message to the other player, with a starting gameboard
      * @param newBoard new Board state to send
      */
-    public void startGame(GameBoard newBoard) {
-        writer.println("S " + newBoard.toString());
+    public void startGame(String board) {
+        writer.println("S " + board);
     }
 
     /**
@@ -174,7 +176,7 @@ public class NetworkModule implements Runnable {
             String command = sc.next();
 
             if (command == "S") {
-                //engine.startGame(sc.nextLine());
+                engine.remoteStartGame(sc.nextLine());
 
             } else if (command == "M") {
                engine.networkRecvMove(sc.nextLine());
