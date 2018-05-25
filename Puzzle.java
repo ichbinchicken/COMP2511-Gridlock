@@ -508,6 +508,10 @@ public class Puzzle {
 		return initial;
 	}
 	
+	public int getGoalR() {
+		return GoalR;
+	}
+	
 	
 
 

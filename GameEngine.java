@@ -522,6 +522,23 @@ public class GameEngine  {
 
 
 	public void networkStartGame() {
+		if(netMod.amIHost) {
+			//Send puzzle
+			//Send
+			ArrayList<Integer> arr = currPuzzle.GetBoard();
+			int moves = currPuzzle.getInitMoves();
+			int GoalR = currPuzzle.getGoalR();
+			
+			//Send the initial
+		}
+		else {
+			ArrayList<Integer>  arr = null;
+			int moves = 0;
+			int GoalR = 0;
+			currPuzzle = new Puzzle(6);
+			currPuzzle.GeneratePuzzlefromArr(arr, moves, GoalR);
+			networkPuzzle = currPuzzle.DuplicatePuzzle();
+		}
 
 	}
 
