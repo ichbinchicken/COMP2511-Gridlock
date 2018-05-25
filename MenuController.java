@@ -143,7 +143,7 @@ public class MenuController extends Controller {
 		//helpMsg.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_TOP_RIGHT);
 		Rectangle rect = new Rectangle();
 		int helpWidth = 600;
-		int helpHeight = 240;
+		int helpHeight = 170;
 		rect.setWidth(helpWidth);
 		rect.setHeight(helpHeight);
 		//Color mycolour = new Color(46/255,139/255,87/255,240/255);
@@ -153,8 +153,8 @@ public class MenuController extends Controller {
 		rect.setVisible(false);
 		//helpMsg.setX(menuPane.getPrefWidth()+50);
 		//helpMsg.setY(-30);
-		helpMsgText.setTextAlignment(TextAlignment.CENTER);
-		helpMsgText.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
+		helpMsgText.setTextAlignment(TextAlignment.LEFT);
+		helpMsgText.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 12));
 		helpMsgText.setWrappingWidth(helpWidth-30);
 		helpMsgText.setFill(Color.SEAGREEN);
 		helpMsgText.xProperty().bind(rect.xProperty().add(20));
@@ -259,7 +259,7 @@ public class MenuController extends Controller {
 	private Pane menuPane;
 	private Node[] helpMsg;
 	private final Text helpMsgText = new Text
-			("You're a busy student who's trying to Graduate!\n "
+			("You're a busy student who's trying to Graduate!\n"
 					+ "But before you can Graduate you have to complete all your assignments.\n"
 					+ "To complete them, and move them away, simply click and drag.\n"
 					+ "But they can only move on one axis and they can't move through other assignments.\n"
