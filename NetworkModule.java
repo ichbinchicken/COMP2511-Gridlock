@@ -24,7 +24,10 @@ public class NetworkModule implements Runnable {
     private BufferedReader reader;
     private OutputStream output;
     private PrintWriter writer;
-    private NetworkController controller;
+
+   // NetworkController controller;
+    GameEngine engine;
+
 
     private Thread t;
 
@@ -33,8 +36,9 @@ public class NetworkModule implements Runnable {
      * Constructor to create Network Module
      * @param controller Network controller to communicate with game engine
      */
-    public NetworkModule(GameEngine controller) {
-        this.controller = controller;
+
+    public NetworkModule(GameEngine engine) {
+        this.engine = engine;
     }
 
 
@@ -55,12 +59,24 @@ public class NetworkModule implements Runnable {
      * Blocks until a game join request is detected - then initializes the connection
      */
     public void waitForJoin() {
-        socket = servSock.accept();
+        try {
+			socket = servSock.accept();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-        input = socket.getInputStream();
+        try {
+			input = socket.getInputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         reader = new BufferedReader(new InputStreamReader(input));
 
-        output = socket.getOutputStream();
+        try {
+			output = socket.getOutputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         writer = new PrintWriter(output, true);
 
         this.localAddr = this.socket.getLocalAddress();
@@ -133,26 +149,35 @@ public class NetworkModule implements Runnable {
      * Looping message recieve function
      */
     public void run() {
+        String message=null;
 
         while (true) {
             if (Thread.interrupted()) {
                 return;
             }
-            String message = reader.readLine();    // reads a line of text
+			try {
+				message = reader.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}    // reads a line of text
 
             Scanner sc = new Scanner(message);
 
             String command = sc.next();
 
             if (command == "S") {
-                controller.startGame(sc.nextLine());
+                //engine.startGame(sc.nextLine());
 
             } else if (command == "M") {
-                controller.move(sc.nextLine());
+               // engine.move(sc.nextLine());
 
             } else if (command == "W") {
-                socket.close();
-                controller.lose();
+                try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+               // engine.lose();
                 return;
             }
         }

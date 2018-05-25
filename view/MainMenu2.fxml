@@ -16,7 +16,7 @@
             <Font size="30.0" />
          </font>
       </Text>
-      <Button fx:id="buttonStartGame" layoutX="300.0" layoutY="500.0" mnemonicParsing="false" onAction="#StartButtonAction" prefHeight="55.0" prefWidth="200.0" text="Start Game">
+      <Button fx:id="buttonStartGame" layoutX="300.0" layoutY="473.0" mnemonicParsing="false" onAction="#StartButtonAction" prefHeight="55.0" prefWidth="200.0" text="Start Game">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
@@ -27,12 +27,12 @@
          </toggleGroup></ToggleButton>
       <ToggleButton fx:id="toggleFreePlay" layoutX="460.0" layoutY="430.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="80.0" text="Free Play" toggleGroup="$Group" />
       <ToggleButton fx:id="toggleStory" layoutX="360.0" layoutY="430.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Story" toggleGroup="$Group" />
-      <Button fx:id="buttonMultiplayer" layoutX="50.0" layoutY="500.0" mnemonicParsing="false" onAction="#MultiplayerButtonAction" prefHeight="55.0" prefWidth="200.0" text="Beat AI!">
+      <Button fx:id="buttonMultiplayer" layoutX="50.0" layoutY="473.0" mnemonicParsing="false" onAction="#MultiplayerButtonAction" prefHeight="55.0" prefWidth="200.0" text="Beat AI!">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
-      <Button fx:id="buttonExit" layoutX="550.0" layoutY="500.0" mnemonicParsing="false" onAction="#ExitButton" prefHeight="55.0" prefWidth="200.0" text="Exit">
+      <Button fx:id="buttonExit" layoutX="540.0" layoutY="473.0" mnemonicParsing="false" onAction="#ExitButton" prefHeight="55.0" prefWidth="200.0" text="Exit">
          <font>
             <Font name="Algerian" size="22.0" />
          </font>
@@ -41,6 +41,14 @@
       <Text layoutX="100.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Difficulty:">
          <font>
             <Font size="30.0" />
+         </font>
+      </Text>
+      <TextField fx:id="PortTextField" layoutX="87.0" layoutY="566.0" prefHeight="25.0" prefWidth="80.0" />
+      <Button fx:id="HostButton" layoutX="80.0" layoutY="536.0" mnemonicParsing="false" onAction="#HostButton" text="Host" />
+      <Button fx:id="JoinButton" layoutX="165.0" layoutY="536.0" mnemonicParsing="false" onAction="#JoinButton" text="Join" />
+      <Text layoutX="51.0" layoutY="583.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port:" wrappingWidth="49.375">
+         <font>
+            <Font size="10.0" />
          </font>
       </Text>
    </children>
