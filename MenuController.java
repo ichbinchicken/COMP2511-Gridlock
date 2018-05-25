@@ -212,12 +212,12 @@ public class MenuController extends Controller {
 	private Pane menuPane;
 	private Node[] helpMsg;
 	private final Text helpMsgText = new Text
-			("You're a busy student who's trying to Graduate\n "
-					+ "But before you can Graduate you have to move all your assignments\n"
-					+ "To move them away, simply click and drag\n"
-					+ "But they can only move on one axis and there can't be other assignments blocking them\n"
-					+ "Once all your assignments have been moved, you will automatically run to the edge and graduate\n"
-					+ "With each level you complete you will get a grading\n"
-					+ "Relax with free play, Race against the clock with timed or Challenge yourself with story mode and see just how far you can go");
+			("You're a busy student who's trying to Graduate!\n "
+					+ "But before you can Graduate you have to complete all your assignments.\n"
+					+ "To complete them, and move them away, simply click and drag.\n"
+					+ "But they can only move on one axis and they can't move through other assignments.\n"
+					+ "Once all your assignments have been moved, you will automatically run to the edge and graduate!\n"
+					+ "With each level you complete you will be graded\n"
+					+ "Relax with free play, Race against the clock with timed or Challenge yourself with story mode and see just how far you can go!");
 
 }
