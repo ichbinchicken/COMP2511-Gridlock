@@ -1,7 +1,10 @@
 /**
  * GradLock Project
  * @author Michael Hamilton
- * This class represents different levels of grade
+ * Contains all possible grade levels for maps
+ * Numbers from highest grade to lowest grade
+ * String for each grade name
+
  */
 public enum GradeLvl {
 	HD ("High Distinction", 5),
@@ -16,8 +19,8 @@ public enum GradeLvl {
 
 	/**
 	 * Constructor of grade level
-	 * @param s the msg
-	 * @param mark the mark
+	 * @param s Grade name
+	 * @param mark Grade mark
 	 */
 	GradeLvl(String s, int mark){
 		this.s=s;
@@ -26,14 +29,15 @@ public enum GradeLvl {
 
 	/**
 	 * getter method for marks
-	 * @return the number of marks
+	 * @return Grade Mark
 	 */
 	public int getMark() {
 		return mark;
 	}
+
 	/**
-	 * getter method for the msg
-	 * @return the msg
+	 * getter method for the grade name
+	 * @return Grade name
 	 */
 	public String getString() {
 		return s;

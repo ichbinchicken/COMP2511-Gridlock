@@ -2,7 +2,8 @@ import java.util.*;
 /**
  * GradLock Project
  * @author Michael Hamilton
- * This class is to generate threads in order to generate boards
+ * Multithreaded Generation of puzzles
+ * Generates them then adds to queue
  */
 public class GenThread implements Runnable
 {
@@ -46,8 +47,8 @@ public class GenThread implements Runnable
 	}
 
 	/**
-	 * find the smallest queue which isn't full
-	 * @return minimal moves of easiest queue which isn't full
+	 * Find lowest difficulty of non-full queue
+	 * @return lowest difficulty 
 	 */
 	private Difficulty findSmallestQueue() {
 		for(int i=0;i<queueList.size();i++) {
@@ -67,9 +68,15 @@ public class GenThread implements Runnable
 		return null;
 	}
 
-	/**
-	 * run the threads
- 	 */
+
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 * Continuously generate puzzles
+	 * Put puzzle on difficulty queue
+	 * IF queue is full increase number of minimal moves (so wont generate those boards)
+	 * If number of boards generated = count - return
+	 * When all queues are full sleep
+	 */
 	public void run() {
 		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 

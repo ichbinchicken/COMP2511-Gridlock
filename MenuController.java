@@ -18,6 +18,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
+/**
+ * @author Michael Hamilton & Ziming Zheng
+ * Controller for the main menu
+ *
+ */
 public class MenuController extends Controller {
 	private Main main;
 	private GameEngine engine;
@@ -31,6 +36,13 @@ public class MenuController extends Controller {
 		showHelp = false;
 	}
 	
+    /**
+     * Start button pressed
+     * Go to solo mode screen
+     * Select mode and difficulty
+     * @param event
+     * 
+     */
     @FXML
     void StartButtonAction(ActionEvent event) {
 		engine.NetworkSetMode(false);
@@ -55,6 +67,11 @@ public class MenuController extends Controller {
 	
     
     
+    /**
+     * Multiplayer button pressed
+     * Get new puzzle and go to multiplayer screen
+     * @param event
+     */
     @FXML
     void MultiplayerButtonAction(ActionEvent event) {
     		engine.getNewPuzzle();
@@ -63,11 +80,21 @@ public class MenuController extends Controller {
 
     }
     
+    /**
+     * Exit button pressed
+     * Quit game
+     * @param event
+     */
     @FXML
     void ExitButton(ActionEvent event) {
     	stage.close();
     }
     
+	/* (non-Javadoc)
+	 * @see Controller#initialize()
+	 * Initialize toggle buttons mode select
+	 * Initialize difficulty updating on slider movement
+	 */
 	@FXML
     public void initialize() {
 		ModeGroup = new ToggleGroup();
@@ -89,6 +116,10 @@ public class MenuController extends Controller {
         	});
 	}
 	
+	/**
+	 * Help button pressed
+	 * Show or hide help screen
+	 */
 	public void helpButton() {
 		if(showHelp) {
 			helpMsg[0].setVisible(false);
@@ -104,6 +135,9 @@ public class MenuController extends Controller {
 	
 	
 	
+	/**
+	 * Initialize help screen
+	 */
 	private void initHelp() {
 		//helpMsg = new Popup();
 		//helpMsg.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_TOP_RIGHT);
@@ -135,6 +169,10 @@ public class MenuController extends Controller {
 		menuPane.getChildren().add(helpMsgText);
 	}	
 	
+	/**
+	 * Slider change detected
+	 * Update label
+	 */
 	public void sliderChanged(){
 		double difficulty = sliderDifficulty.getValue();
 		String text = getDiffString(difficulty);
@@ -143,6 +181,10 @@ public class MenuController extends Controller {
 		engine.SetDifficulty((int)difficulty);
 	}
 		
+	/**
+	 * Toggle button changed
+	 * @param newToggle
+	 */
 	public void toggleChanged(Toggle newToggle) {
 		if(newToggle!=toggleStory ) {
 				sliderDifficulty.setDisable(false);
@@ -158,6 +200,11 @@ public class MenuController extends Controller {
 		}
 	}
 
+    /**
+     * Convert difficulty level from slider to string difficulty name
+     * @param difficulty
+     * @return Difficulty name
+     */
     private String getDiffString(double difficulty) {
 		int diff = (int) Math.round(difficulty);
 		String text;
@@ -212,12 +259,12 @@ public class MenuController extends Controller {
 	private Pane menuPane;
 	private Node[] helpMsg;
 	private final Text helpMsgText = new Text
-			("You're a busy student who's trying to Graduate\n "
-					+ "But before you can Graduate you have to move all your assignments\n"
-					+ "To move them away, simply click and drag\n"
-					+ "But they can only move on one axis and there can't be other assignments blocking them\n"
-					+ "Once all your assignments have been moved, you will automatically run to the edge and graduate\n"
-					+ "With each level you complete you will get a grading\n"
-					+ "Relax with free play, Race against the clock with timed or Challenge yourself with story mode and see just how far you can go");
+			("You're a busy student who's trying to Graduate!\n "
+					+ "But before you can Graduate you have to complete all your assignments.\n"
+					+ "To complete them, and move them away, simply click and drag.\n"
+					+ "But they can only move on one axis and they can't move through other assignments.\n"
+					+ "Once all your assignments have been moved, you will automatically run to the edge and graduate!\n"
+					+ "With each level you complete you will be graded\n"
+					+ "Relax with free play, Race against the clock with timed or Challenge yourself with story mode and see just how far you can go!");
 
 }

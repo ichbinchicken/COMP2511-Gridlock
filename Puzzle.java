@@ -1,12 +1,16 @@
 import java.util.*;
 
 
-//1 is for vert car
-//3 vert truck
-//19 horiz car
-//21 horiz truck
-//34 is red car
 
+
+/**
+ * @author Michael Hamilton
+ * 
+ * Puzzle -  each puzzle is the board and counts data directly relating to board
+ * Contains current board - initial starting point, moves made etc
+ * Also generates new boards, and searches through
+ *
+ */
 public class Puzzle {
 	private GameBoard board=null; //Current State of Board
 	private GameBoard initial=null; //Initial State of Board (Reset)
@@ -37,6 +41,13 @@ public class Puzzle {
 	
 	
 	
+	/**
+	 * Generate a puzzle 
+	 * First get initial state
+	 * Then search through and determine furthest point from all state and minimal number of moves
+	 * @param MinMoves to solve puzzle
+	 * @return number of moves to solve
+	 */
 	public int GeneratePuzzle(int MinMoves) {
 		int maxCars=13; //13 for 6x6 
 		int CarP = 80;
@@ -66,6 +77,10 @@ public class Puzzle {
 		return minInitMoves;
 	}
 	
+	/**
+	 * Get a previously stored puzzle
+	 * @return minimal number of moves to solve puzzle
+	 */
 	public int GetStoredPuzzle() {
 		Random rand = new Random(System.currentTimeMillis());
 		GameBoard nB = StoredBoard.values()[rand.nextInt(StoredBoard.values().length)].getBoard();
@@ -76,6 +91,10 @@ public class Puzzle {
 		return minInitMoves;
 	}
 	
+	/**
+	 * Duplicate current puzzle
+	 * @return new Puzzle
+	 */
 	public Puzzle DuplicatePuzzle() {
 		Puzzle p = new Puzzle(Size );
 		p.SetNewPuzzleVars(board, initial, GoalC, GoalR, minInitMoves);
@@ -83,6 +102,14 @@ public class Puzzle {
 		return p;
 	}
 	
+	/**
+	 * Set all variables for a new puzzle - for duplication
+	 * @param board Current game board
+	 * @param init Initial game board 
+	 * @param GoalC - GoalCar column
+	 * @param GoalR GoalCar row
+	 * @param minInit minimal initial moves to solve
+	 */
 	public void SetNewPuzzleVars(GameBoard board, GameBoard init, int GoalC, int GoalR, int minInit) {
 		this.board= board.copyGameBoard();
 		this.initial = init.copyGameBoard();
@@ -97,7 +124,10 @@ public class Puzzle {
 	
 	
 	/**
+	 * Find a hint - search for best move
+	 * 
 	 * @return [currR,currC,newR,newC]
+	 * Row and Column of piece and new location to move to
 	 */
 	public int[] getBestMove() {
 		
@@ -116,6 +146,11 @@ public class Puzzle {
 		arr = new ArrayList<Integer>(Arrays.asList(array));
 	}*/
 
+	/**
+	 * Restart puzzle
+	 * Board = inital board
+	 * Reset moves and hints
+	 */
 	public void RestartPuzzle() {
 		board = initial.copyGameBoard();
 		numMoves=0;
@@ -123,22 +158,38 @@ public class Puzzle {
 		
 	}
 	
+	/**
+	 * @return Number of hints used on current puzzle
+	 */
 	public int getHintsUsed() {
 		return numHints;
 	}
 	
+	/**
+	 * @return size of board (length)
+	 * nxn - return n
+	 */
 	public int getSize() {
 		return Size;
 	}
+	/**
+	 * @return Minimal number of moves to solve
+	 */
 	public int getInitMoves() {
 		return minInitMoves;
 	}
 	
+	/**
+	 * @return Array of board
+	 */
 	public ArrayList<Integer> GetBoard(){
 		return board.getArr();
 	}
 	
 	//Return isGoal if only move left is red to end
+	/**
+	 * @return true if board is goal state - completed
+	 */
 	private boolean isGoalState() {
 		int i=GoalC;
 		int id = board.getRC(GoalR, i );
@@ -153,6 +204,17 @@ public class Puzzle {
 		return false;
 	}
 	
+	/**
+	 * Move piece in r,c to newR,newC
+	 * 
+	 * @param r Row Inital
+	 * @param c Column  Initial
+	 * @param newR New row
+	 * @param newC new column
+	 * @return true if move leads to solution
+	 * @pre r,c contains piece
+	 * @pre newR,newC valid
+	 */
 	public boolean MakeMove(int r,int c, int newR,int newC) {
 		int type = board.getRC(r, c);
 		switch(type) {
@@ -194,10 +256,17 @@ public class Puzzle {
 		//if(isGoalState()) 
 	}
 	
+	/**
+	 * @return Number of moves made
+	 */
 	public int getMoves() {
 		return numMoves;
 	}
 	
+	/**
+	 * Generate a list of cars, their type and position on board
+	 * @return ArrayList Cars on the board
+	 */
 	public ArrayList<Car> GenCarList(){
 		ArrayList<Car> list = new ArrayList<Car>();
 		ArrayList<Integer> arr = initial.getArr();
@@ -276,6 +345,15 @@ public class Puzzle {
 	
 	
 	//In general - hardest solutions roughly ~13, 80, 60
+	/**
+	 * Generate a 'solved board'
+	 * Randomly place pieces if room
+	 * 
+	 * @param maxCars maximal number of cars on board
+	 * @param carProb Probability of a car (opposed to truck) /100
+	 * @param verProb Probability piece will be vertical faced /100
+	 * @return solved board
+	 */
 	public GameBoard GenSolution(int maxCars, int carProb, int verProb) {
 		ArrayList<Integer> arr = new ArrayList<Integer>(Collections.nCopies(Size*Size, 0));
 		GameBoard board = new GameBoard(arr,-1, Size);
@@ -328,11 +406,13 @@ public class Puzzle {
 	}
 	
 	/**
-	 * @param r
-	 * @param c
-	 * @param type
-	 * @return
+	 * @param r Row
+	 * @param c Column
+	 * @param type Type of car
+	 * @return true if car added
 	 * R C are top left corner of car to insert
+	 * Add car to R,C if room
+	 * If no room - car not added return false
 	 */
 	private boolean addCar(GameBoard board, int r, int c, int type) {
 		if(r<0 || c<0) { 
@@ -380,16 +460,30 @@ public class Puzzle {
 		}
 		return false;
 	}
+	/**
+	 * @param r ROw
+	 * @param c Column
+	 * @return Index of array
+	 */
 	private int RCtoI(int r, int c) {
 		return r * (Size) + c;
 	}
 	
 	
+	/**
+	 * Print current board
+	 */
 	public void printBoard() {
 		board.printBoard();
 	}
 	
 	
+	/**
+	 * @param r Row
+	 * @param c Column
+	 * @return Int[left,up,right,down] moves in each direction
+	 * Find distance piece at location r,c can travel in each direction
+	 */
 	public int[] FindMoves(int r, int c) {
 		return board.FindMoves(r, c);
 	}
@@ -407,6 +501,9 @@ public class Puzzle {
 		return false;
 	}
 	
+	/**
+	 * @return Inital board
+	 */
 	public GameBoard getInitial(){
 		return initial;
 	}
