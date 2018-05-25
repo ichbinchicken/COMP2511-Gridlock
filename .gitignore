@@ -5,4 +5,6 @@ out/*
 /.classpath
 /.project
 *.csv
+*.class
+
 
