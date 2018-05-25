@@ -1,12 +1,16 @@
 import java.util.*;
 
 
-//1 is for vert car
-//3 vert truck
-//19 horiz car
-//21 horiz truck
-//34 is red car
 
+
+/**
+ * @author Michael Hamilton
+ * 
+ * Puzzle -  each puzzle is the board and counts data directly relating to board
+ * Contains current board - initial starting point, moves made etc
+ * Also generates new boards, and searches through
+ *
+ */
 public class Puzzle {
 	private GameBoard board=null; //Current State of Board
 	private GameBoard initial=null; //Initial State of Board (Reset)

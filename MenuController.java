@@ -18,6 +18,11 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
+/**
+ * @author Michael Hamilton & Ziming Zheng
+ * Controller for the main menu
+ *
+ */
 public class MenuController extends Controller {
 	private Main main;
 	private GameEngine engine;

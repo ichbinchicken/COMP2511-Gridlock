@@ -1,9 +1,16 @@
 import java.util.*;
+
 @SuppressWarnings("unused")
 
 
 
-
+/**
+ * @author Michael Hamilton
+ * Search through board
+ * Either generate hardest board from initial configuration
+ * Find minimal solution to current board
+ *
+ */
 public class Search {
 	private static final int  EMPTY=0;
 	private static final int  GOALCAR=5;

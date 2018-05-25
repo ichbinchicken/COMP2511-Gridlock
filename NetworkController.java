@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * @author Michael
+ * @author Michael Hamilton
  * Controller for network board
  * Multiplayer specific actions on new board
  *
