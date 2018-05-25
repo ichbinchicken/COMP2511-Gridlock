@@ -119,6 +119,12 @@ public class NetworkController extends GameController {
     }
     
     
+    /* (non-Javadoc)
+     * @see GameController#GameWon()
+     * Game has been completed
+     * Stop counting
+     * Set user cars to be non-moveable
+     */
     @Override
     protected void GameWon(){
     	timeline.stop();
@@ -127,6 +133,16 @@ public class NetworkController extends GameController {
     	}
     	//curtainShow();
     	//NcurtainShow();
+    	DisplayWinScreen();
+
+    }
+    
+    /* (non-Javadoc)
+     * @see GameController#DisplayWinScreen()
+     * Display win screen once game over
+     */
+    @Override
+    public void DisplayWinScreen() {
     	if (isGameWon) {
     		message.setText("YOU WON");
     		Nmessage.setText("AI LOST");
