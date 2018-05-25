@@ -102,6 +102,20 @@ public class Puzzle {
 		return p;
 	}
 	
+	
+	/**
+	 * Generate puzzle from network sent array
+	 * @param arr
+	 * @param moves
+	 * @param GoalR
+	 */
+	public void GeneratePuzzlefromArr(ArrayList<Integer> arr, int moves, int GoalR) {
+		board = new GameBoard(arr,moves,6);
+		initial = board.copyGameBoard();
+		this.minInitMoves=moves;
+		this.GoalR=GoalR;
+		
+	}
 	/**
 	 * Set all variables for a new puzzle - for duplication
 	 * @param board Current game board
