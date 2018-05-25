@@ -1,7 +1,9 @@
 import java.util.ArrayList;
-
-
-
+/**
+ * GradLock Project
+ * @author Michael Hamilton
+ * This class is the bridge connecting frontend and backend
+ */
 public class GameEngine  {
 	private static final int NumDifficulties=5;
 	private ArrayList<BoundedQueue<Puzzle>> queueList = new ArrayList<BoundedQueue<Puzzle>>(NumDifficulties);
@@ -21,12 +23,15 @@ public class GameEngine  {
 	private Puzzle networkPuzzle = null;
 	private boolean NetworkOpponentWon=true;
 
-	//private Network network;
-
 
 	Puzzle currPuzzle;
 	BoardController bCont;
-	
+
+	/**
+	 * Constructor of game engine
+	 * @pre none
+	 * @post none
+	 */
     public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
 			queue = new BoundedQueue<Puzzle>(10);
@@ -60,12 +65,23 @@ public class GameEngine  {
         getAnyPuzzle();
 
     }
-    
-    
-    public int getStoryLevel() {
+
+	/**
+	 * getter method of story level
+	 * @return the story level
+	 * @pre none
+	 * @post none
+	 */
+	public int getStoryLevel() {
     	return StoryLevel;
     }
-	
+
+	/**
+	 * get the current puzzle
+	 * @return the puzzle
+	 * @pre none
+	 * @post puzzle != null
+	 */
     public Puzzle getAnyPuzzle() {
     	int tempDiff=0;
         while(1!=2) {
@@ -87,7 +103,13 @@ public class GameEngine  {
         return currPuzzle;
         
     }
-    
+
+	/**
+	 * get the new puzzle
+	 * @return the new puzzle
+	 * @pre none
+	 * @post puzzle != null
+	 */
 	public Puzzle getNewPuzzle(){
 		if(size<6) {
 			Puzzle p=null;
@@ -154,19 +176,42 @@ public class GameEngine  {
 			return currPuzzle;
 		
 	}
-	
+
+	/**
+	 * get the list of frontend cars
+	 * @return list of frontend cars
+	 * @pre none
+	 * @post list != null
+	 */
 	public ArrayList<Car> GetCarList(){
 		return currPuzzle.GenCarList();
 	}
-	
+
+	/**
+	 * make a move
+	 * @param r the curr row
+	 * @param c the curr column
+	 * @param newR the new row
+	 * @param newC the new column
+	 * @return boolean for valid move
+	 * @pre none
+	 * @post none
+	 */
 	public boolean MakeMove(int r,int c,int newR,int newC) {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
-		if(NetworkMode==true) {
-			NetworkSendMove( r,  c,  newR,  newC);
-		}
+		//if(NetworkMode==true) {
+			//NetworkSendMove( r,  c,  newR,  newC);
+		//}
 		return ret;
 	}
-	
+
+	/**
+	 * the won state for each level in story mode
+	 * @param time the time
+	 * @return the level of grade
+	 * @pre none
+	 * @post gdlvl != null
+	 */
 	public GradeLvl GameWon(int time) {
 		GameWin=true;
 		GradeLvl gdlvl = CalculateGrade(time);
@@ -193,7 +238,13 @@ public class GameEngine  {
 		return gdlvl;
 
 	}
-	
+
+	/**
+	 * get the finial grade for story mode
+	 * @return the final grade
+	 * @pre none
+	 * @post none
+	 */
 	public GradeLvl GetFinalGrade() {
 		float mark=0;
 		for(GradeLvl glv: gradeList) {
@@ -220,11 +271,23 @@ public class GameEngine  {
 		}
 
 	}
-	
+
+	/**
+	 * get the all grades of rounds
+	 * @return the list of grades
+	 * @pre none
+	 * @post list != null
+	 */
 	public ArrayList<GradeLvl> StoryGetAllGrades(){
 		return gradeList;
 	}
-	
+
+	/**
+	 * get the game level you achieved
+	 * @return the level you achieved
+	 * @pre none
+	 * @post none
+	 */
 	public String StoryGetGradLevel() {
 		if(StoryLevel>=10) {
 			return "PHD";
@@ -246,7 +309,14 @@ public class GameEngine  {
 		}
 		
 	}
-	
+
+	/**
+	 * calculate the grade of each round
+	 * @param timeLeft the left time
+	 * @return the grade level
+	 * @pre none
+	 * @post none
+	 */
 	public GradeLvl CalculateGrade(int timeLeft) {
 		int gradeMoves = getMoves() + currPuzzle.getHintsUsed();
 		//System.out.println("MIN MOVES" + getMinMoves());
@@ -270,6 +340,10 @@ public class GameEngine  {
 		return GradeLvl.F;
 		
 	}
+
+	/**
+	 * action of lose a game
+	 */
 	public void GameLoss() {
 		
 		if(gameMode==Mode.STORY) {
@@ -285,39 +359,59 @@ public class GameEngine  {
 			//System.out.println("GRAD WITH" + gdlvl.getString());
 		}
 	}
-	
+
+	/**
+	 * get the next move
+	 * @return array of next moves
+	 */
 	public int[] getNextMove() {
 		return currPuzzle.getBestMove();
 	}
-	
+
+	/**
+	 * get the size of board
+	 * @return the size of board
+	 */
 	public int getBoardSize() {
 		return currPuzzle.getSize();
 	}
 	
 	
 	//Only use for other testing
-	public ArrayList<Car> UIGetPuzzle(){
+	/*public ArrayList<Car> UIGetPuzzle(){
 		currPuzzle = new Puzzle(6);
 		currPuzzle.GeneratePuzzle(2);
 		return currPuzzle.GenCarList();
-	}
-	
+	}*/
+
+	/**
+	 * restart the puzzle
+	 */
 	public void RestartPuzzle(){
 		currPuzzle.RestartPuzzle();
 		//return currPuzzle.GenCarList();
 	}
-	
-	//Get number of moves made on this puzzle
+
+	/**
+	 * Get number of moves made on this puzzle
+	 * @return number of moves
+	 */
 	public int getMoves() {
 		return currPuzzle.getMoves();
 	}
-	
+
+	/**
+	 * get the enemy's moves on this puzzle
+	 * @return the number of moves
+	 */
 	public int getOppMoves() {
 		return networkPuzzle.getMoves();
 	}
 
-
-	
+	/**
+	 * get the minimum moves of this puzzle
+	 * @return the minimum moves
+	 */
 	public int getMinMoves() {
 		return currPuzzle.getInitMoves()-1;
 	}
@@ -390,10 +484,10 @@ public class GameEngine  {
 	}
 	
 	
-	public void NetworkSendMove(int r, int c, int NewR, int NewC){
-		
-		
-	}
+//	public void NetworkSendMove(int r, int c, int NewR, int NewC){
+//
+//
+//	}
 	 
 	public int[] NetworkGetMove(){
 		
@@ -404,24 +498,28 @@ public class GameEngine  {
 		return arr;
 
 	}
-	
+
+	/**
+	 *
+	 * @return
+	 */
 	public boolean NetworkMoveWaiting() {
 		return NetworkWaiting;
 	}
-	
-	
+
+	/**
+	 * set network mode
+	 * @param net
+	 */
 	public void NetworkSetMode(boolean net) {
 		NetworkMode = net;
 	}
-	
+
+	/**
+	 * get network won boolean
+	 * @return network won boolean
+	 */
 	public boolean NetworkOpponentWon() {
 		return NetworkOpponentWon;
 	}
-	
-
-	
-	
-
-
-
 }

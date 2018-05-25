@@ -1,14 +1,22 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-
-public class GameBoard { //Representation of the board
+/**
+ * GradLock Project
+ * @author Michael Hamilton
+ * This class represents the board
+ */
+public class GameBoard {
 		 private ArrayList<Integer> arr; //Current 
 		 private int moves=-1;
 		 private int Size;
-
-		 //int GoalRow;
-		 
-		 
+	/**
+	 * Constructor of GameBoard
+ 	 * @param arr the array of car ids
+	 * @param moves number of moves
+	 * @param Size the size of board
+     * @pre none
+     * @post none
+	 */
 		public GameBoard(ArrayList<Integer> arr, int moves, int Size) {
 			this.arr = arr;
 			this.moves = moves;
@@ -16,9 +24,11 @@ public class GameBoard { //Representation of the board
 		}
 		
 		/**
-		 * Get index from array
-		 * @param i
-		 * @return
+		 * Get the value from given index in array list
+		 * @param i the index
+		 * @return the value in the index
+         * @pre none
+         * @post none
 		 */
 		public int get(int i) {
 			if(i<arr.size()) {
@@ -27,14 +37,23 @@ public class GameBoard { //Representation of the board
 			System.out.println("FATAL TRY GET WRONG SIZE");
 			return -1;
 		}
-		
+
+    /**
+     * setter method for moves
+     * @param i new moves
+     * @pre none
+     * @post none
+     */
 		public void setMoves(int i) {
 			moves=i;
 		}
 		
 		/**
+         * setter method for index
 		 * @param i Set index
 		 * @param j Value
+         * @pre none
+         * @post none
 		 */
 		public void set(int i, int j) {
 			if(i<arr.size()) {
@@ -49,10 +68,12 @@ public class GameBoard { //Representation of the board
 		
 		
 		/**
-		 * Set row column to value
-		 * @param r
-		 * @param c
-		 * @param value
+		 * Set value at row column
+		 * @param r the row number
+		 * @param c the column number
+		 * @param value the value in that coordinate
+         * @pre none
+         * @post none
 		 */
 		public void setRC(int r, int c, int value) {
 			int i = RCtoI(r,c);
@@ -62,26 +83,55 @@ public class GameBoard { //Representation of the board
 		
 		/**
 		 * Get value at row column
-		 * @param r
-		 * @param c
-		 * @return
+		 * @param r the row number
+		 * @param c the column number
+		 * @return the value at row column
+         * @pre none
+         * @post none
 		 */
 		public int getRC(int r, int c) {
 			int i = RCtoI(r,c);
 			return get(i);
 			//return arr.get(RCtoI( r,  c));
 		}
-		
+
+    /**
+     * find index in the array given row and column
+     * @param r the row number
+     * @param c the column number
+     * @return the index
+     * @pre none
+     * @post none
+     */
 		private int RCtoI(int r, int c) {
 			return r * Size + c;
 		}
-		
+
+    /**
+     * getter method of size of array
+     * @return the size
+     * @pre none
+     * @post none
+     */
 		public int size() {
 			return arr.size();
 		}
+
+    /**
+     * increase the move
+     * @pre none
+     * @post none
+     */
 		public void incMoves() {
 			moves++;
 		}
+
+    /**
+     * getter method for the moves
+     * @return the moves
+     * @pre none
+     * @post none
+     */
 		public int getMoves() {
 			return moves;
 		}
@@ -95,6 +145,8 @@ public class GameBoard { //Representation of the board
 
 		/**
 		 * Print current board
+         * @pre none
+         * @post none
 		 */
 		public void printBoard() {
 			
@@ -112,9 +164,10 @@ public class GameBoard { //Representation of the board
 		
 		/**
 		 * Compare this board with another board
-		 * @pre oldB and this board must be different by 1 move
-		 * @param oldB
-		 * @return Difference
+		 * @param oldB the board to be compared
+		 * @return an array of Difference
+         * @pre oldB and this board must be different by 1 move
+         * @post array != null
 		 */
 		public int[] compareBoard(GameBoard oldB) {
 			boolean first=false;
@@ -194,9 +247,12 @@ public class GameBoard { //Representation of the board
 		
 		
 		/**
+         * find the available moves within the space
 		 * @param r Top Left Row
 		 * @param c Top Left Column
 		 * @return Array with spaces in each direction in form {left, up, right,down}
+         * @pre none
+         * @Post spaces != null
 		 */
 		public int[] FindMoves(int r, int c) {
 			int id = arr.get(RCtoI(r,c));
@@ -246,6 +302,7 @@ public class GameBoard { //Representation of the board
 			}
 			return spaces;
 		}
+
 		@Override
 		public int hashCode() {
 			return arr.hashCode();
@@ -263,7 +320,14 @@ public class GameBoard { //Representation of the board
 			}
 			return false;
 		}
-		
+
+    /**
+     * getter method for getting the size of car given the car id
+     * @param id the car id
+     * @return the size
+     * @pre none
+     * @post none
+     */
 		private int getSize(int id) { //Check this for scaling
 			if(id==EMPTY) {
 				return 0;
@@ -277,7 +341,12 @@ public class GameBoard { //Representation of the board
 			return -1;
 		}
 
-		
+    /**
+     * copy the game board
+     * @return the copied game board
+     * @pre none
+     * @post n != null
+     */
 		public GameBoard copyGameBoard() {
 			ArrayList<Integer> newarr = new ArrayList<Integer>(arr);
 			GameBoard n= new GameBoard(newarr,moves, Size);
@@ -292,7 +361,10 @@ public class GameBoard { //Representation of the board
 		private static final int  VTRUCK =2; //Horizontal sliding
 
 		/**
+         * Find the row of goal car
 		 * @return row of goal car
+         * @pre none
+         * @post none
 		 */
 		public int findGoalCarR() {
 			for(int i=0; i<arr.size();i++) {

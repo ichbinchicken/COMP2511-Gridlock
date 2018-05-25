@@ -3,7 +3,7 @@ import java.util.concurrent.locks.*;
 
 /**
  * GradLock
- * @author Michael Hamilton
+ * @author Michael Hamilton and Wayne Wobcke
  * A first-in, first-out bounded collection of objects.
 */
 public class BoundedQueue<E>
