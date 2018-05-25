@@ -488,6 +488,10 @@ public class GameEngine  {
 //
 //
 //	}
+
+	public void setUpNetwork() {
+
+	}
 	 
 	public int[] NetworkGetMove(){
 		
