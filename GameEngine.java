@@ -21,7 +21,11 @@ public class GameEngine  {
 	
 	
 	private boolean NetworkMode = false;
-	private boolean NetworkWaiting = true;
+	private boolean NetworkMoveWaiting = false;
+	private int a;
+	private int b;
+	private int c;
+	private int d;
 	private Puzzle networkPuzzle = null;
 	private boolean NetworkOpponentWon=true;
 
@@ -521,12 +525,24 @@ public class GameEngine  {
 
 	}
 
-	public void networkMakeMove() {
+	public void networkMakeMove(int a, int b, int c, int d) {
+		String sa = Integer.toString(a);
+		String sb = Integer.toString(b);
+		String sc = Integer.toString(c);
+		String sd = Integer.toString(d);
 
+		String move = sa + " " + sb + " " + sc + " " + sd;
+		this.netMod.makeMove(move);
 	}
 
-	public void networkRecvMove() {
+	public void networkRecvMove(String move) {
+		Scanner sc = new Scanner(move);
+		this.a = sc.nextInt();
+		this.b = sc.nextInt();
+		this.c = sc.nextInt();
+		this.d = sc.nextInt();
 
+		this.NetworkMoveWaiting = true;
 	}
 
 	public void networkWinGame() {
@@ -537,10 +553,11 @@ public class GameEngine  {
 	 
 	public int[] NetworkGetMove(){
 		
-		int[] arr = networkPuzzle.getBestMove();
+		int[] arr = {a,b,c,d};
 		if(networkPuzzle.MakeMove(arr[0],arr[1],arr[2],arr[3])){
 			NetworkOpponentWon=true;
 		}
+		this.NetworkMoveWaiting = false;
 		return arr;
 
 	}

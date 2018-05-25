@@ -125,8 +125,8 @@ public class NetworkModule implements Runnable {
      * Sends a new move to the other player
      * @param newBoard new Board State to send
      */
-    public void makeMove(GameBoard newBoard) {
-        writer.println("M " + newBoard.toString());
+    public void makeMove(String move) {
+        writer.println("M " + move);
     }
 
     /**
@@ -177,7 +177,7 @@ public class NetworkModule implements Runnable {
                 //engine.startGame(sc.nextLine());
 
             } else if (command == "M") {
-               // engine.move(sc.nextLine());
+               engine.networkRecvMove(sc.nextLine());
 
             } else if (command == "W") {
                 try {
