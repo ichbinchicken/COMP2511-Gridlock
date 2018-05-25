@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 
@@ -108,16 +109,17 @@ public class MenuController extends Controller {
 		//helpMsg.setAnchorLocation(PopupWindow.AnchorLocation.WINDOW_TOP_RIGHT);
 		Rectangle rect = new Rectangle();
 		int helpWidth = 600;
-		int helpHeight = 100;
+		int helpHeight = 240;
 		rect.setWidth(helpWidth);
 		rect.setHeight(helpHeight);
-		rect.setFill(Color.MINTCREAM);
+		//Color mycolour = new Color(46/255,139/255,87/255,240/255);
+		rect.setFill(Color.LEMONCHIFFON);
 		rect.setX(menuPane.getPrefWidth()-helpWidth-buttonHelp.getPrefWidth()-30);
 		rect.yProperty().bind(buttonHelp.layoutYProperty());
 		rect.setVisible(false);
 		//helpMsg.setX(menuPane.getPrefWidth()+50);
 		//helpMsg.setY(-30);
-		Text helpMsgText = new Text("ahahahahaha this is empty hahahahhahaha\n this\n is very looooooong hahahahaha");
+		helpMsgText.setTextAlignment(TextAlignment.CENTER);
 		helpMsgText.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
 		helpMsgText.setWrappingWidth(helpWidth-30);
 		helpMsgText.setFill(Color.SEAGREEN);
@@ -209,5 +211,13 @@ public class MenuController extends Controller {
     @FXML
 	private Pane menuPane;
 	private Node[] helpMsg;
+	private final Text helpMsgText = new Text
+			("You're a busy student who's trying to Graduate\n "
+					+ "But before you can Graduate you have to move all your assignments\n"
+					+ "To move them away, simply click and drag\n"
+					+ "But they can only move on one axis and there can't be other assignments blocking them\n"
+					+ "Once all your assignments have been moved, you will automatically run to the edge and graduate\n"
+					+ "With each level you complete you will get a grading\n"
+					+ "Relax with free play, Race against the clock with timed or Challenge yourself with story mode and see just how far you can go");
 
 }
