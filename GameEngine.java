@@ -545,7 +545,7 @@ public class GameEngine  {
 
 	public void remoteStartGame(String board) {
 
-			ArrayList<Integer>  arr = new arrayList<Integer>;
+			ArrayList<Integer>  arr = new ArrayList<Integer>();
 
 			Scanner sc = new Scanner(board);
 			while (sc.hasNextInt()) {

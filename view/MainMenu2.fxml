@@ -58,5 +58,6 @@
          </font>
       </Text>
       <Label fx:id="HostIPAddr" layoutX="104.0" layoutY="578.0" text="Label" />
+      <Button fx:id="IPEnterBut" layoutX="193.0" layoutY="549.0" mnemonicParsing="false" onAction="#IPEnter" prefHeight="27.0" prefWidth="62.0" text="Enter" />
    </children>
 </Pane>

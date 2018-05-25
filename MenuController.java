@@ -78,7 +78,7 @@ public class MenuController extends Controller {
     void MultiplayerButtonAction(ActionEvent event) {
     		engine.getNewPuzzle();
     		engine.NetworkSetMode(true);
-    		main.ShowNetworkScreen();
+    		//main.ShowNetworkScreen();
 
     }
     
@@ -101,6 +101,8 @@ public class MenuController extends Controller {
     public void initialize() {
 		HostIPAddr.setVisible(false);
 		HostIDTextInput.setVisible(false);
+    	IPEnterBut.setVisible(false);
+
 		ModeGroup = new ToggleGroup();
 		labelDifficulty.setText("School Certificate");
 		toggleTimed.setToggleGroup(ModeGroup);
@@ -239,15 +241,19 @@ public class MenuController extends Controller {
     
     @FXML
     void HostButton(ActionEvent event) {
+    	engine.setUpNetworking();
     	String portStr = PortTextField.getText();
     	if(portStr!=null) {
     		int port = Integer.parseInt(portStr);
+    		engine.hostGame(port);
 	    	System.out.println("HOST" + port);
 	    	HostIPAddr.setText(engine.getIP());
 	    	HostIPAddr.setVisible(true);
 	    	HostIPAddr.toFront();
 	    	HostIDTextInput.toBack();
 	    	HostIDTextInput.setVisible(false);
+	    	IPEnterBut.setVisible(false);
+
 	    	
     	}
     	
@@ -255,15 +261,25 @@ public class MenuController extends Controller {
 
     @FXML
     void JoinButton(ActionEvent event) {
+    	engine.setUpNetworking();
+
     	String portStr = PortTextField.getText();
     	//System.out.println(port);
     	if(portStr!=null) {
     		int port = Integer.parseInt(portStr);
+    		//engine.joinGame(addr, );
 	    	HostIPAddr.setVisible(false);
 	    	HostIPAddr.toBack();
 	    	HostIDTextInput.toBack();
 	    	HostIDTextInput.setVisible(true);
+	    	IPEnterBut.setVisible(true);
     	}
+
+    }
+    
+    @FXML
+    void IPEnter(ActionEvent event) {
+    	String IP = HostIDTextInput.getText();
 
     }
     
@@ -304,6 +320,10 @@ public class MenuController extends Controller {
     
     @FXML
     private TextField HostIDTextInput;
+    
+    @FXML
+    private Button IPEnterBut;
+
 
 
 
