@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,7 +13,12 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
+/**
+ * GradLock Project
+ * @author Ziming Zheng and Michael Hamilton
+ * This class is the controller to connect front end and back end
+ * for single player board screen.
+ */
 public class BoardController extends GameController {
 	private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
     private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
@@ -36,14 +40,25 @@ public class BoardController extends GameController {
     private boolean running;
     private Mode mode;
 
-
+    /**
+     * Constructor of BoardController
+     * @param s the stage of app, required by javafx
+     * @param engine the backend "interface" object so that we can call backend methods
+     * @param main game launcher, holding this reference for screen switching
+     * @pre s != null && engine != null && main != null
+     * @post none
+     */
     public BoardController(Stage s, GameEngine engine, Main main) {
     	super(s,engine,main);
         totalSeconds = currSeconds = engine.getTime();
-
         running = true; // this is to check whether the game is paused. Initially, it's running.
     }
 
+    /**
+     * Method to handle the action when "Hint" button is clicked
+     * @pre none
+     * @post none
+     */
 	@FXML
 	void HintAction() {
 		if(animating==false && isGameWon == false) {
@@ -55,7 +70,11 @@ public class BoardController extends GameController {
     	}
 	}
 	
-
+    /**
+     * Method to handle the action when "Pause" button is clicked
+     * @pre none
+     * @post none
+     */
 	@FXML
     void PauseAction(ActionEvent event) {
 		if(running) {
@@ -76,6 +95,12 @@ public class BoardController extends GameController {
 		}
     }
 
+    /**
+     * Method to handle the action when "Restart" button is clicked
+     * @param event
+     * @pre event != null
+     * @post boardPane != null
+     */
     @FXML
     void RestartAction(ActionEvent event) {
     	if(animating==false) {
@@ -96,8 +121,12 @@ public class BoardController extends GameController {
             curtainHide();
     	}
     }
-	
-    
+
+    /**
+     * Method for initializing the setting of single player board screen
+     * @pre none
+     * @post countDown != null
+     */
     @FXML
     public void initialize() {
     	super.initialize();
@@ -121,41 +150,32 @@ public class BoardController extends GameController {
 
     }
 
+    /**
+     * Method for displaying the "You Won" screen and stop the game for each round
+     * @pre none
+     * @post none
+     */
     @Override
     public void DisplayWinScreen() {
     	stopGame(GAME_WON_MSGS[0]);
     }
 
-    // draw border for the board
-
-
-    
-    //boardPane.getChildren().add(curtain);
-    //boardPane.getChildren().add(message);
-
-    ///buttonNewGame.setDisable(false);
-    //buttonPause.setDisable(false);
-    //buttonPause.setText("Pause");
-    //totalTime.setText(convertTime(totalSeconds));
-    //curtain.setVisible(false);
-    //message.setVisible(false);
-    /*if(mode==Mode.STORY) {
-        buttonHint.setDisable(true);
-        buttonRestart.setDisable(true);
-        buttonNewGame.setDisable(true);
-    }
-    else {
-        buttonHint.setDisable(false);
-        buttonRestart.setDisable(false);
-        buttonNewGame.setDisable(false);
-    }*/
-
+    /**
+     * Method for getting a single player board screen with settings
+     * @pre none
+     * @post none
+     */
     @Override
     public void GetNewBoard(){
     	super.GetNewBoard();
     	drawBoardAdit();
     }
-    
+
+    /**
+     * Method for drawing or setting additional things for a single player board screen
+     * @pre none
+     * @post none
+     */
     private void drawBoardAdit() {
         totalSeconds = currSeconds = engine.getTime();
         running=true;
@@ -181,7 +201,14 @@ public class BoardController extends GameController {
             buttonNewGame.setText("New Game");
     	}
     }
-    
+
+    /**
+     * Method for stopping the game for each level/round instead of the entire mode
+     * @param msg the message to be displayed on the screen when game stops,
+     *            defined in final type in this class
+     * @pre msg != none
+     * @post none
+     */
     private void stopGame(String msg) {
         //System.out.println("msg="+msg);
         double boardHeight = boardPane.getPrefHeight();
@@ -275,15 +302,24 @@ public class BoardController extends GameController {
 
         }
     }
-    
+
+    /**
+     * Method for getting "game won" state from backend via GameEngine
+     * @pre none
+     * @post none
+     */
     @Override
     protected void GameWon() {
         engine.GameWon(currSeconds);
         countDown.stop();
         
     }
-    
-    
+
+     /**
+      * Method for showing the ending screen in story mode
+      * @pre none
+      * @post boardPane != null
+      */
     protected void StoryModeEndScreen() {
         buttonNewGame.setDisable(true);
         double boardHeight = boardPane.getPrefHeight();
@@ -336,23 +372,20 @@ public class BoardController extends GameController {
             levelLabel[i].setTextFill(secondaryTextColor);
             levelLabel[i].setTextAlignment(TextAlignment.LEFT);
             levelLabel[i].toFront();
-
-
         }
         boardPane.getChildren().addAll(gradeLabel);
         boardPane.getChildren().addAll(GradLabel);
         boardPane.getChildren().addAll(levelLabel);
-        //message.setVisible(false);
-        //message.toFront();
-
-
-        //details[0] = new Label(GAME_WON_MSGS[1]+timeElapsed);
-
-
     }
-    
 
 
+    /**
+     * Method for converting total seconds into strings
+     * @param secondDelta the difference between start time and end time in seconds
+     * @return the time difference showing in a string format of "HH:MM:SS"
+     * @pre none
+     * @post returned string is not null
+     */
     protected String convertTime(long secondDelta) {
         // this snippet taken from https://stackoverflow.com/questions/43892644
         long seconds = 1;
@@ -370,7 +403,4 @@ public class BoardController extends GameController {
                 String.format("%02d", elapsedMinutes) + ":" +
                 String.format("%02d", elapsedSeconds);
     }
-
-
-
 }

@@ -15,16 +15,17 @@ import javafx.util.Duration;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * GradLock
+ * @author Michael Hamilton and Ziming Zheng
+ * This class represents a car on the board
+ */
 public class Car {
     private Image IMAGE;
     private ImageView carNode;
 	private static final int  GOALCAR=5;
-	//private static final int  HORCAR=4;
-	//private static final int  HORTRUCK=3;
 	private static final int  VERCAR=1;
 	private static final int  VERTRUCK=2;
-	//private static final int X = 0;
-    //private static final int Y = 0;
 
 	private int r;
     private int c;
@@ -37,19 +38,23 @@ public class Car {
 	private boolean dragging;
 	private double mousex;
 	private double mousey;
-	//private BoardController boardController;
 	private WeakReference<GameController> boardReference;
-	//private Bounds bounds;
 	private int initR;
 	private int initC;
 	private int[] moveSpace = {0,0,0,0};
 	private Bounds moveBounds;
-	double initX,initY;
-	boolean moveable;
-	//private GameEngine engine;
-	//private double max;
+	private double initX,initY;
+	private boolean moveable;
 
-
+	/**
+	 * Constructor of Car class
+	 * @param r the row coordinate in the backend
+	 * @param c the column coordinate in the backend
+	 * @param type the type of car
+	 * @param length the lengh of car
+	 * @pre none
+	 * @post none
+	 */
 	public Car(int r, int c, int type, int length) {
 		this.r=r; // backend coordinate
 		this.c=c; // backend coordinate
@@ -59,7 +64,15 @@ public class Car {
 		this.length = length;  // backend length
 	}
 
-	//
+	/**
+	 * Putting images and setting frontend coordinate
+	 * @param squareLength the length of tile on the board
+	 * @param b the bound required by javafx
+	 * @param bcontroller the controller to connect frontend and backend
+	 * @param Moveable boolean to check whether a car is movable or not
+	 * @pre b != null && bcontroller != null
+	 * @post carNode != null
+	 */
 	public void frontEndCarConstructor(double squareLength, Bounds b, GameController bcontroller, boolean Moveable) {
 		//this.engine = engine;
 		this.moveable=Moveable;
@@ -100,27 +113,45 @@ public class Car {
 	    addMouseEvent();
 
 	}
-	
-	
+
+	/**
+	 * getter method for carNode
+	 * @return the carNode
+	 * @pre none
+	 * @post none
+	 */
 	public Node getCar() {
 		return carNode;
 	}
 
-
-	/*private double mRound(double value, double factor) {
-		return Math.round(value/factor) * factor;
-	}*/
-	
-
+	/**
+	 * convert to backend coordinate(row/column) given the local board coordinate
+	 * @param coord the local board coordinate
+	 * @return the number of row or column
+	 * @pre none
+	 * @post none
+	 */
 	private int CoordtoN(double coord) {
 		//System.out.println(coord + "|");
 		return (int) Math.round(coord/squareLength);
 	}
-	
+
+	/**
+	 * convert to local board coordinate given the number of squares for a side
+	 * @param n the number of squares
+	 * @return the local board coordinate
+	 * @pre none
+	 * @post none
+	 */
 	private double NtoCoord(int n) {
 		return n*squareLength;
 	}
 
+	/**
+	 * Mouse handler for all sorts of actions to the car on the board
+	 * @pre none
+	 * @post none
+	 */
 	private void addMouseEvent() {
         carNode.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
@@ -245,16 +276,22 @@ public class Car {
         });
 
     }
-	
+
+	/**
+	 * getter method for the car type
+	 * @return the type of car
+	 */
 	public int getCarType() {
 		return type;
 	}
-	//Make move to newR and newC - animTime in ms
+
 	/**
-	 * Make Animating Move then perform new move
-	 * @param newR
-	 * @param newC
-	 * @param animTime
+	 * Make Animating Move and update the backend
+	 * @param newR the new row number
+	 * @param newC the new column number
+	 * @param animTime the time of animation
+	 * @pre none
+	 * @post none
 	 */
 	public void CarMakeAnimatingMove(int newR, int newC, int animTime) {
 		double xshift = NtoCoord(newC-c);
@@ -296,10 +333,12 @@ public class Car {
 	
 	/**
 	 * 
-	 * Make Animating Move for already performed move
-	 * @param newR
-	 * @param newC
-	 * @param animTime
+	 * Make Animating Move without updating backend
+	 * @param newR the new row number
+	 * @param newC the new column number
+	 * @param animTime the animation time
+	 * @pre none
+	 * @post none
 	 */
 	public void makeSetAnimateMove(int newR, int newC, int animTime) {
 		double xshift = NtoCoord(newC-c);
@@ -336,16 +375,35 @@ public class Car {
 
 		});
 
-	}	
+	}
+
+	/**
+	 * getter method for row number in backend
+	 * @return the row number
+	 * @pre none
+	 * @post none
+	 */
 	public int getR() {
 		return r;
 	}
+
+	/**
+	 * getter method for column in backend
+	 * @return the column number
+	 * @pre none
+	 * @post none
+	 */
 	public int getC() {
 		return c;
 	}
-	
-	
-	
+
+	/**
+	 * bounding the coordinate within the board
+	 * @param newCoord the new frontend coordinate
+	 * @param minCoord the minimum frontend coordinate
+	 * @param maxCoord the maximum frontend coordinate
+	 * @return the updated frontend coordinate
+	 */
 	private double setCoord(double newCoord, double minCoord, double maxCoord) {
         if (newCoord > maxCoord) {
             return maxCoord;
@@ -356,21 +414,11 @@ public class Car {
         return newCoord;
     }
 
-	
+	/**
+	 * setter methods for moveable
+	 * @param move the boolean for moveable
+	 */
 	public void setMoveable(boolean move) {
 		moveable = move;
 	}
-    /*
-    private double getCoordInParent(int flag) {
-        double localX = carNode.getLayoutX();
-        double localY = carNode.getLayoutY();
-        Point2D XYInParent = carNode.localToParent(localX, localY);
-        if (flag == X) {
-            return XYInParent.getX();
-        } else {
-            return XYInParent.getY();
-        }
-
-    }
-    */
 }

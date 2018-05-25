@@ -1,17 +1,28 @@
 import java.util.concurrent.locks.*;
 
 
-/** 
-    A first-in, first-out bounded collection of objects. 
-*/ 
-
-
+/**
+ * GradLock
+ * @author Michael Hamilton
+ * A first-in, first-out bounded collection of objects.
+*/
 public class BoundedQueue<E>
-{ 
-	//Monitor monitor = new Monitor();
-   /** 
-       Constructs an empty queue. 
-       @param capacity the maximum capacity of the queue 
+{
+	private Object[] elements;
+	private int capacity;
+	private int head;
+	private int tail;
+	private int size;
+	private boolean debug;
+	private final Lock lock = new ReentrantLock();
+	private final Condition notFull = lock.newCondition();
+	private final Condition notEmpty = lock.newCondition();
+
+   /**
+	* Constructs an empty queue.
+	* @param capacity the maximum capacity of the queue
+	* @pre none
+	* @post elements != null
    */ 
    public BoundedQueue(int capacity) 
    { 
@@ -23,9 +34,10 @@ public class BoundedQueue<E>
    } 
 
    /** 
-       Removes the object at the head. 
-       @return the object that has been removed from the queue
-       @precondition !isEmpty()
+	* Removes the object at the head.
+	* @return the object that has been removed from the queue
+	* @pre !isEmpty()
+	* @post none
    */ 
    public E remove() throws InterruptedException
    { 
@@ -59,10 +71,11 @@ public class BoundedQueue<E>
    } 
 
    /** 
-       Appends an object at the tail. 
-       @param newValue the object to be appended 
- * @throws InterruptedException 
-       @precondition !isFull();
+	* Appends an object at the tail when the object isn't in the queue
+	* @param newValue the object to be appended
+ 	* @throws InterruptedException
+	* @pre !isFull()
+	* @post none
    */ 
    public void add(E newValue) throws InterruptedException 
    { 
@@ -100,10 +113,16 @@ public class BoundedQueue<E>
 		  lock.unlock();
 	  }
 	  
-   } 
-   
-   
-   public void Forceadd(E newValue) throws InterruptedException 
+   }
+
+	/**
+	 * Append an object at the tail even if the object has existed in the queue
+ 	 * @param newValue the object to be appended
+	 * @throws InterruptedException
+	 * @pre !isFull()
+	 * @post none
+	 */
+	public void Forceadd(E newValue) throws InterruptedException
    { 
 	  lock.lock();
 	  try {
@@ -130,32 +149,32 @@ public class BoundedQueue<E>
 		  lock.unlock();
 	  }
 	  
-   } 
+   }
 
-
-   public boolean isFull() 
+	/**
+	 * check the queue is full or not
+	 * @return boolean True for full, False for the other way round
+	 * @pre none
+	 * @post none
+	 */
+	public boolean isFull()
    { 
       return size == elements.length;
-   } 
+   }
 
+	/**
+	 * check the queue is empty or not
+	 * @return boolean True for empty, Flase for the other way round
+	 * @pre none
+	 * @post none
+	 */
    public boolean isEmpty() 
    { 
       return size == 0; 
    } 
 
-   public void setDebug(boolean newValue)
+  /* public void setDebug(boolean newValue)
    {
       debug = newValue;
-   }
-
-   private Object[] elements; 
-   private int capacity;
-   private int head; 
-   private int tail; 
-   private int size;
-   private boolean debug;
-   private final Lock lock = new ReentrantLock();
-   private final Condition notFull = lock.newCondition();
-   private final Condition notEmpty = lock.newCondition();
-
+   }*/
 }
