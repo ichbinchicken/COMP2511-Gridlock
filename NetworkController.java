@@ -46,16 +46,16 @@ public class NetworkController extends GameController {
     public void initialize() {
     	super.initialize();
     	message = new Label("");
-        message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
-        message.setTextFill(primaryTextColor);
+        message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 60));
+        message.setTextFill(Color.BLACK);
         setCenterX(boardPane, message);
         setCenterY(boardPane, message);
     	Ncurtain = new Rectangle(NboardPane.getPrefWidth(), NboardPane.getPrefHeight(), boardColor);
         Ncurtain.setX(0);
         Ncurtain.setY(0);
 		Nmessage = new Label("");
-		Nmessage.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40*NboardPane.getPrefWidth()/boardPane.getPrefWidth()));
-		Nmessage.setTextFill(primaryTextColor);
+		Nmessage.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 60*NboardPane.getPrefWidth()/boardPane.getPrefWidth()));
+		Nmessage.setTextFill(Color.BLACK);
 		setCenterX(NboardPane, Nmessage);
 		setCenterY(NboardPane, Nmessage);
 
@@ -108,8 +108,8 @@ public class NetworkController extends GameController {
     	for(Car c: workload) {
     		c.setMoveable(false);
     	}
-    	curtainShow();
-    	NcurtainShow();
+    	//curtainShow();
+    	//NcurtainShow();
     	if (isGameWon) {
     		message.setText("YOU WON");
     		Nmessage.setText("AI LOST");

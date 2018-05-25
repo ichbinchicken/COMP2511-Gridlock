@@ -34,10 +34,6 @@ public class BoardController extends GameController {
     private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
     private int currSeconds;
     private boolean running;
-    private boolean GameWon = false;
-    private boolean animating = false;
-    private Car goalCar;
-    private Main main;
     private Mode mode;
 
 
