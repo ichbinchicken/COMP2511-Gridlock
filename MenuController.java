@@ -231,6 +231,17 @@ public class MenuController extends Controller {
 
     }
     
+    
+    @FXML
+    void HostButton(ActionEvent event) {
+
+    }
+
+    @FXML
+    void JoinButton(ActionEvent event) {
+
+    }
+    
     @FXML
     private Button buttonStartGame;
     @FXML
@@ -255,6 +266,13 @@ public class MenuController extends Controller {
     private Button buttonSize;
     @FXML
     private Label labelDifficulty;
+    @FXML
+    private Button JoinButton;
+
+    @FXML
+    private Button HostButton;
+
+
     @FXML
 	private Pane menuPane;
 	private Node[] helpMsg;
