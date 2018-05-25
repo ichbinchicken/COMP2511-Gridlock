@@ -37,6 +37,7 @@ public class MenuController extends Controller {
 		showHelp = false;
 	}
 	
+	
     /**
      * Start button pressed
      * Go to solo mode screen
@@ -98,6 +99,8 @@ public class MenuController extends Controller {
 	 */
 	@FXML
     public void initialize() {
+		HostIPAddr.setVisible(false);
+		HostIDTextInput.setVisible(false);
 		ModeGroup = new ToggleGroup();
 		labelDifficulty.setText("School Certificate");
 		toggleTimed.setToggleGroup(ModeGroup);
@@ -237,15 +240,30 @@ public class MenuController extends Controller {
     @FXML
     void HostButton(ActionEvent event) {
     	String portStr = PortTextField.getText();
-    	int port = Integer.parseInt(portStr);
-    	System.out.println("HOST" + port);
+    	if(portStr!=null) {
+    		int port = Integer.parseInt(portStr);
+	    	System.out.println("HOST" + port);
+	    	HostIPAddr.setText(engine.getIP());
+	    	HostIPAddr.setVisible(true);
+	    	HostIPAddr.toFront();
+	    	HostIDTextInput.toBack();
+	    	HostIDTextInput.setVisible(false);
+	    	
+    	}
+    	
     }
 
     @FXML
     void JoinButton(ActionEvent event) {
     	String portStr = PortTextField.getText();
-    	int port = Integer.parseInt(portStr);
-    	System.out.println(port);
+    	//System.out.println(port);
+    	if(portStr!=null) {
+    		int port = Integer.parseInt(portStr);
+	    	HostIPAddr.setVisible(false);
+	    	HostIPAddr.toBack();
+	    	HostIDTextInput.toBack();
+	    	HostIDTextInput.setVisible(true);
+    	}
 
     }
     
@@ -274,6 +292,8 @@ public class MenuController extends Controller {
     @FXML
     private Label labelDifficulty;
     @FXML
+    private Label HostIPAddr;
+    @FXML
     private Button JoinButton;
 
     @FXML
@@ -281,6 +301,9 @@ public class MenuController extends Controller {
 
     @FXML
     private TextField PortTextField;
+    
+    @FXML
+    private TextField HostIDTextInput;
 
 
 

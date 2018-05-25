@@ -500,7 +500,10 @@ public class GameEngine  {
 	public void setUpNetworking() {
 		this.netMod = new NetworkModule(this);
 	}
-
+	
+	public String getIP() {
+		return netMod.getLocalAddr();
+	}
 	public void hostGame(int port) {
 		this.netMod.hostGame(port);
 	}
