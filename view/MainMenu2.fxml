@@ -21,7 +21,7 @@
             <Font name="Algerian" size="22.0" />
          </font>
       </Button>
-      <ToggleButton fx:id="toggleTimed" layoutX="260.0" layoutY="430.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" selected="true" text="Timed">
+      <ToggleButton fx:id="toggleTimed" layoutX="260.0" layoutY="430.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" selected="true" text="Time">
          <toggleGroup>
             <ToggleGroup fx:id="Group" />
          </toggleGroup></ToggleButton>
