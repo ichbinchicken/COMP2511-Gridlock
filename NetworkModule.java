@@ -24,7 +24,7 @@ public class NetworkModule implements Runnable {
     private BufferedReader reader;
     private OutputStream output;
     private PrintWriter writer;
-    NetworkController controller;
+    private NetworkController controller;
 
     private Thread t;
 
@@ -33,7 +33,7 @@ public class NetworkModule implements Runnable {
      * Constructor to create Network Module
      * @param controller Network controller to communicate with game engine
      */
-    public NetworkModule(NetworkController controller) {
+    public NetworkModule(GameEngine controller) {
         this.controller = controller;
     }
 
@@ -77,8 +77,8 @@ public class NetworkModule implements Runnable {
      * @param remotePort Port of Game to connect to
      * @throws Exception
      */
-    public void connectToGame(InetAddress remoteAddr, int remotePort) throws Exception {
-         Socket socket = new Socket(remoteAddr, remotePort)
+    public void joinGame(InetAddress remoteAddr, int remotePort) throws Exception {
+         Socket socket = new Socket(remoteAddr, remotePort);
 
          input = socket.getInputStream();
          reader = new BufferedReader(new InputStreamReader(input));

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.net.*;
 /**
  * GradLock Project
  * @author Michael Hamilton
@@ -22,6 +23,8 @@ public class GameEngine  {
 	private boolean NetworkWaiting = true;
 	private Puzzle networkPuzzle = null;
 	private boolean NetworkOpponentWon=true;
+
+	private NetworkModule netMod;
 
 
 	Puzzle currPuzzle;
@@ -489,9 +492,46 @@ public class GameEngine  {
 //
 //	}
 
-	public void setUpNetwork() {
+	public void setUpNetworking() {
+		this.netMod = new NetworkModule(this);
+	}
+
+	public void hostGame(int port) {
+		this.netMod.hostGame(port);
+	}
+
+
+	public void joinGame(String addr, int port) {
+		InetAddress host = InetAddress.getByName(addr);
+		this.netMod.hostGame(host,port);
+	}
+
+	public void waitForGame() {
+		this.netMod.waitForGame();
+	}
+
+
+	public void networkStartGame() {
 
 	}
+
+	public void networkMakeMove() {
+
+	}
+
+	public void networkWinGame() {
+
+	}
+
+	public void networkRecvMove() {
+
+	}
+
+	public void networkWinGame() {
+
+	}
+
+
 	 
 	public int[] NetworkGetMove(){
 		
