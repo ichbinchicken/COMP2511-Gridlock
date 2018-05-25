@@ -52,8 +52,8 @@ public class NetworkModule implements Runnable {
         try {
           servSock = new ServerSocket(port);
 
-           this.localAddr = this.socket.getLocalAddress();
-           this.localPort = this.socket.getLocalPort();
+           this.localAddr = this.servSock.getInetAddress();
+           this.localPort = this.servSock.getLocalPort();
            this.amIHost = true;
         } catch (IOException e) {
           e.printStackTrace();
@@ -83,9 +83,6 @@ public class NetworkModule implements Runnable {
 			e.printStackTrace();
 		}
         writer = new PrintWriter(output, true);
-
-        this.localAddr = this.socket.getLocalAddress();
-        this.localPort = this.socket.getLocalPort();
 
         this.startRecv();
 
