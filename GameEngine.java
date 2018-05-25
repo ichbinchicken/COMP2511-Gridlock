@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.*;
 import java.net.*;
 import java.io.*;
 /**
@@ -567,7 +567,7 @@ public class GameEngine  {
 	 * @return
 	 */
 	public boolean NetworkMoveWaiting() {
-		return NetworkWaiting;
+		return NetworkMoveWaiting;
 	}
 
 	/**
