@@ -157,9 +157,11 @@ public class Search {
 	
 	
 	/**
-	 * @param state 
-	 * @param moves
-	 * @return
+	 * @param state intial Gameboard
+	 * @param moves Minimal number of movess
+	 * @return GameBoard > minimal moves 
+	 * Not Used
+	 * 
 	 */
 	private GameBoard FindMoves(GameBoard state, int moves) {
 		while(state.getMoves()> moves) {
@@ -175,7 +177,7 @@ public class Search {
 	 * Find previous board from list and current state
 	 * @param state
 	 * @param list
-	 * @return
+	 * @return integer of moves from end node
 	 */
 	private int FindPrev(GameBoard state, LinkedList<GameBoard> list) {
 		GameBoard prev = closedMap.get(state.getArr());
@@ -188,6 +190,13 @@ public class Search {
 
 	}
 	
+	/**
+	 * @param leaf 
+	 * @return updated board
+	 * Find all moves in goal state
+	 * Not Used
+	 * 
+	 */
 	private GameBoard UpdateMoves(GameBoard leaf) {
 		GameBoard prev = closedMap.get(leaf.getArr());
 		GameBoard max = leaf;
@@ -245,11 +254,7 @@ public class Search {
 		return false;
 	}
 	
-	/**
-	 * Is board a goal state
-	 * @param state
-	 * @return
-	 */
+
 	/*private boolean isGoal(GameBoard state) {
 		if(state.get(RCtoI(GoalR,GoalC)) == GOALCAR) {
 			return true;
@@ -258,6 +263,10 @@ public class Search {
 	}*/
 	
 	//Return isGoal if only move left is red to end
+	/**
+	 * @param state Current board
+	 * @return true if in goal state
+	 */
 	private boolean isGoal(GameBoard state) {
 		int i=GoalC;
 		int id = state.getRC(GoalR, i );

@@ -32,6 +32,10 @@ public class GenThread implements Runnable
 		this.minMoves=minMoves;
 	}
 
+	/**
+	 * Check if all queues are full
+	 * @return true if all queues are full
+	 */
 	private boolean queueListFull() {
 		for(BoundedQueue<Puzzle> q: queueList) {
 			if(q.isFull()==false) {
@@ -41,6 +45,10 @@ public class GenThread implements Runnable
 		return true;
 	}
 	
+	/**
+	 * Find lowest difficulty of non-full queue
+	 * @return lowest difficulty 
+	 */
 	private Difficulty findSmallestQueue() {
 		for(int i=0;i<queueList.size();i++) {
 			queue = queueList.get(i);
@@ -59,6 +67,14 @@ public class GenThread implements Runnable
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 * Continuously generate puzzles
+	 * Put puzzle on difficulty queue
+	 * IF queue is full increase number of minimal moves (so wont generate those boards)
+	 * If number of boards generated = count - return
+	 * When all queus are full sleep
+	 */
 	public void run() {
 		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 

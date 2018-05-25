@@ -15,6 +15,12 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * @author Michael
+ * Controller for network board
+ * Multiplayer specific actions on new board
+ *
+ */
 public class NetworkController extends GameController {
     protected static final int networkUpdateTime = 2000;
     protected static final int oppAnimTime = 100;
@@ -43,6 +49,12 @@ public class NetworkController extends GameController {
     }
 
 	
+    /* (non-Javadoc)
+     * @see GameController#initialize()
+     * 
+     * Initialize buttons
+     * Initialize 2 timers and messages
+     */
     public void initialize() {
     	super.initialize();
     	message = new Label("");
@@ -124,6 +136,10 @@ public class NetworkController extends GameController {
 
     }
     	
+    /**
+     * Start new game
+     * Have curtain hide to board start count down
+     */
     protected void NetgameStart() {
     	timeline.play();
     	curtainHide();
@@ -136,6 +152,11 @@ public class NetworkController extends GameController {
 	}
 
 
+	/**
+	 * Make move on opponent board
+	 * Move piece in r,c to the New R,C point
+	 * @param arr [r,c,newR,newC]
+	 */
 	private void MakeOpponentMove(int [] arr) {
 		Car car =findOpponentCar(arr[0], arr[1]);
 		car.makeSetAnimateMove(arr[2], arr[3], oppAnimTime);
@@ -184,11 +205,17 @@ public class NetworkController extends GameController {
         scounter.playFromStart();
     }
     
+    /**
+     * Show opponent curtain
+     */
     private void NcurtainShow() {
     	Ncurtain.setVisible(true);
     	Ncurtain.toFront();
     }
     
+    /**
+     * Hide Opponent curtain
+     */
     private void NcurtainHide() {
     	Ncurtain.setVisible(false);
     	Ncurtain.toBack();
@@ -196,11 +223,22 @@ public class NetworkController extends GameController {
     
 
     
+    /**
+     * New game button pressed
+     * Get new borad
+     */
     @FXML
     private void RequestNewGame() {
     	GetNewBoard();
     }
     
+    /**
+     * Find car on opponent board
+     * @param r Row of car
+     * @param c Colomn of car
+     * @return Car
+     * 
+     */
     protected Car findOpponentCar(int r,int c){
     	for(Car car: nworkload) {
     		if(r==car.getR() && c==car.getC()) {
