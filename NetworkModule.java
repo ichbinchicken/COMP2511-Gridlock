@@ -48,11 +48,15 @@ public class NetworkModule implements Runnable {
      * @param port Port number to listen for incoming connections
      * @throws Exception
      */
-    public void hostGame(int port) throws Exception {
-         servSock = new ServerSocket(port);
+    public void hostGame(int port) {
+        try {
+          servSock = new ServerSocket(port);
 
-          this.localAddr = this.socket.getLocalAddress();
-          this.localPort = this.socket.getLocalPort();
+           this.localAddr = this.socket.getLocalAddress();
+           this.localPort = this.socket.getLocalPort();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
     }
 
     /**
@@ -93,13 +97,17 @@ public class NetworkModule implements Runnable {
      * @param remotePort Port of Game to connect to
      * @throws Exception
      */
-    public void joinGame(InetAddress remoteAddr, int remotePort) throws Exception {
+    public void joinGame(InetAddress remoteAddr, int remotePort) {
+        try {
          Socket socket = new Socket(remoteAddr, remotePort);
 
          input = socket.getInputStream();
          reader = new BufferedReader(new InputStreamReader(input));
          output = socket.getOutputStream();
          writer = new PrintWriter(output, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         this.startRecv();
 

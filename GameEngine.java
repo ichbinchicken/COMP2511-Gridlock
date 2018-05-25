@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.net.*;
+import java.io.*;
 /**
  * GradLock Project
  * @author Michael Hamilton
@@ -502,12 +503,17 @@ public class GameEngine  {
 
 
 	public void joinGame(String addr, int port) {
-		InetAddress host = InetAddress.getByName(addr);
-		this.netMod.hostGame(host,port);
+		try {
+			InetAddress host = InetAddress.getByName(addr);
+			this.netMod.joinGame(host,port);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
-	public void waitForGame() {
-		this.netMod.waitForGame();
+	public void waitForJoin() {
+		this.netMod.waitForJoin();
 	}
 
 
@@ -516,10 +522,6 @@ public class GameEngine  {
 	}
 
 	public void networkMakeMove() {
-
-	}
-
-	public void networkWinGame() {
 
 	}
 
