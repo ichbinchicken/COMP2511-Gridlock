@@ -255,6 +255,10 @@ public class MenuController extends Controller {
 	    	HostIDTextInput.setVisible(false);
 	    	IPEnterBut.setVisible(false);
 	    	engine.waitForJoin();
+	    	
+    		engine.getNewPuzzle();
+    		engine.NetworkSetMode(true);
+    		main.ShowNetworkScreen();
 
 	    	
     	}
@@ -274,6 +278,9 @@ public class MenuController extends Controller {
 	    	HostIDTextInput.toBack();
 	    	HostIDTextInput.setVisible(true);
 	    	IPEnterBut.setVisible(true);
+	    	
+	    	
+
     	}
 
     }
@@ -283,6 +290,10 @@ public class MenuController extends Controller {
     	String IP = HostIDTextInput.getText();
     	System.out.println(IP);
 		engine.joinGame(IP, port);
+		
+		engine.NetworkSetMode(true);
+		main.ShowNetworkScreen();
+
 
 
     }
