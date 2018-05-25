@@ -43,7 +43,7 @@
             <Font size="30.0" />
          </font>
       </Text>
-      <TextField fx:id="PortNumber" layoutX="87.0" layoutY="566.0" prefHeight="25.0" prefWidth="80.0" />
+      <TextField fx:id="PortTextField" layoutX="87.0" layoutY="566.0" prefHeight="25.0" prefWidth="80.0" />
       <Button fx:id="HostButton" layoutX="80.0" layoutY="536.0" mnemonicParsing="false" onAction="#HostButton" text="Host" />
       <Button fx:id="JoinButton" layoutX="165.0" layoutY="536.0" mnemonicParsing="false" onAction="#JoinButton" text="Join" />
       <Text layoutX="51.0" layoutY="583.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port:" wrappingWidth="49.375">

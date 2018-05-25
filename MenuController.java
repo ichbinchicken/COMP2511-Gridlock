@@ -1,3 +1,4 @@
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -16,7 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
+import javafx.scene.control.TextField;
 
 /**
  * @author Michael Hamilton & Ziming Zheng
@@ -103,6 +104,7 @@ public class MenuController extends Controller {
 		toggleFreePlay.setToggleGroup(ModeGroup);
 		toggleStory.setToggleGroup(ModeGroup);
 		initHelp();
+		//PortTextField = new TextField();
         ModeGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
         	public void changed(ObservableValue<? extends Toggle> ov, Toggle toggle, Toggle newToggle) {
         		toggleChanged(newToggle);
@@ -234,11 +236,16 @@ public class MenuController extends Controller {
     
     @FXML
     void HostButton(ActionEvent event) {
-
+    	String portStr = PortTextField.getText();
+    	int port = Integer.parseInt(portStr);
+    	System.out.println("HOST" + port);
     }
 
     @FXML
     void JoinButton(ActionEvent event) {
+    	String portStr = PortTextField.getText();
+    	int port = Integer.parseInt(portStr);
+    	System.out.println(port);
 
     }
     
@@ -271,6 +278,10 @@ public class MenuController extends Controller {
 
     @FXML
     private Button HostButton;
+
+    @FXML
+    private TextField PortTextField;
+
 
 
     @FXML
