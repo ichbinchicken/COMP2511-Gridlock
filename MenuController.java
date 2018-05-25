@@ -29,7 +29,7 @@ public class MenuController extends Controller {
 	private GameEngine engine;
 	private Stage stage;
 	private boolean showHelp;
-
+	private int port;
 	public MenuController(Main main, GameEngine engine, Stage s) {
 		this.main = main;
 		this.engine = engine;
@@ -253,6 +253,7 @@ public class MenuController extends Controller {
 	    	HostIDTextInput.toBack();
 	    	HostIDTextInput.setVisible(false);
 	    	IPEnterBut.setVisible(false);
+	    	engine.waitForJoin();
 
 	    	
     	}
@@ -266,8 +267,7 @@ public class MenuController extends Controller {
     	String portStr = PortTextField.getText();
     	//System.out.println(port);
     	if(portStr!=null) {
-    		int port = Integer.parseInt(portStr);
-    		//engine.joinGame(addr, );
+    		port = Integer.parseInt(portStr);
 	    	HostIPAddr.setVisible(false);
 	    	HostIPAddr.toBack();
 	    	HostIDTextInput.toBack();
@@ -280,6 +280,8 @@ public class MenuController extends Controller {
     @FXML
     void IPEnter(ActionEvent event) {
     	String IP = HostIDTextInput.getText();
+		engine.joinGame(IP, port);
+
 
     }
     
