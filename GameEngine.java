@@ -416,14 +416,27 @@ public class GameEngine  {
 		return currPuzzle.getInitMoves()-1;
 	}
 
+	/**
+	 * Find all permitted next moves
+	 * @param r the row of the current car
+	 * @param c the column of the current car
+	 * @return array of moves in all permitted directions, each represented by int
+	 */
 	public int[] FindMoves(int r, int c) {
 		return currPuzzle.FindMoves(r, c);
 	}
 
+	/**
+	 * Setter for current difficulty level
+	 * @param difficulty the difficulty level as an int
+	 */
 	public void SetDifficulty(int difficulty) {
 		currDifficulty=difficulty;
 	}
-	
+
+	/**
+	 * Increase the difficulty level of the game by 1
+	 */
 	public void IncrementDifficulty() {
 		currDifficulty++;
 		if(currDifficulty>=NumDifficulties) {
@@ -431,16 +444,21 @@ public class GameEngine  {
 		}
 		//System.out.println("Diff"+ currDifficulty);
 	}
-	
+
+	/**
+	 * Decrease the difficulty level of the game by 1
+	 */
 	public void DecrementDifficulty() {
 		currDifficulty--;
 		if(currDifficulty<0) {
 			currDifficulty=0;
 		}
 	}
-	
 
-	//May be other settings required
+	/**
+	 * Configure the game mode and set related variables
+	 * @param mode the game mode chosen
+	 */
 	public void setMode(Mode mode) {
 		gameMode = mode;
 		switch(gameMode) {
@@ -458,6 +476,10 @@ public class GameEngine  {
 		//System.out.println("GAME MODE" +gameMode);
 	}
 
+	/**
+	 * Get the dynamically calculated time limit for the game depending on its mode and difficulty
+	 * @return the time limit of the game
+	 */
 	public int getTime() {
 		switch(gameMode) {
 			case TIMED:
@@ -470,10 +492,19 @@ public class GameEngine  {
 				return 0;
 		}
 	}
+
+	/**
+	 * Getter for current game mode
+	 * @return the game mode
+	 */
 	public Mode getMode() {
 		return gameMode;
 	}
 
+	/**
+	 * Getter for story mode game state
+	 * @return whether or not the story mode game is ended
+	 */
 	public boolean StoryModeEnd() {
 		if(	StoryModeEnd==true) {
 			StoryModeEnd=false;
@@ -482,13 +513,11 @@ public class GameEngine  {
 			
 		return false;
 	}
-	
-	
-//	public void NetworkSendMove(int r, int c, int NewR, int NewC){
-//
-//
-//	}
-	 
+
+	/**
+	 * Get the next move of the AI opponent
+	 * @return the optimal next move of the current game
+	 */
 	public int[] NetworkGetMove(){
 		
 		int[] arr = networkPuzzle.getBestMove();
@@ -500,8 +529,8 @@ public class GameEngine  {
 	}
 
 	/**
-	 *
-	 * @return
+	 * Getter for opponent move state
+	 * @return whether or not the opponent AI should make a move
 	 */
 	public boolean NetworkMoveWaiting() {
 		return NetworkWaiting;

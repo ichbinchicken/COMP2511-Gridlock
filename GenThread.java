@@ -34,8 +34,6 @@ public class GenThread implements Runnable
 	/**
 	 * check the queue is full or not
 	 * @return true for full, false for the other way round
-	 * @pre none
-	 * @post none
 	 */
 	private boolean queueListFull() {
 		for(BoundedQueue<Puzzle> q: queueList) {

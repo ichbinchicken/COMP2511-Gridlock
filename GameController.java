@@ -224,9 +224,7 @@ public abstract class GameController extends Controller {
     public void GetNewBoard() {
     	engine.getNewPuzzle();
         nSquares = engine.getBoardSize(); //this will be replaced dynamically.
-        //this.squareWidth = boardPane.getPrefWidth()/nSquares;
 
-        
         workload = drawBoard(boardPane, workload,true);
         if(!boardPane.getChildren().contains(curtain)) {
         	boardPane.getChildren().add(curtain);

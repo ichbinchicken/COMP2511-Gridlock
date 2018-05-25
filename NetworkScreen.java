@@ -1,23 +1,30 @@
-//import javafx.fxml.FXML;
 import javafx.stage.Stage;
-//import javafx.scene.control.TableView;
 
+/**
+ * @author Michael Hamilton
+ * This class represents a Beat-AI game screen loader.
+ */
 public class NetworkScreen extends Screen {
-	//private GameEngine engine;
-    //@FXML
-    //private TableView table;
 
     private Controller controller;
     private Stage stage;
 
+    /**
+     * Constructor for a Beat-AI game screen loader
+     * @param s current stage
+     * @param engine backend interface
+     * @param main main app
+     */
     public NetworkScreen(Stage s, GameEngine engine, Main main) {
         super("view/NetBoardScreen.fxml", "Gradlock", s);
-    	//this.engine = engine;
         controller = new NetworkController(s,engine, main);
         super.setController(controller);
         stage = s;
     }
-    
+
+    /**
+     * Show the screen on stage
+     */
     @Override
     public void StageShow() {
     	NetworkController ncontroller = (NetworkController) controller;

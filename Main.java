@@ -1,9 +1,10 @@
 import javafx.application.Application;
-//import javafx.fxml.FXMLLoader;
-//import javafx.scene.Parent;
-//import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+/**
+ * @author Michael Hamilton & Ziming Zheng
+ * Main class to launch the app
+ *
+ */
 public class Main extends Application {
 	Screen gameScreen;
 	Screen menuScreen;
@@ -12,7 +13,12 @@ public class Main extends Application {
 	public Main() {
 		
 	}
-	
+
+    /**
+     * Start the app and load the screens
+     * @param primaryStage main stage of the app
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -33,20 +39,30 @@ public class Main extends Application {
 
     }
 
+
     public static void main(String[] args) {
         launch(args);
         System.exit(0); //Close all threads when window is closed
 
     }
-    
-    
+
+    /**
+     * Show a single-player game screen
+     */
     public void ShowGameScreen() {
     	gameScreen.StageShow();
     }
+
+    /**
+     * Show a menu screen
+     */
     public void ShowMenuScreen() {
     	menuScreen.StageShow();
     }
-    
+
+    /**
+     * Show Beat-AI game screen
+     */
     public void ShowNetworkScreen() {
     	networkScreen.StageShow();
     }

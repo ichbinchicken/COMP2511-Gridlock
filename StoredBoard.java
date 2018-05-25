@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * @author Michael Hamilton
+ * This class represents a pre-generated 7x7 board in order to speed up initial loading.
+ */
 public enum StoredBoard {
 	B7A(26,7,new Integer[] {4, 4, 4, 4, 4, 4, 0, 5, 5, 0, 1, 0, 1, 0, 1, 4, 4, 1, 0, 1, 0, 1, 0, 1, 4, 4, 4, 4, 4, 4, 1, 0, 1, 0, 0, 1, 1, 4, 4, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0}),
 	B7B(20,7,new Integer[] {1, 4, 4, 1, 1, 4, 4, 1, 0, 0, 1, 1, 4, 4, 4, 4, 1, 2, 0, 0, 0, 0, 0, 1, 2, 0, 1, 0, 0, 0, 0, 2, 0, 1, 0, 0, 1, 1, 5, 5, 1, 0, 0, 1, 1, 0, 0, 1, 0}),
@@ -27,21 +31,27 @@ public enum StoredBoard {
 	B7W(24,7,new Integer[] {4, 4, 0, 0, 2, 2, 0, 0, 1, 4, 4, 2, 2, 0, 0, 1, 4, 4, 2, 2, 0, 5, 5, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0}),
 	B7X(23,7,new Integer[] {1, 4, 4, 1, 0, 0, 0, 1, 1, 0, 1, 3, 3, 3, 1, 1, 3, 3, 3, 4, 4, 1, 4, 4, 0, 1, 1, 0, 5, 5, 1, 0, 1, 1, 0, 4, 4, 1, 4, 4, 1, 0, 0, 0, 0, 0, 0, 1, 0});
 
-	
+	private ArrayList<Integer> arrL;
+	private int moves;
+	private int size;
 
-	
-	
-	ArrayList<Integer> arrL;
-	int moves;
-	int size;
+	/**
+	 * Constructor for the pre-generated board
+	 * @param moves number of optimal moves
+	 * @param size size of the board
+	 * @param arr the array of car IDs
+	 */
 	StoredBoard( int moves, int size, Integer[] arr){
 		arrL = new ArrayList<Integer>(Arrays.asList(arr));
 		this.moves = moves;
 		this.size = size;
 	}
-	
-	public  GameBoard getBoard() {
-		GameBoard b = new GameBoard(arrL,moves,size);
-		return b;
+
+	/**
+	 * Generate a game board
+	 * @return the game board generated
+	 */
+	public GameBoard getBoard() {
+		return new GameBoard(arrL,moves,size);
 	}
 }

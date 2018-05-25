@@ -40,6 +40,7 @@ public class Search {
 	
 	//private GameBoard arr;
 	/**
+	 * Constructor of Search
 	 * @param GoalR Row with goal car
 	 * @param Size of search
 	 */
@@ -61,17 +62,12 @@ public class Search {
 		queue = null;
 	}
 
-	
-
-	
 	/**
-	 * @param state Finished state
-	 * @param movesMin Minimum nubmer of moves
-	 * @param movesMax Maximum number of moves
-	 * Returns a board with number of moves to solve as close to upper bound movesMax 
-	 * If moves < movesMin - no solution with required difficulty
+	 * Generate a board with number of moves to solve as close to upper bound movesMax
+	 * @param board the starting board
+	 * @param minMoves minimum of moves
+	 * @return a board with number of moves to solve as close to upper bound movesMax
 	 */
-	//public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
 	public GameBoard GenBoard(GameBoard board, int minMoves) {
 		
 		queue =  new LinkedList<GameBoard>();

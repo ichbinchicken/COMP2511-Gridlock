@@ -16,9 +16,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * @author Michael Hamilton
- * Controller for network board
- * Multiplayer specific actions on new board
+ * @author Michael Hamilton & Ziming Zheng
+ * Controller for Beat-AI game board
  *
  */
 public class NetworkController extends GameController {
@@ -44,6 +43,12 @@ public class NetworkController extends GameController {
 	private Label Nmessage;
 	private boolean GameOver = false; //=True when someone wins
 
+	/**
+	 * Constructor of NetworkController
+	 * @param s current stage
+	 * @param engine backend interface
+	 * @param main main app to launch
+	 */
 	public NetworkController(Stage s, GameEngine engine, Main main) {
 		super(s,engine,main);
     }

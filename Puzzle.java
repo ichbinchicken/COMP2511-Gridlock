@@ -38,9 +38,7 @@ public class Puzzle {
 		this.Size=n;
 		GoalC = Size-1;		
 	}
-	
-	
-	
+
 	/**
 	 * Generate a puzzle 
 	 * First get initial state
@@ -186,7 +184,6 @@ public class Puzzle {
 		return board.getArr();
 	}
 	
-	//Return isGoal if only move left is red to end
 	/**
 	 * @return true if board is goal state - completed
 	 */
@@ -338,12 +335,7 @@ public class Puzzle {
 		return list;
 	}
 		
-		
-	
-	
-	
-	
-	
+
 	//In general - hardest solutions roughly ~13, 80, 60
 	/**
 	 * Generate a 'solved board'
