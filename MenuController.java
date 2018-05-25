@@ -255,7 +255,8 @@ public class MenuController extends Controller {
 	    	HostIDTextInput.setVisible(false);
 	    	IPEnterBut.setVisible(false);
 	    	engine.waitForJoin();
-	    	
+	    	engine.networkStartGame();
+	    	//engine.remoteStartGame();
     		engine.getNewPuzzle();
     		engine.NetworkSetMode(true);
     		main.ShowNetworkScreen();
