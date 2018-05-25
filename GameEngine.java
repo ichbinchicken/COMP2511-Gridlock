@@ -15,6 +15,13 @@ public class GameEngine  {
 	private ArrayList<GradeLvl> gradeList;  
 	private boolean StoryModeEnd = false;
 	
+	
+	private boolean NetworkMode = false;
+	private boolean NetworkWaiting = true;
+	private Puzzle networkPuzzle = null;
+	private boolean NetworkOpponentWon=true;
+
+	//private Network network;
 
 
 	Puzzle currPuzzle;
@@ -26,7 +33,7 @@ public class GameEngine  {
 
 	public GameEngine() {
 		for(int i=0;i<NumDifficulties;i++) {
-			queue = new BoundedQueue<Puzzle>(20);
+			queue = new BoundedQueue<Puzzle>(10);
 			//queue.setDebug(true);
 			queueList.add(queue);
 		}
@@ -49,8 +56,17 @@ public class GameEngine  {
         t2.start();
         t3.start();
         t4.start();
+<<<<<<< HEAD
+=======
+        
+>>>>>>> origin/master
         getAnyPuzzle();
 
+    }
+    
+    
+    public int getStoryLevel() {
+    	return StoryLevel;
     }
 	
     public Puzzle getAnyPuzzle() {
@@ -80,14 +96,16 @@ public class GameEngine  {
 			Puzzle p=null;
 			int moves=0;
 			while(moves<2) {
-				p = new Puzzle(size,2,true);
+				p = new Puzzle(size);
+				p.GeneratePuzzle(2);
 				moves = p.getInitMoves();
 			}
 			currPuzzle = p;
 
 		}
 		else if(size>6) {
-			currPuzzle = new Puzzle(size,2,false);
+			currPuzzle = new Puzzle(size);
+			currPuzzle.GetStoredPuzzle();
 		}
 		else{
 			if(GameWin==false && currPuzzle!=null) {
@@ -134,6 +152,8 @@ public class GameEngine  {
 			}
 		}
 	        size = currPuzzle.getSize();
+	        networkPuzzle = currPuzzle.DuplicatePuzzle();
+	        NetworkOpponentWon= false;
 			return currPuzzle;
 		
 	}
@@ -144,7 +164,8 @@ public class GameEngine  {
 	
 	public boolean MakeMove(int r,int c,int newR,int newC) {
 		boolean ret = currPuzzle.MakeMove(r, c, newR, newC);
-		if(ret==true) {
+		if(NetworkMode==true) {
+			NetworkSendMove( r,  c,  newR,  newC);
 		}
 		return ret;
 	}
@@ -254,7 +275,14 @@ public class GameEngine  {
 
 			gradeList.add(gdlvl);
 			gdlvl = GetFinalGrade();
+<<<<<<< HEAD
 			System.out.println("GRAD WITH" + gdlvl.getString());
+=======
+
+
+			//StoryLevel=0;
+			//System.out.println("GRAD WITH" + gdlvl.getString());
+>>>>>>> origin/master
 		}
 	}
 	
@@ -268,7 +296,8 @@ public class GameEngine  {
 	
 
 	public ArrayList<Car> UIGetPuzzle(){
-		currPuzzle = new Puzzle(6,6,true);
+		currPuzzle = new Puzzle(6);
+		currPuzzle.GeneratePuzzle(2);
 		return currPuzzle.GenCarList();
 	}
 	
@@ -282,6 +311,10 @@ public class GameEngine  {
 
 	public int getMoves() {
 		return currPuzzle.getMoves();
+	}
+	
+	public int getOppMoves() {
+		return networkPuzzle.getMoves();
 	}
 
 
@@ -352,9 +385,49 @@ public class GameEngine  {
 			
 		return false;
 	}
+<<<<<<< HEAD
 
 	public int getStoryLevel() {
 		return StoryLevel;
+=======
+	
+	
+	public void NetworkSendMove(int r, int c, int NewR, int NewC){
+		
+		
+>>>>>>> origin/master
 	}
+	 
+	public int[] NetworkGetMove(){
+		
+		int[] arr = networkPuzzle.getBestMove();
+		if(networkPuzzle.MakeMove(arr[0],arr[1],arr[2],arr[3])){
+			NetworkOpponentWon=true;
+		}
+		return arr;
 
+<<<<<<< HEAD
+=======
+	}
+	
+	public boolean NetworkMoveWaiting() {
+		return NetworkWaiting;
+	}
+	
+	
+	public void NetworkSetMode(boolean net) {
+		NetworkMode = net;
+	}
+	
+	public boolean NetworkOpponentWon() {
+		return NetworkOpponentWon;
+	}
+	
+
+	
+	
+
+
+
+>>>>>>> origin/master
 }

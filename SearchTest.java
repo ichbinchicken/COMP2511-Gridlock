@@ -64,27 +64,39 @@ public class SearchTest {
 		if(moves>0) {
 			System.out.println("Puzzle Solved in " + moves +" moves");
 		}
-	}
+	}*/
 	
 	@Test
 	public void GenComp() {
-		System.out.println("//GEN");
-		Search search = new Search();
-		Integer[] gen1 = { 	01,04,21,21,21,00,
-							01,04,22,22,00,00,
-							00,00,00,00,34,34,
-							25,25,07,10,15,18,
-							28,28,07,10,15,18,
-							31,31,32,32,15,18};
+		int j=0;
+		//System.out.println("//GEN");
+		/*Search search = new Search(1,6);
+		Integer[] gen1 = { 	1,1,3,3,3,0,
+							1,1,4,4,0,0,
+							0,0,0,0,5,5,
+							4,4,1,1,2,2,
+							4,4,1,1,2,2,
+							4,4,4,4,2,2};*/
+		//ArrayList<Integer> arrL = new ArrayList<Integer>(Arrays.asList(gen1));
+		for(int i=0;i<1000;i++) {
+			//search.GenBoard(gb);
 		
-		BoardState state = new BoardState(6);
-		state.GivenBoard(gen1);
-		search.GenBoard(state, 20);
 		
-		System.out.println("ENDGEN\\");
+			Puzzle p = new Puzzle(6);
+			p.GeneratePuzzle(18);
+			System.out.println(i);
+			if(p.getInitMoves()>=18) {
+				System.out.println("J = " + j);
+				j++;
+
+
+			}
+		}
+		
+		//gb.printBoard();
+		//System.out.println("ENDGEN\\");
 	}
-	
-	
+	/*	
 	@Test
 	public void GenCompSimpler() {
 		System.out.println("//GEN");
@@ -238,8 +250,7 @@ public class SearchTest {
 	
 	
 	
-		@Test
-
+	/*	@Test
 		public void SizeTest() {
 			Puzzle p=null;
 			int moves=0;
@@ -258,10 +269,10 @@ public class SearchTest {
 			}
 
 	        
-	        /*queue = queueList.get(NumDifficulties-1);
+	        queue = queueList.get(NumDifficulties-1);
 	        Puzzle node = queue.remove();
-	        node.printBoard();*/
-		}
+	        node.printBoard();
+		}*/
 
 	
 

@@ -26,6 +26,10 @@ public class Search {
 	
 	
 	//private GameBoard arr;
+	/**
+	 * @param GoalR Row with goal car
+	 * @param Size of search
+	 */
 	public Search(int GoalR, int Size) {
 		this.Cmax=Size;
 		this.Rmax=Size;
@@ -36,10 +40,17 @@ public class Search {
 
 	
 	
+	/**
+	 * Clear closedMap
+	 */
 	public void Clear() {
 		closedMap=null;
+		queue = null;
 	}
 
+	
+
+	
 	/**
 	 * @param state Finished state
 	 * @param movesMin Minimum nubmer of moves
@@ -47,7 +58,12 @@ public class Search {
 	 * Returns a board with number of moves to solve as close to upper bound movesMax 
 	 * If moves < movesMin - no solution with required difficulty
 	 */
+<<<<<<< HEAD
 	public GameBoard GenBoard(GameBoard board) {
+=======
+	//public ArrayList<Integer> GenBoard(BoardState state, int movesMin) {
+	public GameBoard GenBoard(GameBoard board, int minMoves) {
+>>>>>>> origin/master
 		
 		queue =  new LinkedList<GameBoard>();
 		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
@@ -59,6 +75,7 @@ public class Search {
 		//gen=true;
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
+			curr.incMoves();
 			if(isGoal(curr)) {
 				solveList.add(curr);
 			}
@@ -66,25 +83,39 @@ public class Search {
 
 			FindNeighbour(curr);
 		}
+		int maxMoves = curr.getMoves();
+		if(maxMoves<minMoves) {
+		//System.out.println("Cant Do Max Gen" + maxMoves + "Req:" + minMoves);
+			return null; //Cant generate hard board with this config
+		}
+		//System.out.println(maxMoves);
+	
 		queue =  new LinkedList<GameBoard>();
 		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
 		gen=false;
 		while(!solveList.isEmpty()) {
 			curr = solveList.remove();
+			curr.resetMoves();
 			addQueue(curr,null); //Add to queue and closed map
 		}
 		while(!queue.isEmpty()) {
 			curr = queue.remove();
 			curr.incMoves();
 			FindNeighbour(curr);
-			//curr.printBoard();
-
-
 		}
+<<<<<<< HEAD
+=======
+		Clear();
+>>>>>>> origin/master
 		return curr;
 	}
 
 	
+	/**
+	 * Search Board for minimal solution
+	 * @param board Current board location
+	 * @return List of board containg solution
+	 */
 	public LinkedList<GameBoard> SearchBoard(GameBoard board) {
 		queue =  new LinkedList<GameBoard>();
 		closedMap = new HashMap<ArrayList<Integer>,GameBoard>();
@@ -121,6 +152,11 @@ public class Search {
 	}
 	
 	
+	/**
+	 * @param state 
+	 * @param moves
+	 * @return
+	 */
 	private GameBoard FindMoves(GameBoard state, int moves) {
 		while(state.getMoves()> moves) {
 			state = closedMap.get(state.getArr());
@@ -129,6 +165,14 @@ public class Search {
 	}
 	
 	
+	
+	
+	/**
+	 * Find previous board from list and current state
+	 * @param state
+	 * @param list
+	 * @return
+	 */
 	private int FindPrev(GameBoard state, LinkedList<GameBoard> list) {
 		GameBoard prev = closedMap.get(state.getArr());
         int step = (prev == null) ? 0 : FindPrev(prev,list) + 1;
@@ -140,9 +184,48 @@ public class Search {
 
 	}
 	
+	private GameBoard UpdateMoves(GameBoard leaf) {
+		GameBoard prev = closedMap.get(leaf.getArr());
+		GameBoard max = leaf;
+		int maxMoves=leaf.getMoves();
+		int newMoveCount=leaf.getMoves();
+		while(prev!=null) {
+
+			if(prev.getMoves()==0) { //Goal State
+				newMoveCount=0;
+			}
+			else {
+				System.out.println("MOVES"+prev.getMoves());
+				prev.printBoard();
+				if(prev.getMoves()>newMoveCount) {
+					prev.setMoves(newMoveCount);
+				}
+
+
+			}
+			if(prev.getMoves()>maxMoves) {
+				System.out.println("MOVES"+prev.getMoves());
+				prev.printBoard();
+
+				max=prev;
+				maxMoves=prev.getMoves();
+			}
+			newMoveCount++;
+			
+			prev = closedMap.get(prev.getArr());
+			
+		}
+		return max;
+	}
+	
 
 	
-	private void addQueue(GameBoard next, GameBoard prev) {
+	/**
+	 * Add new board to queue
+	 * @param next
+	 * @param prev
+	 */
+	private boolean addQueue(GameBoard next, GameBoard prev) {
 		GameBoard next1 = next.copyGameBoard();
 		GameBoard prev1 = null;
 		if(prev!=null && gen==false) {
@@ -153,16 +236,51 @@ public class Search {
 			closedMap.put(next1.getArr(), prev1);
 			//closedMap.put(next1,prev1);
 			queue.add(next1);
-		}
-	}
-	
-	private boolean isGoal(GameBoard state) {
-		if(state.get(RCtoI(GoalR,GoalC)) == GOALCAR) {
 			return true;
 		}
 		return false;
 	}
+	
+	/**
+	 * Is board a goal state
+	 * @param state
+	 * @return
+	 */
+	/*private boolean isGoal(GameBoard state) {
+		if(state.get(RCtoI(GoalR,GoalC)) == GOALCAR) {
+			return true;
+		}
+		return false;
+<<<<<<< HEAD
+	}
 	private void FindNeighbour(GameBoard curr) {
+=======
+	}*/
+	
+	//Return isGoal if only move left is red to end
+	private boolean isGoal(GameBoard state) {
+		int i=GoalC;
+		int id = state.getRC(GoalR, i );
+		while(id==0) {
+			i--;
+			id = state.getRC(GoalR,i);
+		}
+		if(id==GOALCAR) {
+			//System.out.println("GOAL STATE");
+			return true;
+		}
+		return false;
+	}
+	
+
+	/**
+	 * Find Neighbouring boards
+	 * @param curr
+	 * @return 
+	 */
+	private boolean FindNeighbour(GameBoard curr) {
+		boolean leaf=true;
+>>>>>>> origin/master
 		for( int r=0; r < Rmax; r++) {
 			for (int c = 0; c<Cmax; c++) {
 
@@ -175,23 +293,32 @@ public class Search {
 				}
 				else if(carId== HORTRUCK || carId == HORCAR || carId==GOALCAR) {
 					if(c>0) {
-					LeftSpaces(curr,r,c);
+						if(LeftSpaces(curr,r,c)) {
+							leaf=false;
+						}
 					}
 					if(c<Cmax-1) {
-						RightSpaces(curr,r,c);
+						if(RightSpaces(curr,r,c)) {
+							leaf=false;
+						}
 					}
 				}
 					
 				else {
 					if(r>0) {
-					UpSpaces(curr,r,c);
+						if(UpSpaces(curr,r,c)) {
+							leaf=false;
+						}
 					}
 					if(r<Rmax-1) {
-					DownSpaces(curr,r,c);
+						if(DownSpaces(curr,r,c)) {
+							leaf=false;
+						}
 					}
 				}
 			}
 		}
+		return leaf;
 	}
 	
 	
@@ -201,7 +328,15 @@ public class Search {
 	
 
 	
-	private int UpSpaces(GameBoard state, int r, int c) {
+	/**
+	 * Check Spaces Above piece
+	 * @param state board
+	 * @param r row
+	 * @param c column
+	 * @return number of spaces
+	 */
+	private boolean UpSpaces(GameBoard state, int r, int c) {
+		boolean flag=false;
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
@@ -212,14 +347,25 @@ public class Search {
 			//Moving up - add to queue
 			nState.set(RCtoI(r-j,c), id); 
 			nState.set(RCtoI(r-j+length,c), 0); //Clear end
-			addQueue(nState,state);
+			if(addQueue(nState,state)) {
+				flag=true;
+			}
+
 			j++;
 		}
-		return j;
+		return flag;
 	}
+
 	
-	
-	private int DownSpaces(GameBoard state, int r, int c) {
+	/**
+	 * Check Spaces below piece
+	 * @param state board
+	 * @param r row
+	 * @param c column
+	 * @return number of spaces
+	 */
+	private boolean DownSpaces(GameBoard state, int r, int c) {
+		boolean flag=false;
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
@@ -229,14 +375,24 @@ public class Search {
 			//Moving up - add to queue
 			nState.set(RCtoI(r+j,c), id); 
 			nState.set(RCtoI(r+j-length,c), 0); //Clear end
-			addQueue(nState,state);
+			if(addQueue(nState,state)) {
+				flag=true;
+			}
+
 			j++;
 		}
-		return j;
-	
+		return flag;
 	}
-	
-	private int LeftSpaces(GameBoard state, int r, int c) {
+
+	/**
+	 * Check Spaces left of piece
+	 * @param state board
+	 * @param r row
+	 * @param c column
+	 * @return number of spaces
+	 */
+	private boolean LeftSpaces(GameBoard state, int r, int c) {
+		boolean flag=false;
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		int length = getSize(id);
@@ -245,16 +401,25 @@ public class Search {
 		while((c-j >= 0) && state.get(RCtoI(r,c-j))==0){
 			nState.set(RCtoI(r,c-j), id); 
 			nState.set(RCtoI(r,c-j+length), 0); //Clear end
-			addQueue(nState,state);
+			if(addQueue(nState,state)) {
+				flag=true;
+			}
 
 			j++;
 		}
-		return j;
+		return flag;
 	}
 	
 	
-	
-	private int RightSpaces(GameBoard state, int r, int c) {
+	/**
+	 * Check Spaces right of piece
+	 * @param state board
+	 * @param r row
+	 * @param c column
+	 * @return number of spaces
+	 */
+	private boolean RightSpaces(GameBoard state, int r, int c) {
+		boolean flag=false;
 		int j=1;
 		int id = state.get(RCtoI(r,c));
 		
@@ -264,25 +429,32 @@ public class Search {
 		while((c+j < Cmax) && state.get(RCtoI(r,c+j))==0){
 			nState.set(RCtoI(r,c+j), id);
 			nState.set(RCtoI(r,c+j-length),0);
-			addQueue(nState,state);
+			if(addQueue(nState,state)) {
+				flag=true;
+			}
 
 			j++;
 		}
-		return j;
+		return flag;
 	}
 	
 	
+	/**
+	 * Row Column to int in array
+	 * @param r
+	 * @param c
+	 * @return
+	 */
 	private int RCtoI(int r, int c) {
 		return r * Cmax + c;
 	}
 	
-	/*private int IDtoType(int id) {
-		if (id<=Cmax*numCarPer) {
-			return VERT;
-		}
-		return HORIZ;
-	}*/
-	
+
+	/**
+	 * GetSize of piece by ID type
+	 * @param id
+	 * @return
+	 */
 	private int getSize(int id) { //Check this for scaling
 		if(id==EMPTY) {
 			return 0;

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane fx:id="boardPane" layoutX="14.0" layoutY="41.0" prefHeight="500.0" prefWidth="500.0" />
+      <Pane fx:id="NboardPane" layoutX="537.0" layoutY="41.0" prefHeight="250.0" prefWidth="250.0" />
+      <Label fx:id="movesMade" layoutX="594.0" layoutY="321.0" text="0">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="536.0" layoutY="321.0" text="Move:">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="NmovesMade" layoutX="661.0" layoutY="321.0" text="0">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="buttonNewGame" layoutX="535.0" layoutY="394.0" mnemonicParsing="false" onAction="#RequestNewGame" prefHeight="27.0" prefWidth="100.0" text="New Game">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="buttonMenu" layoutX="535.0" layoutY="452.0" mnemonicParsing="false" onAction="#MainMenuAction" prefHeight="27.0" prefWidth="100.0" text="Menu">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="16.0" />
+         </font>
+      </Button>
+      <Label layoutX="221.0" layoutY="14.0" text="You">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="639.0" layoutY="14.0" prefHeight="18.0" prefWidth="45.0" text="Them">
+         <font>
+            <Font name="DejaVu Sans Mono for Powerline Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
+</Pane>

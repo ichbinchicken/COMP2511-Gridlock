@@ -1,34 +1,39 @@
+import java.util.ArrayList;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+<<<<<<< HEAD
 import java.util.ArrayList;
 
 public class BoardController extends Controller {
     private static final int  GOALCAR =5;
     private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
-    private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
-    private static final int animTime = 500;
+=======
 
+
+public class BoardController extends gameController {
+	private static final String[] GAME_OVER_MSGS = {"GAME OVER", "TRY AGAIN", "Your Moves: ", "Optimal Moves: "};
+>>>>>>> origin/master
+    private static final String[] GAME_WON_MSGS = {"YOU WON", "Time used: ", "Your Moves: ", "Optimal Moves: ", "Your grade: "};
+
+<<<<<<< HEAD
     private GameEngine engine;
 
     @FXML
     private Pane boardPane;
+=======
+>>>>>>> origin/master
     @FXML
     private Label totalTime;
     @FXML
@@ -37,31 +42,20 @@ public class BoardController extends Controller {
     private Button buttonPause;
     @FXML
     private Button buttonRestart;
-    
-    @FXML
-    private Button buttonNewGame;
     @FXML
     private Button buttonHint;
-    @FXML
-    private Button buttonMenu;
 
-    private Rectangle curtain;
     private Label message;
-    private double squareWidth;
-    private int nSquares;
     private Timeline countDown;
-    private Timeline winCountDown;
     private int totalSeconds;  // The duration of game, should not changed *TOBY but needs to be reset for each new board
     private int currSeconds;
     private boolean running;
-    private ArrayList<Car> workload;
     private boolean GameWon = false;
     private boolean animating = false;
     private Car goalCar;
     private Main main;
     private Mode mode;
 
-    private final Color boardColor = Color.ORANGE;
 
     /***
      * this is to check whether the game is paused. Initially, it's running.
@@ -69,9 +63,9 @@ public class BoardController extends Controller {
      */
 
     public BoardController(Stage s, GameEngine engine, Main main) {
-        this.engine = engine;
-        this.main = main;
+    	super(s,engine,main);
         totalSeconds = currSeconds = engine.getTime();
+<<<<<<< HEAD
         workload = new ArrayList<Car>();
         running = true;
     }
@@ -83,18 +77,75 @@ public class BoardController extends Controller {
 
 
         this.squareWidth = boardPane.getPrefWidth()/nSquares;
+=======
 
-        // init curtain
-        curtain = new Rectangle(boardPane.getPrefWidth(), boardPane.getPrefHeight(), boardColor);
-        curtain.setX(0);
-        curtain.setY(0);
+        running = true; // this is to check whether the game is paused. Initially, it's running.
+    }
 
-        // init game over message
+	@FXML
+	void HintAction() {
+		if(animating==false && isGameWon == false) {
+    		int[] arr =engine.getNextMove();
+    		//System.out.println(arr);
+    		Car car =findCar(arr[0], arr[1]);
+    		animating=true;
+    		car.CarMakeAnimatingMove(arr[2], arr[3], animTime);
+    	}
+	}
+	
+>>>>>>> origin/master
+
+	@FXML
+    void PauseAction(ActionEvent event) {
+		if(running) {
+			running = false;
+			countDown.pause();
+			buttonHint.setDisable(true);
+			buttonPause.setText("Resume");
+			curtainShow();
+		}
+		else {
+			if(mode!=Mode.STORY) {
+				buttonHint.setDisable(false);
+			}
+			curtainHide();
+			countDown.play();
+			running=true;
+			buttonPause.setText("Pause");
+		}
+    }
+
+    @FXML
+    void RestartAction(ActionEvent event) {
+    	if(animating==false) {
+    		engine.RestartPuzzle();
+    		boardPane.getChildren().clear();
+            currSeconds = totalSeconds;
+            isGameWon=false;
+            animating=false;
+            running = true;
+            workload = drawBoard(boardPane, workload, true);
+        	drawBoardAdit();
+
+            boardPane.getChildren().add(curtain);
+            isGameWon=false;
+            animating=false;
+            running=true;
+            movesMade.setText("0");
+            curtainHide();
+    	}
+    }
+	
+    
+    @FXML
+    public void initialize() {
+    	super.initialize();
         message = new Label("");
         message.setFont(new Font("DejaVu Sans Mono for Powerline Bold", 40));
         message.setTextFill(Color.WHITESMOKE);
         message.setTextAlignment(TextAlignment.CENTER);
         setCenterX(message);
+<<<<<<< HEAD
         drawBoard();
         buttonPause.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -164,11 +215,15 @@ public class BoardController extends Controller {
 
 
         // init timer
+=======
+        
+>>>>>>> origin/master
         countDown = new Timeline(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 currSeconds--;
                 totalTime.setText(convertTime(currSeconds));
+<<<<<<< HEAD
                 if (currSeconds <= 0) {
                     engine.GameLoss();
                     if(engine.getMode()==Mode.STORY) {
@@ -177,42 +232,81 @@ public class BoardController extends Controller {
                     stopGame(GAME_OVER_MSGS[0]);
                 
 
+=======
+                if (currSeconds <= 0 && !isGameWon) {
+    				engine.GameLoss();
+                	if(mode==Mode.STORY) {
+                        buttonNewGame.setDisable(true);
+                	}
+                	stopGame(GAME_OVER_MSGS[0]);
+>>>>>>> origin/master
                 }
             }
         }));
         countDown.setCycleCount(Animation.INDEFINITE);
         countDown.playFromStart();
 
-        winCountDown = new Timeline(new KeyFrame(Duration.millis(animTime-43), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                stopGame(GAME_WON_MSGS[0]);
-            }
-        }));
-        winCountDown.setCycleCount(1);
-
     }
 
-    private void drawBoard() {
-        mode = engine.getMode();
-        running = true;
-        buttonPause.setDisable(false);
-        buttonPause.setText("Pause");
+    @Override
+    public void DisplayWinScreen() {
+    	stopGame(GAME_WON_MSGS[0]);
+    }
+
+    // draw border for the board
+
+
+    
+    //boardPane.getChildren().add(curtain);
+    //boardPane.getChildren().add(message);
+
+    ///buttonNewGame.setDisable(false);
+    //buttonPause.setDisable(false);
+    //buttonPause.setText("Pause");
+    //totalTime.setText(convertTime(totalSeconds));
+    //curtain.setVisible(false);
+    //message.setVisible(false);
+    /*if(mode==Mode.STORY) {
+        buttonHint.setDisable(true);
+        buttonRestart.setDisable(true);
+        buttonNewGame.setDisable(true);
+    }
+    else {
+        buttonHint.setDisable(false);
+        buttonRestart.setDisable(false);
         buttonNewGame.setDisable(false);
-        totalTime.setText(convertTime(totalSeconds));
-        curtain.setVisible(false);
-        message.setVisible(false);
-        if(mode==Mode.STORY) {
-            buttonHint.setDisable(true);
+    }*/
+
+    @Override
+    public void GetNewBoard(){
+    	super.GetNewBoard();
+    	drawBoardAdit();
+    }
+    
+    private void drawBoardAdit() {
+        totalSeconds = currSeconds = engine.getTime();
+        running=true;
+		countDown.play();
+    	buttonPause.setDisable(false);
+    	buttonPause.setText("Pause");
+    	buttonNewGame.setDisable(false);
+    	totalTime.setText(convertTime(totalSeconds));
+    	mode = engine.getMode();
+    	totalSeconds = engine.getTime();
+    	currSeconds = totalSeconds;
+    	countDown.playFromStart();
+    	if(mode==Mode.STORY) {
+    		buttonHint.setDisable(true);
             buttonRestart.setDisable(true);
             buttonNewGame.setDisable(true);
             buttonNewGame.setText("Next");
-        }
-        else {
-            buttonHint.setDisable(false);
+    	}
+    	else {
+    		buttonHint.setDisable(false);
             buttonRestart.setDisable(false);
             buttonNewGame.setDisable(false);
             buttonNewGame.setText("New Game");
+<<<<<<< HEAD
         }
         Rectangle[][] rec = new Rectangle[nSquares][nSquares];
 
@@ -284,8 +378,11 @@ public class BoardController extends Controller {
             }
         }
         return false;
+=======
+    	}
+>>>>>>> origin/master
     }
-
+    
     private void stopGame(String msg) {
         double boardHeight = boardPane.getPrefHeight();
         //double boardWidth = boardPane.getWidth();
@@ -300,7 +397,7 @@ public class BoardController extends Controller {
         if (engine.StoryModeEnd()==true) {
             StoryModeEndScreen();
         }
-        else if (GameWon) {
+        else if (isGameWon) {
             message.setLayoutY(boardHeight/4);
             String timeElapsed = convertTime(totalSeconds - currSeconds);
             Label[] details = new Label[4];
@@ -374,8 +471,15 @@ public class BoardController extends Controller {
         }
     }
     
+    @Override
+    protected void GameWon() {
+        engine.GameWon(currSeconds);
+        countDown.stop();
+        
+    }
     
-    private void StoryModeEndScreen() {
+    
+    protected void StoryModeEndScreen() {
         buttonNewGame.setDisable(true);
         double boardHeight = boardPane.getPrefHeight();
         double boardWidth = boardPane.getPrefWidth();
@@ -386,11 +490,19 @@ public class BoardController extends Controller {
         Label[] gradeLabel = new Label[gradeList.size()];
         Label[] GradLabel = new Label[3];
         Label[] levelLabel = new Label[gradeList.size()];
+<<<<<<< HEAD
         if(!gradLevel.equals("FAILED")) {
             GradLabel[0] = new Label("Congratulations!");
             GradLabel[1] = new Label("You Graduated from: "+ gradLevel);
             GradLabel[2] = new Label ("With an Overall Grade of: " + finalGrade.getString());
             
+=======
+        if(!gradLevel.equals("FAILED")){
+        	GradLabel[0] = new Label("Congratulations!");
+        	GradLabel[1] = new Label("You Graduated from: "+ gradLevel);
+        	GradLabel[2] = new Label ("With an Overall Grade of: " + finalGrade.getString());
+        	
+>>>>>>> origin/master
         }
         else {
             GradLabel[0] = new Label("You Failed to Graduate");
@@ -407,10 +519,23 @@ public class BoardController extends Controller {
 
         }
         for(int i=0;i<gradeList.size();i++) {
+<<<<<<< HEAD
             levelLabel[i] = new Label("Level: "+(i+1));
             gradeLabel[i] = new Label("Grade: "+gradeList.get(i).getString());
             gradeLabel[i].setLayoutY((boardHeight*(i+10))/24);
             levelLabel[i].setLayoutY((boardHeight*(i+10))/24);
+=======
+        	levelLabel[i] = new Label("Level: "+(i+1));
+        	gradeLabel[i] = new Label("Grade: "+gradeList.get(i).getString());
+        	//levelLabel[i].setLayoutX(value);
+        	gradeLabel[i].setLayoutY((boardHeight*(i+10))/24);
+        	levelLabel[i].setLayoutY((boardHeight*(i+10))/24);
+
+        	levelLabel[i].layoutXProperty().bind(boardPane.widthProperty().divide(6));
+        	gradeLabel[i].layoutXProperty().bind(boardPane.widthProperty().multiply(5).divide(12));            //setCenterX(gradeLabel[i]);
+            gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 20));
+            
+>>>>>>> origin/master
             levelLabel[i].layoutXProperty().bind(boardPane.widthProperty().divide(6));
             gradeLabel[i].layoutXProperty().bind(boardPane.widthProperty().multiply(5).divide(12));
             gradeLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
@@ -430,9 +555,17 @@ public class BoardController extends Controller {
         message.setVisible(false);
 
     }
+<<<<<<< HEAD
 
 
     private String convertTime(long secondDelta) {
+=======
+    
+
+
+    protected String convertTime(long secondDelta) {
+        // this snippet taken from https://stackoverflow.com/questions/43892644
+>>>>>>> origin/master
         long seconds = 1;
         long minutes = seconds * 60;
         long hours = minutes * 60;
@@ -449,6 +582,7 @@ public class BoardController extends Controller {
                 String.format("%02d", elapsedSeconds);
     }
 
+<<<<<<< HEAD
     
     public void MakeMove(int oldR, int oldC, int r, int c) {
         if(!GameWon) {
@@ -468,10 +602,11 @@ public class BoardController extends Controller {
 
         }
         movesMade.setText(Integer.toString(engine.getMoves()));
+=======
+>>>>>>> origin/master
 
-    }
-    
 
+<<<<<<< HEAD
     
     public boolean GetAnimating() {
         return animating;
@@ -523,4 +658,6 @@ public class BoardController extends Controller {
     private void setCenterX(Label label) {
         label.layoutXProperty().bind(boardPane.widthProperty().subtract(label.widthProperty()).divide(2));
     }
+=======
+>>>>>>> origin/master
 }

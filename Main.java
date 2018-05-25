@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 	Screen gameScreen;
 	Screen menuScreen;
+	Screen networkScreen;
 	GameEngine engine;
 	public Main() {
 		
@@ -15,8 +16,9 @@ public class Main extends Application {
         engine = new GameEngine();
         gameScreen = new BoardScreen(primaryStage,engine, this);
         menuScreen = new MenuScreen(primaryStage,engine, this);
+        networkScreen = new NetworkScreen(primaryStage,engine,this);
+        networkScreen.loadShowSettings();
         gameScreen.loadShowSettings();
-
         menuScreen.show();
 
     }
@@ -31,6 +33,10 @@ public class Main extends Application {
     }
     public void ShowMenuScreen() {
     	menuScreen.StageShow();
+    }
+    
+    public void ShowNetworkScreen() {
+    	networkScreen.StageShow();
     }
 }
 
