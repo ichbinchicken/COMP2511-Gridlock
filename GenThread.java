@@ -3,6 +3,12 @@ import java.util.*;
 /**
    An action that repeatedly inserts a greeting into a queue.
 */
+/**
+ * @author Michael
+ * Multithreaded Generation of puzzles
+ * Generates them then adds to queue
+ *
+ */
 public class GenThread implements Runnable
 {
 	ArrayList<BoundedQueue<Puzzle>> queueList;
