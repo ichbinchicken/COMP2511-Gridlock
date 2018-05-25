@@ -84,9 +84,6 @@ public class NetworkModule implements Runnable {
 		}
         writer = new PrintWriter(output, true);
 
-        this.localAddr = this.socket.getLocalAddress();
-        this.localPort = this.socket.getLocalPort();
-
         this.startRecv();
 
     }
