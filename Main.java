@@ -6,10 +6,10 @@ import javafx.stage.Stage;
  *
  */
 public class Main extends Application {
-	Screen gameScreen;
-	Screen menuScreen;
-	Screen networkScreen;
-	GameEngine engine;
+	private Screen gameScreen;
+	private Screen menuScreen;
+	private Screen networkScreen;
+	private GameEngine engine;
 	public Main() {
 		
 	}

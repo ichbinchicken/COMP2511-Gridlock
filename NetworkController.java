@@ -196,6 +196,7 @@ public class NetworkController extends GameController {
     		GameWon();
     	}
 	}
+
     @Override
     public void GetNewBoard() {
     	super.GetNewBoard();
