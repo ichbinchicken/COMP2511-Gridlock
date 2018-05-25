@@ -237,9 +237,10 @@ public class Search {
 
 	
 	/**
-	 * Add new board to queue
+	 * 	 Add new board to queue
 	 * @param next
 	 * @param prev
+	 * @return True if added to queue
 	 */
 	private boolean addQueue(GameBoard next, GameBoard prev) {
 		GameBoard next1 = next.copyGameBoard();
@@ -288,7 +289,7 @@ public class Search {
 	/**
 	 * Find Neighbouring boards
 	 * @param curr
-	 * @return 
+	 * @return  true if neighbours found
 	 */
 	private boolean FindNeighbour(GameBoard curr) {
 		boolean leaf=true;
@@ -344,7 +345,7 @@ public class Search {
 	 * @param state board
 	 * @param r row
 	 * @param c column
-	 * @return number of spaces
+	 * @return true if added
 	 */
 	private boolean UpSpaces(GameBoard state, int r, int c) {
 		boolean flag=false;
@@ -373,7 +374,7 @@ public class Search {
 	 * @param state board
 	 * @param r row
 	 * @param c column
-	 * @return number of spaces
+	 * @return true if added
 	 */
 	private boolean DownSpaces(GameBoard state, int r, int c) {
 		boolean flag=false;
@@ -400,7 +401,7 @@ public class Search {
 	 * @param state board
 	 * @param r row
 	 * @param c column
-	 * @return number of spaces
+	 * @return true if added
 	 */
 	private boolean LeftSpaces(GameBoard state, int r, int c) {
 		boolean flag=false;
@@ -427,7 +428,7 @@ public class Search {
 	 * @param state board
 	 * @param r row
 	 * @param c column
-	 * @return number of spaces
+	 * @return true if added
 	 */
 	private boolean RightSpaces(GameBoard state, int r, int c) {
 		boolean flag=false;
@@ -464,7 +465,7 @@ public class Search {
 	/**
 	 * GetSize of piece by ID type
 	 * @param id
-	 * @return
+	 * @return int size
 	 */
 	private int getSize(int id) { //Check this for scaling
 		if(id==EMPTY) {
