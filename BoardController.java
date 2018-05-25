@@ -312,7 +312,7 @@ public class BoardController extends GameController {
         }
 
         for(int i=0;i<3;i++) {
-        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 16));
+        	GradLabel[i].setFont(new Font("DejaVu Sans Mono for Powerline Bold", 14));
         	GradLabel[i].setTextFill(primaryTextColor);
         	GradLabel[i].setTextAlignment(TextAlignment.CENTER);
         	setCenterX(boardPane, GradLabel[i]);
