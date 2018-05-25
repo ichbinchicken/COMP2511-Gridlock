@@ -32,7 +32,7 @@ public class NetworkController extends GameController {
 	@FXML
 	private Label NmovesMade;
 	
-    private ArrayList<Car> nworkload = new ArrayList<>();
+    private ArrayList<Car> nworkload = new ArrayList<Car>();
     private Car theirgoalCar;
     private Timeline timeline;
     private Rectangle Ncurtain;
